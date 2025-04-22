@@ -9,10 +9,10 @@ public class FormationRepository {
         allFormations.add(createDiamante());
         allFormations.add(createDobleW());
         allFormations.add(createAutobus());
-        /*
         allFormations.add(createFlechaEspectral());
         allFormations.add(createJungla());
         allFormations.add(createReja());
+        /*
         allFormations.add(createPiramide());
         allFormations.add(createZonaMuerta());
         allFormations.add(createAlasGrulla());
@@ -153,10 +153,17 @@ public class FormationRepository {
         );
 
         Map<Integer, List<Integer>> links = new HashMap<>();
-        links.put(0, List.of(1, 2));
-        links.put(1, List.of(0, 3));
-        links.put(2, List.of(0, 3));
-        links.put(3, List.of(1, 2));
+        links.put(0, List.of(2, 3));
+        links.put(1, List.of(2, 5));
+        links.put(2, List.of(0, 1, 3, 5, 7));
+        links.put(3, List.of(0, 2, 4, 7, 9));
+        links.put(4, List.of(3, 9));
+        links.put(5, List.of(1, 2, 6));
+        links.put(6, List.of(5, 7, 10));
+        links.put(7, List.of(2, 3, 6, 8));
+        links.put(8, List.of(7, 9, 10));
+        links.put(9, List.of(3, 4, 8));
+        links.put(10, List.of(6, 8));
 
         return new Formation("Flecha espectral (4-5-1)", placements, links);
     }
@@ -180,10 +187,17 @@ public class FormationRepository {
         );
 
         Map<Integer, List<Integer>> links = new HashMap<>();
-        links.put(0, List.of(1, 2));
-        links.put(1, List.of(0, 3));
-        links.put(2, List.of(0, 3));
-        links.put(3, List.of(1, 2));
+        links.put(0, List.of(1, 2, 3));
+        links.put(1, List.of(0, 2, 4));
+        links.put(2, List.of(0, 1, 3, 5, 6));
+        links.put(3, List.of(0, 2, 7));
+        links.put(4, List.of(1, 5, 8));
+        links.put(5, List.of(2, 4, 6, 9));
+        links.put(6, List.of(2, 5, 7, 9));
+        links.put(7, List.of(3, 6, 10));
+        links.put(8, List.of(4, 9));
+        links.put(9, List.of(5, 6, 8, 10));
+        links.put(10, List.of(9, 7));
 
         return new Formation("Jungla (3-4-3)", placements, links);
     }
@@ -207,10 +221,17 @@ public class FormationRepository {
         );
 
         Map<Integer, List<Integer>> links = new HashMap<>();
-        links.put(0, List.of(1, 2));
-        links.put(1, List.of(0, 3));
-        links.put(2, List.of(0, 3));
-        links.put(3, List.of(1, 2));
+        links.put(0, List.of(2, 3));
+        links.put(1, List.of(2, 5));
+        links.put(2, List.of(0, 1, 3, 6));
+        links.put(3, List.of(0, 2, 4, 7));
+        links.put(4, List.of(3, 8));
+        links.put(5, List.of(1, 6, 9));
+        links.put(6, List.of(2, 5, 7, 9));
+        links.put(7, List.of(3, 6, 8, 10));
+        links.put(8, List.of(4, 7, 10));
+        links.put(9, List.of(5, 6, 10));
+        links.put(10, List.of(7, 8, 9));
 
         return new Formation("Reja (4-4-2)", placements, links);
     }

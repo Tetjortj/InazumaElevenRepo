@@ -36,13 +36,16 @@ public class FormationDisplayer {
                 campo[filaPantalla + 0][colPantalla] = "[" + abreviar(c.getName(), 11) + "]";
                 campo[filaPantalla + 1][colPantalla] = "[" + abreviar(c.getTeam().name(), 11) + "]";
                 campo[filaPantalla + 2][colPantalla] = "[" + c.getRating() + " ".repeat(11 - String.valueOf(c.getRating()).length()) + "]";
-                campo[filaPantalla + 3][colPantalla] = "[" + abreviar(c.getElement().name(), 10) + i + "]";
+                if(i != 10) campo[filaPantalla + 3][colPantalla] = "[" + abreviar(c.getElement().name(), 10) + i + "]";
+                else campo[filaPantalla + 3][colPantalla] = "[" + abreviar(c.getElement().name(), 9) + i + "]";
             } else {
                 String tipo = p.getPosition().name() + "-" + i;
                 campo[filaPantalla + 0][colPantalla] = "[" + " ".repeat(11) + "]";
                 campo[filaPantalla + 1][colPantalla] = "[" + centrar(tipo, 11) + "]";
                 campo[filaPantalla + 2][colPantalla] = "[" + " ".repeat(11) + "]";
-                campo[filaPantalla + 3][colPantalla] = "[" + " ".repeat(10) + i + "]";
+                if(i != 10) campo[filaPantalla + 3][colPantalla] = "[" + " ".repeat(10) + i + "]";
+                else campo[filaPantalla + 3][colPantalla] = "[" + " ".repeat(9) + i + "]";
+
             }
         }
 
