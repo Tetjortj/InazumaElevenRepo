@@ -4,391 +4,448 @@
     "team": "RAIMON",
     "position": "GKE",
     "rating": 85,
-    "element": "FOREST"
+    "element": "MOUNTAIN",
+    "grade": 2
   },
   {
     "name": "Nathan Swift",
     "team": "RAIMON",
     "position": "DEF",
     "rating": 82,
-    "element": "MOUNTAIN"
+    "element": "MOUNTAIN",
+    "grade": 2
   },
   {
     "name": "Jack Wallside",
     "team": "RAIMON",
     "position": "DEF",
     "rating": 78,
-    "element": "FOREST"
+    "element": "FOREST",
+    "grade":
   },
   {
     "name": "Jim Wraith",
     "team": "RAIMON",
     "position": "DEF",
     "rating": 75,
-    "element": "FIRE"
+    "element": "FIRE",
+    "grade":
   },
   {
     "name": "Tod Ironside",
     "team": "RAIMON",
     "position": "DEF",
     "rating": 74,
-    "element": "FIRE"
+    "element": "FIRE",
+    "grade":
   },
   {
     "name": "Steve Grim",
     "team": "RAIMON",
     "position": "MDF",
     "rating": 76,
-    "element": "WIND"
+    "element": "WIND",
+    "grade":
   },
   {
     "name": "Timmy Saunders",
     "team": "RAIMON",
     "position": "MDF",
     "rating": 77,
-    "element": "FOREST"
+    "element": "FOREST",
+    "grade":
   },
   {
     "name": "Sam Kincaid",
     "team": "RAIMON",
     "position": "MDF",
     "rating": 76,
-    "element": "MOUNTAIN"
+    "element": "MOUNTAIN",
+    "grade":
   },
   {
     "name": "Maxwell Carson",
     "team": "RAIMON",
     "position": "MDF",
     "rating": 78,
-    "element": "MOUNTAIN"
+    "element": "MOUNTAIN",
+    "grade":
   },
   {
     "name": "Axel Blaze",
     "team": "RAIMON",
     "position": "STR",
     "rating": 90,
-    "element": "FIRE"
+    "element": "FIRE",
+    "grade":
   },
   {
     "name": "Kevin Dragonfly",
     "team": "RAIMON",
     "position": "STR",
     "rating": 83,
-    "element": "MOUNTAIN"
+    "element": "MOUNTAIN",
+    "grade":
   },
   {
     "name": "William Glass",
     "team": "RAIMON",
     "position": "STR",
     "rating": 70,
-    "element": "WIND"
+    "element": "WIND",
+    "grade":
   },
   {
     "name": "Bobby Shearer",
     "team": "RAIMON",
     "position": "DEF",
     "rating": 79,
-    "element": "MOUNTAIN"
+    "element": "MOUNTAIN",
+    "grade":
   },
   {
     "name": "Jude Sharp",
     "team": "RAIMON",
     "position": "MDF",
     "rating": 88,
-    "element": "MOUNTAIN"
+    "element": "MOUNTAIN",
+    "grade":
   },
   {
     "name": "Erik Eagle",
     "team": "RAIMON",
     "position": "MDF",
     "rating": 84,
-    "element": "MOUNTAIN"
+    "element": "MOUNTAIN",
+    "grade":
   },
   {
     "name": "Joseph King",
     "team": "ROYAL_ACADEMY",
     "position": "GKE",
     "rating": 85,
-    "element": "WIND"
+    "element": "WIND",
+    "grade":
   },
   {
     "name": "Gus Martin",
     "team": "ROYAL_ACADEMY",
     "position": "DEF",
     "rating": 80,
-    "element": "MOUNTAIN"
+    "element": "MOUNTAIN",
+    "grade":
   },
   {
     "name": "Herman Waldon",
     "team": "ROYAL_ACADEMY",
     "position": "DEF",
     "rating": 78,
-    "element": "FOREST"
+    "element": "FOREST",
+    "grade":
   },
   {
     "name": "John Bloom",
     "team": "ROYAL_ACADEMY",
     "position": "MDF",
     "rating": 82,
-    "element": "WIND"
+    "element": "WIND",
+    "grade":
   },
   {
     "name": "Derek Swing",
     "team": "ROYAL_ACADEMY",
     "position": "MDF",
     "rating": 81,
-    "element": "FIRE"
+    "element": "FIRE",
+    "grade":
   },
   {
     "name": "Daniel Hatch",
     "team": "ROYAL_ACADEMY",
     "position": "STR",
     "rating": 80,
-    "element": "WIND"
+    "element": "WIND",
+    "grade":
   },
   {
     "name": "David Samford",
     "team": "ROYAL_ACADEMY",
     "position": "STR",
     "rating": 83,
-    "element": "FIRE"
+    "element": "FIRE",
+    "grade":
   },
   {
     "name": "Jude Sharp",
     "team": "ROYAL_ACADEMY",
     "position": "MDF",
     "rating": 88,
-    "element": "WIND"
+    "element": "WIND",
+    "grade":
   },
   {
     "name": "Paul Siddon",
     "team": "ZEUS",
     "position": "GKE",
     "rating": 85,
-    "element": "FOREST"
+    "element": "FOREST",
+    "grade":
   },
   {
     "name": "Apollo Light",
     "team": "ZEUS",
     "position": "DEF",
     "rating": 82,
-    "element": "MOUNTAIN"
+    "element": "MOUNTAIN",
+    "grade":
+
   },
   {
     "name": "Jeff Iron",
     "team": "ZEUS",
     "position": "DEF",
     "rating": 80,
-    "element": "WIND"
+    "element": "WIND",
+    "grade":
   },
   {
     "name": "Lane War",
     "team": "ZEUS",
     "position": "DEF",
     "rating": 79,
-    "element": "MOUNTAIN"
+    "element": "MOUNTAIN",
+    "grade":
   },
   {
     "name": "Danny Wood",
     "team": "ZEUS",
     "position": "DEF",
     "rating": 78,
-    "element": "FIRE"
+    "element": "FIRE",
+    "grade":
   },
   {
     "name": "Artie Mishman",
     "team": "ZEUS",
     "position": "MDF",
     "rating": 81,
-    "element": "FOREST"
+    "element": "FOREST",
+    "grade":
   },
   {
     "name": "Arion Matlock",
     "team": "ZEUS",
     "position": "MDF",
     "rating": 80,
-    "element": "MOUNTAIN"
+    "element": "MOUNTAIN",
+    "grade":
   },
   {
     "name": "Wesley Knox",
     "team": "ZEUS",
     "position": "MDF",
     "rating": 82,
-    "element": "FIRE"
+    "element": "FIRE",
+    "grade":
   },
   {
     "name": "Jonas Demetrius",
     "team": "ZEUS",
     "position": "STR",
     "rating": 83,
-    "element": "FIRE"
+    "element": "FIRE",
+    "grade":
   },
   {
     "name": "Byron Love",
     "team": "ZEUS",
     "position": "MDF",
     "rating": 90,
-    "element": "FOREST"
+    "element": "FOREST",
+    "grade":
   },
   {
     "name": "Henry House",
     "team": "ZEUS",
     "position": "STR",
     "rating": 84,
-    "element": "WIND"
+    "element": "WIND",
+    "grade":
   },
   {
     "name": "Nata Juuzou",
     "team": "OCCULT",
     "position": "GKE",
     "rating": 80,
-    "element": "WIND"
+    "element": "WIND",
+    "grade":
   },
   {
     "name": "Sanzu Wataru",
     "team": "OCCULT",
     "position": "DEF",
     "rating": 78,
-    "element": "FIRE"
+    "element": "FIRE",
+    "grade":
   },
   {
     "name": "Yanagida Shigeru",
     "team": "OCCULT",
     "position": "DEF",
     "rating": 77,
-    "element": "FOREST"
+    "element": "FOREST",
+    "grade":
   },
   {
     "name": "Furan Ken",
     "team": "OCCULT",
     "position": "DEF",
     "rating": 76,
-    "element": "WIND"
+    "element": "WIND",
+    "grade":
   },
   {
     "name": "Shikabane Fujimi",
     "team": "OCCULT",
     "position": "DEF",
     "rating": 75,
-    "element": "WIND"
+    "element": "WIND",
+    "grade":
   },
   {
     "name": "Reigen Michihisa",
     "team": "OCCULT",
     "position": "MDF",
     "rating": 78,
-    "element": "FOREST"
+    "element": "FOREST",
+    "grade":
   },
   {
     "name": "Kinoi Mami",
     "team": "OCCULT",
     "position": "MDF",
     "rating": 77,
-    "element": "MOUNTAIN"
+    "element": "MOUNTAIN",
+    "grade":
   },
   {
     "name": "Yatsuhaka Tataru",
     "team": "OCCULT",
     "position": "MDF",
     "rating": 76,
-    "element": "WIND"
+    "element": "WIND",
+    "grade":
   },
   {
     "name": "Yuukoku Hiroyuki",
     "team": "OCCULT",
     "position": "MDF",
     "rating": 82,
-    "element": "MOUNTAIN"
+    "element": "MOUNTAIN",
+    "grade":
   },
   {
     "name": "Tsukimura Kenichi",
     "team": "OCCULT",
     "position": "STR",
     "rating": 79,
-    "element": "FOREST"
+    "element": "FOREST",
+    "grade":
   },
   {
     "name": "Burado Kiba",
     "team": "OCCULT",
     "position": "STR",
     "rating": 78,
-    "element": "MOUNTAIN"
+    "element": "MOUNTAIN",
+    "grade":
   },
   {
     "name": "Albert Green",
     "team": "FARM",
     "position": "GKE",
     "rating": 82,
-    "element": "FIRE"
+    "element": "FIRE",
+    "grade":
   },
   {
     "name": "Seward Hayseed",
     "team": "FARM",
     "position": "DEF",
     "rating": 78,
-    "element": "FIRE"
+    "element": "FIRE",
+    "grade":
   },
   {
     "name": "Kent Work",
     "team": "FARM",
     "position": "DEF",
     "rating": 77,
-    "element": "MOUNTAIN"
+    "element": "MOUNTAIN",
+    "grade":
   },
   {
     "name": "Mark Hillvalley",
     "team": "FARM",
     "position": "DEF",
     "rating": 80,
-    "element": "FIRE"
+    "element": "FIRE",
+    "grade":
   },
   {
     "name": "Herb Sherman",
     "team": "FARM",
     "position": "DEF",
     "rating": 79,
-    "element": "FIRE"
+    "element": "FIRE",
+    "grade":
   },
   {
     "name": "Joe Small",
     "team": "FARM",
     "position": "MDF",
     "rating": 76,
-    "element": "FIRE"
+    "element": "FIRE",
+    "grade":
   },
   {
     "name": "Ike Steiner",
     "team": "FARM",
     "position": "MDF",
     "rating": 77,
-    "element": "MOUNTAIN"
+    "element": "MOUNTAIN",
+    "grade":
   },
   {
     "name": "Orville Newman",
     "team": "FARM",
     "position": "MDF",
     "rating": 75,
-    "element": "MOUNTAIN"
+    "element": "MOUNTAIN",
+    "grade":
   },
   {
     "name": "Tom Walters",
     "team": "FARM",
     "position": "MDF",
     "rating": 81,
-    "element": "MOUNTAIN"
+    "element": "MOUNTAIN",
+    "grade":
   },
   {
     "name": "Daniel Dawson",
     "team": "FARM",
     "position": "MDF",
     "rating": 78,
-    "element": "WIND"
+    "element": "WIND",
+    "grade":
   },
   {
     "name": "Stuart Racoonfur",
     "team": "FARM",
     "position": "STR",
     "rating": 80,
-    "element": "WIND"
+    "element": "WIND",
+    "grade":
   }
 ]
