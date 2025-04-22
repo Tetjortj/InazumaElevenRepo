@@ -1,10 +1,10 @@
 package main;
 
 public enum Team {
-    RAIMON,
-    OCCULT,
-    WILD,
-    BRAIN,
+    Raimon,
+    Occult,
+    Wild,
+    Brain,
     OTAKU,
     ROYAL_ACADEMY,
     SHURIKEN,
