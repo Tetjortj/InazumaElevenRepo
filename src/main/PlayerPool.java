@@ -18,11 +18,11 @@ public class PlayerPool {
 
     private void groupPlayersByPosition() {
         for (Card card : allPlayers) {
-            switch (card.getPos()) {
-                case GKE -> goalkeepers.add(card);
-                case DEF -> defenders.add(card);
-                case MDF -> midfielders.add(card);
-                case STR -> strikers.add(card);
+            switch (card.getPosition()) {
+                case GK -> goalkeepers.add(card);
+                case DF -> defenders.add(card);
+                case MF -> midfielders.add(card);
+                case FW -> strikers.add(card);
             }
         }
     }
@@ -37,10 +37,10 @@ public class PlayerPool {
 
     public List<Card> getByPosition(Position pos) {
         return switch (pos) {
-            case GKE -> goalkeepers;
-            case DEF -> defenders;
-            case MDF -> midfielders;
-            case STR -> strikers;
+            case GK -> goalkeepers;
+            case DF -> defenders;
+            case MF -> midfielders;
+            case FW -> strikers;
         };
     }
 }

@@ -6,7 +6,7 @@ import java.util.*;
 
 public class CSV {
     public static void main(String[] args) {
-        List<PlayerStatsCSV> jugadores = CSVReader.leerJugadores("Bdd.txt");
+        List<PlayerStatsCSV> jugadores = CSVReader.leerJugadores("resources/Bdd.txt");
 
         Set<String> equiposUnicos = new HashSet<>();
 

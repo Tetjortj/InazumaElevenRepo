@@ -71,7 +71,7 @@ public class Main {
             System.out.println("Opciones para posición " + posicionARevelar + ":");
             for (int i = 0; i < opciones.size(); i++) {
                 Card c = opciones.get(i);
-                System.out.printf("%d. %s | %s | %d | %s%n", i + 1, c.getName(), c.getTeam(), c.getRating(), c.getElement());
+                System.out.printf("%d. %s | %s | %d | %s%n", i + 1, c.getName(), c.getTeam(), c.getFp(), c.getElement());
             }
 
             int eleccion = -1;
