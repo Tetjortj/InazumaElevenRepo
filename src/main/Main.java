@@ -47,8 +47,8 @@ public class Main {
 
                 // Cálculo de química
                 Map<Integer, List<Integer>> links = formacion.getLinks();
-                int quimicaTotal = 0;
                 int enlacesTotales = 0;
+                float quimicaActual = 0;
 
                 for (Map.Entry<Integer, List<Integer>> entry : links.entrySet()) {
                     int from = entry.getKey();
@@ -57,17 +57,19 @@ public class Main {
                             enlacesTotales++;
                             Card a = jugadoresSeleccionados.get(from);
                             Card b = jugadoresSeleccionados.get(to);
+
                             if (a.getTeam() == b.getTeam()) {
-                                quimicaTotal += 3;
+                                quimicaActual += 1.0;
                             } else if (a.getElement() == b.getElement()) {
-                                quimicaTotal += 2;
+                                quimicaActual += 0.6;
+                            } else {
+                                quimicaActual += 0.25;
                             }
                         }
                     }
                 }
 
-                int quimicaMaxima = enlacesTotales * 3;
-                int quimicaFinal = quimicaMaxima > 0 ? Math.round((quimicaTotal / (float) quimicaMaxima) * 100) : 0;
+                int quimicaFinal = enlacesTotales > 0 ? Math.round((quimicaActual / enlacesTotales) * 100) : 0;
                 System.out.println("Química del equipo actual: " + quimicaFinal);
             }
 
@@ -128,10 +130,9 @@ public class Main {
         int mediaEquipo = Math.round((float) sumaPuntajes / jugadoresSeleccionados.size());
         System.out.println("Puntuación media final del equipo: " + mediaEquipo);
 
-        // Cálculo final de química
         Map<Integer, List<Integer>> links = formacion.getLinks();
-        int quimicaTotal = 0;
         int enlacesTotales = 0;
+        float quimicaActual = 0;
 
         for (Map.Entry<Integer, List<Integer>> entry : links.entrySet()) {
             int from = entry.getKey();
@@ -140,20 +141,22 @@ public class Main {
                     enlacesTotales++;
                     Card a = jugadoresSeleccionados.get(from);
                     Card b = jugadoresSeleccionados.get(to);
+
                     if (a.getTeam() == b.getTeam()) {
-                        quimicaTotal += 3;
+                        quimicaActual += 1.0;
                     } else if (a.getElement() == b.getElement()) {
-                        quimicaTotal += 2;
+                        quimicaActual += 0.6;
+                    } else {
+                        quimicaActual += 0.25;
                     }
                 }
             }
         }
 
-        int quimicaMaxima = enlacesTotales * 3;
-        int quimicaFinal = quimicaMaxima > 0 ? Math.round((quimicaTotal / (float) quimicaMaxima) * 100) : 0;
+        int quimicaFinal = enlacesTotales > 0 ? Math.round((quimicaActual / enlacesTotales) * 100) : 0;
         System.out.println("Química final del equipo: " + quimicaFinal);
         System.out.println("¡Has completado tu draft!");
-        System.out.println("Puntuación final: " + mediaEquipo + quimicaFinal);
+        System.out.println("Puntuación final: " + mediaEquipo + ", Química: " + quimicaFinal);
     }
 }
 
