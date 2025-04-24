@@ -124,7 +124,9 @@ public class Main {
         boolean quiereIntercambiar = true;
         while (quiereIntercambiar) {
             displayer.showFormation(formacion, jugadoresSeleccionados, banquillo);
+            System.out.println();
             mostrarStatsEquipo(formacion, jugadoresSeleccionados);
+            System.out.println();
 
             System.out.print("¿Deseas intercambiar dos jugadores? (s/n): ");
             String respuesta = scanner.nextLine().trim().toLowerCase();

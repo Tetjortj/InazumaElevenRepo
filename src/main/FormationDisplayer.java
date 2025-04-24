@@ -39,7 +39,8 @@ public class FormationDisplayer {
                 String punGra = String.format("P:%2d G:%s", c.calcularScore(), c.getGrade().toStringCorrect());
                 campo[filaPantalla + 2][colPantalla] = "[" + abreviar(punGra, 11) + "]";
 
-                campo[filaPantalla + 3][colPantalla] = "[" + abreviar(c.getElement().name(), 10) + i + "]";
+                String elemPos = String.format("%s | %s", c.getElement().name(), c.getPosition().name());
+                campo[filaPantalla + 3][colPantalla] = "[" + abreviar(elemPos, 11) + "]";
             } else {
                 String tipo = p.getPosition().name() + "-" + i;
                 campo[filaPantalla + 0][colPantalla] = "[" + " ".repeat(11) + "]";
