@@ -40,39 +40,7 @@ public class Main {
             System.out.println("─────────────────────────────────────────────────────────────────────────────────────────────");
             displayer.showFormation(formacion, jugadoresSeleccionados, banquillo);
 
-            // Mostrar puntuación media del equipo actual
-            if (!jugadoresSeleccionados.isEmpty()) {
-                int sumaPuntajes = jugadoresSeleccionados.values().stream().mapToInt(Card::calcularScore).sum();
-                int mediaEquipo = Math.round((float) sumaPuntajes / jugadoresSeleccionados.size());
-                System.out.println("Puntuación media del equipo actual: " + mediaEquipo);
-
-                // Cálculo de química
-                Map<Integer, List<Integer>> links = formacion.getLinks();
-                int enlacesTotales = 0;
-                float quimicaActual = 0;
-
-                for (Map.Entry<Integer, List<Integer>> entry : links.entrySet()) {
-                    int from = entry.getKey();
-                    for (int to : entry.getValue()) {
-                        if (from < to && jugadoresSeleccionados.containsKey(from) && jugadoresSeleccionados.containsKey(to)) {
-                            enlacesTotales++;
-                            Card a = jugadoresSeleccionados.get(from);
-                            Card b = jugadoresSeleccionados.get(to);
-
-                            if (a.getTeam() == b.getTeam()) {
-                                quimicaActual += 1.0;
-                            } else if (a.getElement() == b.getElement()) {
-                                quimicaActual += 0.6;
-                            } else {
-                                quimicaActual += 0.25;
-                            }
-                        }
-                    }
-                }
-
-                int quimicaFinal = enlacesTotales > 0 ? Math.round((quimicaActual / enlacesTotales) * 100) : 0;
-                System.out.println("Química del equipo actual: " + quimicaFinal);
-            }
+            mostrarStatsEquipo(formacion, jugadoresSeleccionados);
 
             // Mostrar posiciones aún no elegidas
             List<Integer> posicionesPendientes = new ArrayList<>();
@@ -120,12 +88,14 @@ public class Main {
 
             Card cartaElegida = opciones.get(eleccion - 1);
             jugadoresSeleccionados.put(indiceElegido, cartaElegida);
-
-            System.out.println("─────────────────────────────────────────────────────────────────────────────────────────────");
         }
 
+        // Mostrar formación y stats antes del banquillo
+        displayer.showFormation(formacion, jugadoresSeleccionados, banquillo);
+        mostrarStatsEquipo(formacion, jugadoresSeleccionados);
+
         // Selección del banquillo
-        System.out.println("Selecciona tus 5 jugadores del banquillo:");
+        System.out.println("\nSelecciona tus 5 jugadores del banquillo:");
         while (banquillo.size() < 5) {
             List<Card> opciones = new ArrayList<>(todasLasCartas);
             Collections.shuffle(opciones);
@@ -145,17 +115,58 @@ public class Main {
                 } catch (NumberFormatException ignored) {}
             }
 
+            System.out.println();
             banquillo.add(opciones.get(eleccion - 1));
             System.out.println("Jugador añadido al banquillo. " + (5 - banquillo.size()) + " espacios restantes.");
         }
 
-        // Draft completado
-        displayer.showFormation(formacion, jugadoresSeleccionados, banquillo);
+        // Final del draft
+        boolean quiereIntercambiar = true;
+        while (quiereIntercambiar) {
+            displayer.showFormation(formacion, jugadoresSeleccionados, banquillo);
+            mostrarStatsEquipo(formacion, jugadoresSeleccionados);
 
+            System.out.print("¿Deseas intercambiar dos jugadores? (s/n): ");
+            String respuesta = scanner.nextLine().trim().toLowerCase();
+            if (!respuesta.equals("s")) break;
+
+            System.out.print("Introduce el índice del primer jugador a intercambiar: ");
+            int i1 = Integer.parseInt(scanner.nextLine().trim());
+            System.out.print("Introduce el índice del segundo jugador a intercambiar: ");
+            int i2 = Integer.parseInt(scanner.nextLine().trim());
+
+            if (jugadoresSeleccionados.containsKey(i1) && jugadoresSeleccionados.containsKey(i2)) {
+                Card temp = jugadoresSeleccionados.get(i1);
+                jugadoresSeleccionados.put(i1, jugadoresSeleccionados.get(i2));
+                jugadoresSeleccionados.put(i2, temp);
+                System.out.println("Intercambio realizado.");
+            } else {
+                System.out.println("Uno de los índices no tiene jugador asignado.");
+            }
+        }
+
+        // Final
+        displayer.showFormation(formacion, jugadoresSeleccionados, banquillo);
+        mostrarStatsEquipo(formacion, jugadoresSeleccionados);
+        System.out.println("¡Has completado tu draft!");
+
+        int finalScore = jugadoresSeleccionados.values().stream().mapToInt(Card::calcularScore).sum() / jugadoresSeleccionados.size();
+        int quimicaFinal = calcularQuimica(formacion, jugadoresSeleccionados);
+
+        System.out.println();
+        System.out.println("Puntuación final: " + (finalScore + quimicaFinal));
+    }
+
+    private static void mostrarStatsEquipo(Formation formacion, Map<Integer, Card> jugadoresSeleccionados) {
         int sumaPuntajes = jugadoresSeleccionados.values().stream().mapToInt(Card::calcularScore).sum();
         int mediaEquipo = Math.round((float) sumaPuntajes / jugadoresSeleccionados.size());
-        System.out.println("Puntuación media final del equipo: " + mediaEquipo);
+        System.out.println("Puntuación media del equipo actual: " + mediaEquipo);
 
+        int quimicaFinal = calcularQuimica(formacion, jugadoresSeleccionados);
+        System.out.println("Química del equipo actual: " + quimicaFinal);
+    }
+
+    private static int calcularQuimica(Formation formacion, Map<Integer, Card> jugadoresSeleccionados) {
         Map<Integer, List<Integer>> links = formacion.getLinks();
         int enlacesTotales = 0;
         float quimicaActual = 0;
@@ -178,17 +189,6 @@ public class Main {
                 }
             }
         }
-
-        int quimicaFinal = enlacesTotales > 0 ? Math.round((quimicaActual / enlacesTotales) * 100) : 0;
-        System.out.println("Química final del equipo: " + quimicaFinal);
-        System.out.println("¡Has completado tu draft!");
-
-        int finalScore = mediaEquipo + quimicaFinal;
-
-        System.out.println();
-        System.out.println("Puntuación final: " + finalScore);
+        return enlacesTotales > 0 ? Math.round((quimicaActual / enlacesTotales) * 100) : 0;
     }
 }
-
-
-
