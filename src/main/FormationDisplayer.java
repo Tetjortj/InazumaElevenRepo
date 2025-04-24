@@ -35,7 +35,7 @@ public class FormationDisplayer {
                 Card c = jugadoresSeleccionados.get(i);
                 campo[filaPantalla + 0][colPantalla] = "[" + abreviar(c.getName(), 11) + "]";
                 campo[filaPantalla + 1][colPantalla] = "[" + abreviar(c.getTeam().name(), 11) + "]";
-                campo[filaPantalla + 2][colPantalla] = "[" + c.getFp() + " ".repeat(11 - String.valueOf(c.getFp()).length()) + "]";
+                campo[filaPantalla + 2][colPantalla] = "[" + c.calcularScore() + " ".repeat(11 - String.valueOf(c.calcularScore()).length()) + "]";
                 if(i != 10) campo[filaPantalla + 3][colPantalla] = "[" + abreviar(c.getElement().name(), 10) + i + "]";
                 else campo[filaPantalla + 3][colPantalla] = "[" + abreviar(c.getElement().name(), 9) + i + "]";
             } else {

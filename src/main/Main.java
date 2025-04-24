@@ -39,6 +39,38 @@ public class Main {
             System.out.println("─────────────────────────────────────────────────────────────────────────────────────────────");
             displayer.showFormation(formacion, jugadoresSeleccionados);
 
+            // Mostrar puntuación media del equipo actual
+            if (!jugadoresSeleccionados.isEmpty()) {
+                int sumaPuntajes = jugadoresSeleccionados.values().stream().mapToInt(Card::calcularScore).sum();
+                int mediaEquipo = Math.round((float) sumaPuntajes / jugadoresSeleccionados.size());
+                System.out.println("Puntuación media del equipo actual: " + mediaEquipo);
+
+                // Cálculo de química
+                Map<Integer, List<Integer>> links = formacion.getLinks();
+                int quimicaTotal = 0;
+                int enlacesTotales = 0;
+
+                for (Map.Entry<Integer, List<Integer>> entry : links.entrySet()) {
+                    int from = entry.getKey();
+                    for (int to : entry.getValue()) {
+                        if (from < to && jugadoresSeleccionados.containsKey(from) && jugadoresSeleccionados.containsKey(to)) {
+                            enlacesTotales++;
+                            Card a = jugadoresSeleccionados.get(from);
+                            Card b = jugadoresSeleccionados.get(to);
+                            if (a.getTeam() == b.getTeam()) {
+                                quimicaTotal += 3;
+                            } else if (a.getElement() == b.getElement()) {
+                                quimicaTotal += 2;
+                            }
+                        }
+                    }
+                }
+
+                int quimicaMaxima = enlacesTotales * 3;
+                int quimicaFinal = quimicaMaxima > 0 ? Math.round((quimicaTotal / (float) quimicaMaxima) * 100) : 0;
+                System.out.println("Química del equipo actual: " + quimicaFinal);
+            }
+
             // Mostrar posiciones aún no elegidas
             List<Integer> posicionesPendientes = new ArrayList<>();
             for (int i = 0; i < formacion.getPlacements().size(); i++) {
@@ -71,10 +103,8 @@ public class Main {
             System.out.println("Opciones para posición " + posicionARevelar + ":");
             for (int i = 0; i < opciones.size(); i++) {
                 Card c = opciones.get(i);
-                //System.out.printf("%d. %s | %s | %d | %s%n", i + 1, c.getName(), c.getTeam(), c.getFp(), c.getElement());
                 System.out.printf("%d. %s | %s | Score: %d | %s%n",
                         i + 1, c.getName(), c.getTeam(), c.calcularScore(), c.getElement());
-
             }
 
             int eleccion = -1;
@@ -93,6 +123,37 @@ public class Main {
 
         // Draft completado
         displayer.showFormation(formacion, jugadoresSeleccionados);
+
+        int sumaPuntajes = jugadoresSeleccionados.values().stream().mapToInt(Card::calcularScore).sum();
+        int mediaEquipo = Math.round((float) sumaPuntajes / jugadoresSeleccionados.size());
+        System.out.println("Puntuación media final del equipo: " + mediaEquipo);
+
+        // Cálculo final de química
+        Map<Integer, List<Integer>> links = formacion.getLinks();
+        int quimicaTotal = 0;
+        int enlacesTotales = 0;
+
+        for (Map.Entry<Integer, List<Integer>> entry : links.entrySet()) {
+            int from = entry.getKey();
+            for (int to : entry.getValue()) {
+                if (from < to && jugadoresSeleccionados.containsKey(from) && jugadoresSeleccionados.containsKey(to)) {
+                    enlacesTotales++;
+                    Card a = jugadoresSeleccionados.get(from);
+                    Card b = jugadoresSeleccionados.get(to);
+                    if (a.getTeam() == b.getTeam()) {
+                        quimicaTotal += 3;
+                    } else if (a.getElement() == b.getElement()) {
+                        quimicaTotal += 2;
+                    }
+                }
+            }
+        }
+
+        int quimicaMaxima = enlacesTotales * 3;
+        int quimicaFinal = quimicaMaxima > 0 ? Math.round((quimicaTotal / (float) quimicaMaxima) * 100) : 0;
+        System.out.println("Química final del equipo: " + quimicaFinal);
         System.out.println("¡Has completado tu draft!");
+        System.out.println("Puntuación final: " + mediaEquipo + quimicaFinal);
     }
 }
+
