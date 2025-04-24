@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class CardLoader {
 
@@ -19,7 +20,13 @@ public class CardLoader {
                 return Collections.emptyList();
             }
 
-            return mapper.readValue(is, new TypeReference<List<Card>>() {});
+            List<Card> allCards = mapper.readValue(is, new TypeReference<List<Card>>() {});
+
+            // Filtrar jugadores de Connection Map y Scouting
+            return allCards.stream()
+                    .filter(card -> !(card.getTeam() == Team.Conection_Map || card.getTeam() == Team.Scouting))
+                    .collect(Collectors.toList());
+
         } catch (Exception e) {
             System.out.println("Error al cargar los jugadores: " + e.getMessage());
             e.printStackTrace();

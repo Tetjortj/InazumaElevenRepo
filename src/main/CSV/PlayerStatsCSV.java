@@ -1,4 +1,4 @@
-package main;
+package main.CSV;
 
 public class PlayerStatsCSV {
     private String name;
