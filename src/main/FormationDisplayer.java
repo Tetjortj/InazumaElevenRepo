@@ -8,7 +8,7 @@ public class FormationDisplayer {
     private final int anchoCarta = 13;
     private final int columnasVisualMin = 10;
 
-    public void showFormation(Formation formation, Map<Integer, Card> jugadoresSeleccionados) {
+    public void showFormation(Formation formation, Map<Integer, Card> jugadoresSeleccionados, List<Card> banquillo) {
         List<PlayerPlacement> placements = formation.getPlacements();
 
         int minFila = placements.stream().mapToInt(PlayerPlacement::getFila).min().orElse(0);
@@ -36,16 +36,13 @@ public class FormationDisplayer {
                 campo[filaPantalla + 0][colPantalla] = "[" + abreviar(c.getName(), 11) + "]";
                 campo[filaPantalla + 1][colPantalla] = "[" + abreviar(c.getTeam().name(), 11) + "]";
                 campo[filaPantalla + 2][colPantalla] = "[" + c.calcularScore() + " ".repeat(11 - String.valueOf(c.calcularScore()).length()) + "]";
-                if(i != 10) campo[filaPantalla + 3][colPantalla] = "[" + abreviar(c.getElement().name(), 10) + i + "]";
-                else campo[filaPantalla + 3][colPantalla] = "[" + abreviar(c.getElement().name(), 9) + i + "]";
+                campo[filaPantalla + 3][colPantalla] = "[" + abreviar(c.getElement().name(), 10) + i + "]";
             } else {
                 String tipo = p.getPosition().name() + "-" + i;
                 campo[filaPantalla + 0][colPantalla] = "[" + " ".repeat(11) + "]";
                 campo[filaPantalla + 1][colPantalla] = "[" + centrar(tipo, 11) + "]";
                 campo[filaPantalla + 2][colPantalla] = "[" + " ".repeat(11) + "]";
-                if(i != 10) campo[filaPantalla + 3][colPantalla] = "[" + " ".repeat(10) + i + "]";
-                else campo[filaPantalla + 3][colPantalla] = "[" + " ".repeat(9) + i + "]";
-
+                campo[filaPantalla + 3][colPantalla] = "[" + " ".repeat(10) + i + "]";
             }
         }
 
@@ -63,9 +60,7 @@ public class FormationDisplayer {
         System.out.println("─".repeat(columnasVisuales * anchoCarta));
         System.out.println("Enlaces entre jugadores:");
 
-        // Mostrar enlaces organizados en columnas
         Map<Integer, List<Integer>> links = formation.getLinks();
-
         int numColumnas = 4;
         int jugadoresPorColumna = (int) Math.ceil(placements.size() / (double) numColumnas);
         List<List<String>> columnas = new ArrayList<>();
@@ -81,9 +76,8 @@ public class FormationDisplayer {
             for (int destino : links.getOrDefault(i, List.of())) {
                 Position toPos = placements.get(destino).getPosition();
                 String enlace = fromPos.name() + "-" + i + " --- " + toPos.name() + "-" + destino;
-
-                String raw = "  " + fromPos.name() + "-" + i + " --- " + toPos.name() + "-" + destino;
-                String padded = String.format("%-30s", raw); // formato sin color ANSI
+                String raw = "  " + enlace;
+                String padded = String.format("%-30s", raw);
                 String coloreado = padded;
 
                 if (jugadoresSeleccionados.containsKey(i) && jugadoresSeleccionados.containsKey(destino)) {
@@ -98,10 +92,9 @@ public class FormationDisplayer {
                         coloreado = "\u001B[31m" + padded + "\u001B[0m";
                     }
                 }
-
                 bloque.add(coloreado);
             }
-            bloque.add(""); // espacio extra entre bloques
+            bloque.add("");
         }
 
         int alturaMax = columnas.stream().mapToInt(List::size).max().orElse(0);
@@ -118,6 +111,15 @@ public class FormationDisplayer {
         }
 
         System.out.println("─".repeat(columnasVisuales * anchoCarta));
+
+        if (!banquillo.isEmpty()) {
+            System.out.println("Banquillo:");
+            for (int i = 0; i < banquillo.size(); i++) {
+                Card c = banquillo.get(i);
+                System.out.printf("Suplente %d: %s | %s | Score: %d | %s%n",
+                        i + 1, c.getName(), c.getTeam(), c.calcularScore(), c.getElement());
+            }
+        }
     }
 
     private String abreviar(String texto, int max) {

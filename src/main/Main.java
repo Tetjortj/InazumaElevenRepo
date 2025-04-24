@@ -34,10 +34,11 @@ public class Main {
         PlayerPool pool = new PlayerPool(todasLasCartas);
         FormationDisplayer displayer = new FormationDisplayer();
         Map<Integer, Card> jugadoresSeleccionados = new HashMap<>();
+        List<Card> banquillo = new ArrayList<>();
 
         while (jugadoresSeleccionados.size() < formacion.getPlacements().size()) {
             System.out.println("─────────────────────────────────────────────────────────────────────────────────────────────");
-            displayer.showFormation(formacion, jugadoresSeleccionados);
+            displayer.showFormation(formacion, jugadoresSeleccionados, banquillo);
 
             // Mostrar puntuación media del equipo actual
             if (!jugadoresSeleccionados.isEmpty()) {
@@ -105,8 +106,8 @@ public class Main {
             System.out.println("Opciones para posición " + posicionARevelar + ":");
             for (int i = 0; i < opciones.size(); i++) {
                 Card c = opciones.get(i);
-                System.out.printf("%d. %s | %s | Score: %d | %s%n",
-                        i + 1, c.getName(), c.getTeam(), c.calcularScore(), c.getElement());
+                System.out.printf("%d. %s | %s | Score: %d | Grade: %s | %s%n",
+                        i + 1, c.getName(), c.getTeam(), c.calcularScore(), c.getGrade().toStringCorrect(), c.getElement());
             }
 
             int eleccion = -1;
@@ -123,8 +124,33 @@ public class Main {
             System.out.println("─────────────────────────────────────────────────────────────────────────────────────────────");
         }
 
+        // Selección del banquillo
+        System.out.println("Selecciona tus 5 jugadores del banquillo:");
+        while (banquillo.size() < 5) {
+            List<Card> opciones = new ArrayList<>(todasLasCartas);
+            Collections.shuffle(opciones);
+            opciones = opciones.subList(0, 5);
+
+            for (int i = 0; i < opciones.size(); i++) {
+                Card c = opciones.get(i);
+                System.out.printf("%d. %s | %s | Score: %d | Grade: %s | %s%n",
+                        i + 1, c.getName(), c.getTeam(), c.calcularScore(), c.getGrade().toStringCorrect(), c.getElement());
+            }
+
+            int eleccion = -1;
+            while (eleccion < 1 || eleccion > 5) {
+                System.out.print("Elige una carta para el banquillo (1-5): ");
+                try {
+                    eleccion = Integer.parseInt(scanner.nextLine().trim());
+                } catch (NumberFormatException ignored) {}
+            }
+
+            banquillo.add(opciones.get(eleccion - 1));
+            System.out.println("Jugador añadido al banquillo. " + (5 - banquillo.size()) + " espacios restantes.");
+        }
+
         // Draft completado
-        displayer.showFormation(formacion, jugadoresSeleccionados);
+        displayer.showFormation(formacion, jugadoresSeleccionados, banquillo);
 
         int sumaPuntajes = jugadoresSeleccionados.values().stream().mapToInt(Card::calcularScore).sum();
         int mediaEquipo = Math.round((float) sumaPuntajes / jugadoresSeleccionados.size());
@@ -163,4 +189,6 @@ public class Main {
         System.out.println("Puntuación final: " + finalScore);
     }
 }
+
+
 
