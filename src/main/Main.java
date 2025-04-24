@@ -156,7 +156,11 @@ public class Main {
         int quimicaFinal = enlacesTotales > 0 ? Math.round((quimicaActual / enlacesTotales) * 100) : 0;
         System.out.println("Química final del equipo: " + quimicaFinal);
         System.out.println("¡Has completado tu draft!");
-        System.out.println("Puntuación final: " + mediaEquipo + ", Química: " + quimicaFinal);
+
+        int finalScore = mediaEquipo + quimicaFinal;
+
+        System.out.println();
+        System.out.println("Puntuación final: " + finalScore);
     }
 }
 

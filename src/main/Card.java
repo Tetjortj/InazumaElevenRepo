@@ -12,6 +12,7 @@ public class Card {
     private Team team;
     private Position position;
     private Element element;
+    private Grade grade;
     private int fp, tp, kick, body, control, guard, speed, stamina, guts;
     private String move1, move2, move3, move4;
     private int score;
@@ -22,6 +23,7 @@ public class Card {
             @JsonProperty("team") Team team,
             @JsonProperty("position") Position position,
             @JsonProperty("element") Element element,
+            @JsonProperty("grade") Grade grade,
             @JsonProperty("fp") int fp,
             @JsonProperty("tp") int tp,
             @JsonProperty("kick") int kick,
@@ -40,6 +42,7 @@ public class Card {
         this.team = team;
         this.position = position;
         this.element = element;
+        this.grade = grade;
         this.fp = fp;
         this.tp = tp;
         this.kick = kick;
@@ -60,6 +63,7 @@ public class Card {
     public Team getTeam() { return team; }
     public Position getPosition() { return position; }
     public Element getElement() { return element; }
+    public Grade getGrade() { return grade; }
     public int getFp() { return fp; }
     public int getTp() { return tp; }
     public int getKick() { return kick; }
@@ -74,6 +78,10 @@ public class Card {
     public String getMove3() { return move3; }
     public String getMove4() { return move4; }
     public double getScore() { return score; }
+
+    public void setGrade(Grade grade) {
+        this.grade = grade;
+    }
 
     public int calcularScore() {
         double cruda = switch (position) {
