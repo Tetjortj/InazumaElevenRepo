@@ -181,10 +181,11 @@ public class Main {
                     Card a = jugadoresSeleccionados.get(from);
                     Card b = jugadoresSeleccionados.get(to);
 
-                    if (a.getTeam() == b.getTeam()) {
+                    if (a.getTeam() == b.getTeam() || (a.getElement() == b.getElement() && a.getGrade() == b.getGrade())) {
                         quimicaActual += 1.0;
-                    } else if (a.getElement() == b.getElement()) {
-                        quimicaActual += 0.6;
+                    } else if ((a.getElement() == b.getElement() && a.getGrade() != b.getGrade()) ||
+                            (a.getElement() != b.getElement() && a.getGrade() == b.getGrade())) {
+                        quimicaActual += 0.5;
                     } else {
                         quimicaActual += 0.25;
                     }

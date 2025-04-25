@@ -89,12 +89,14 @@ public class FormationDisplayer {
                     Card a = jugadoresSeleccionados.get(i);
                     Card b = jugadoresSeleccionados.get(destino);
 
-                    if (a.getTeam() == b.getTeam()) {
-                        coloreado = "\u001B[32m" + padded + "\u001B[0m";
-                    } else if (a.getElement() == b.getElement()) {
-                        coloreado = "\u001B[33m" + padded + "\u001B[0m";
+                    if (a.getTeam() == b.getTeam() || (a.getElement() == b.getElement() && a.getGrade() == b.getGrade())) {
+                        coloreado = "\u001B[32m" + padded + "\u001B[0m"; // VERDE
+                    } else if (
+                            (a.getElement() == b.getElement() && a.getGrade() != b.getGrade()) ||
+                                    (a.getElement() != b.getElement() && a.getGrade() == b.getGrade())) {
+                        coloreado = "\u001B[33m" + padded + "\u001B[0m"; // AMARILLO
                     } else {
-                        coloreado = "\u001B[31m" + padded + "\u001B[0m";
+                        coloreado = "\u001B[31m" + padded + "\u001B[0m"; // ROJO
                     }
                 }
                 bloque.add(coloreado);
