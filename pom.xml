@@ -11,7 +11,7 @@
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
-        <exec.mainClass>main.ui.DraftApp</exec.mainClass> <!-- Reemplaza por tu ruta real -->
+        <exec.mainClass>main.ui.DraftApp</exec.mainClass>
         <javafx.version>21</javafx.version>
     </properties>
 
@@ -41,6 +41,11 @@
             <artifactId>javafx-fxml</artifactId>
             <version>${javafx.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-media</artifactId>
+            <version>${javafx.version}</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -56,7 +61,7 @@
                 </configuration>
             </plugin>
 
-            <!-- JavaFX Launcher Plugin -->
+            <!-- JavaFX Plugin para ejecutar -->
             <plugin>
                 <groupId>org.openjfx</groupId>
                 <artifactId>javafx-maven-plugin</artifactId>
@@ -70,6 +75,10 @@
                 </executions>
                 <configuration>
                     <mainClass>${exec.mainClass}</mainClass>
+                    <options>
+                        <option>--add-modules</option>
+                        <option>javafx.controls,javafx.fxml,javafx.media</option>
+                    </options>
                 </configuration>
             </plugin>
         </plugins>

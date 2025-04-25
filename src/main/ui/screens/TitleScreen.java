@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.*;
 import javafx.scene.layout.*;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
@@ -25,10 +26,26 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import java.net.URL;
+
+//import javax.print.attribute.standard.Media;
 
 public class TitleScreen {
 
     public void show(Stage stage) {
+        // Ruta correcta al recurso
+        URL resource = getClass().getResource("/music/menu-theme.mp3");
+        if (resource != null) {
+            Media media = new Media(resource.toExternalForm());
+            MediaPlayer mediaPlayer = new MediaPlayer(media);
+            mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE); // loop infinito
+            mediaPlayer.play();
+        } else {
+            System.err.println("No se encontró el archivo de audio.");
+        }
+
         // ---------- Imagen de fondo ----------
         Image backgroundImage = new Image(getClass().getResource("/images/background2.png").toExternalForm(), true);
         ImageView backgroundView = new ImageView(backgroundImage);
@@ -44,9 +61,8 @@ public class TitleScreen {
         ImageView logoView = new ImageView(logo);
         logoView.setFitWidth(500); // más grande
         logoView.setPreserveRatio(true);
-        //VBox.setMargin(logoView, new Insets(0, 0, 400, 1200)); // más arriba
 
-        FadeTransition fadeLogo = new FadeTransition(Duration.seconds(2), logoView);
+        FadeTransition fadeLogo = new FadeTransition(Duration.seconds(3), logoView);
         fadeLogo.setFromValue(0);
         fadeLogo.setToValue(1);
         fadeLogo.play();
@@ -75,6 +91,7 @@ public class TitleScreen {
             st.setOnFinished(ev -> {
                 System.out.println("Jugar Draft pulsado");
                 // Aquí puedes pasar a la siguiente pantalla en el futuro
+                new DraftScreen().show(stage);
             });
         });
 
