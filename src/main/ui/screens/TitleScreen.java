@@ -28,6 +28,8 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import main.ui.MusicManager;
+
 import java.net.URL;
 
 //import javax.print.attribute.standard.Media;
@@ -35,16 +37,8 @@ import java.net.URL;
 public class TitleScreen {
 
     public void show(Stage stage) {
-        // Ruta correcta al recurso
-        URL resource = getClass().getResource("/music/menu-theme.mp3");
-        if (resource != null) {
-            Media media = new Media(resource.toExternalForm());
-            MediaPlayer mediaPlayer = new MediaPlayer(media);
-            mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE); // loop infinito
-            mediaPlayer.play();
-        } else {
-            System.err.println("No se encontró el archivo de audio.");
-        }
+        // Music manager
+        MusicManager.playMusic("/music/menu-theme.wav");
 
         // ---------- Imagen de fondo ----------
         Image backgroundImage = new Image(getClass().getResource("/images/background2.png").toExternalForm(), true);
@@ -59,7 +53,7 @@ public class TitleScreen {
         // ---------- Logo ----------
         Image logo = new Image(getClass().getResource("/images/logo.png").toExternalForm());
         ImageView logoView = new ImageView(logo);
-        logoView.setFitWidth(500); // más grande
+        logoView.setFitWidth(500);
         logoView.setPreserveRatio(true);
 
         FadeTransition fadeLogo = new FadeTransition(Duration.seconds(3), logoView);
@@ -67,34 +61,51 @@ public class TitleScreen {
         fadeLogo.setToValue(1);
         fadeLogo.play();
 
-        // ---------- Botones de menú (derecha) ----------
+        // ---------- Botones de menú ----------
         Button playButton = new Button("Jugar Draft");
         Button exitButton = new Button("Salir");
 
-        // Personalización básica
         String botonEstilo = "-fx-font-size: 36px; -fx-padding: 40px 80px; -fx-background-color: #0096C9; -fx-text-fill: white; -fx-background-radius: 10;";
         playButton.setStyle(botonEstilo);
         exitButton.setStyle(botonEstilo);
 
+        // ---------- Volumen ----------
+        Slider volumeSlider = new Slider(0, 1, 0.4);
+        volumeSlider.setShowTickLabels(true);
+        volumeSlider.setShowTickMarks(true);
+        volumeSlider.setMajorTickUnit(0.2);
+        volumeSlider.setMinorTickCount(1);
+        volumeSlider.setBlockIncrement(0.1);
+        volumeSlider.setStyle("-fx-pref-width: 300px;");
+        volumeSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
+            if (MusicManager.getCurrentPlayer() != null) {
+                MusicManager.getCurrentPlayer().setVolume(newVal.doubleValue());
+            }
+        });
+
+        // ---------- Acciones de botones ----------
         playButton.setOnAction(e -> {
-            // Animación de rebote (escala)
             ScaleTransition st = new ScaleTransition(Duration.millis(150), playButton);
             st.setFromX(1.0);
             st.setFromY(1.0);
-            st.setToX(1.1);  // Aumenta tamaño
+            st.setToX(1.1);
             st.setToY(1.1);
             st.setAutoReverse(true);
-            st.setCycleCount(2); // Hace el rebote ida y vuelta
+            st.setCycleCount(2);
             st.play();
 
-            // Acción después de la animación
             st.setOnFinished(ev -> {
-                System.out.println("Jugar Draft pulsado");
-                // Aquí puedes pasar a la siguiente pantalla en el futuro
-                new DraftScreen().show(stage);
+                FadeTransition fadeOut = new FadeTransition(Duration.millis(700), stage.getScene().getRoot());
+                fadeOut.setFromValue(1.0);
+                fadeOut.setToValue(0.0);
+
+                fadeOut.setOnFinished(e2 -> {
+                    new DraftScreen().show(stage);
+                    MusicManager.fadeInMusic();
+                });
+                fadeOut.play();
             });
         });
-
 
         exitButton.setOnAction(e -> {
             ScaleTransition st = new ScaleTransition(Duration.millis(150), exitButton);
@@ -107,16 +118,16 @@ public class TitleScreen {
             st.play();
 
             st.setOnFinished(ev -> {
-                Platform.exit(); // Cierra la app
+                Platform.exit();
             });
         });
 
-
-        VBox menuDerecha = new VBox(80, logoView, playButton, exitButton);
+        // ---------- Layout de menú ----------
+        VBox menuDerecha = new VBox(60, logoView, playButton, exitButton, volumeSlider);
         menuDerecha.setAlignment(Pos.CENTER);
-        menuDerecha.setPadding(new Insets(0, 300, 100, 0)); // Alineado a la derecha
+        menuDerecha.setPadding(new Insets(0, 300, 100, 0));
 
-        // ---------- Layout general con fondo ----------
+        // ---------- Layout general ----------
         BorderPane layout = new BorderPane();
         layout.setRight(menuDerecha);
 
