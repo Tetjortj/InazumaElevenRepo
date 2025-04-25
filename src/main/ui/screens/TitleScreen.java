@@ -1,6 +1,8 @@
 package main.ui.screens;
 
 import javafx.animation.FadeTransition;
+import javafx.animation.ScaleTransition;
+import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -11,70 +13,102 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import javafx.animation.FadeTransition;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.stage.Stage;
+import javafx.util.Duration;
+
 public class TitleScreen {
 
     public void show(Stage stage) {
-        // ---------- Fondo ----------
-        Image fondo = new Image(getClass().getResource("/images/background.jpg").toExternalForm());
-        BackgroundImage backgroundImage = new BackgroundImage(fondo,
-                BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
-                BackgroundPosition.CENTER, new BackgroundSize(100, 100, true, true, true, false));
+        // ---------- Imagen de fondo ----------
+        Image backgroundImage = new Image(getClass().getResource("/images/background2.png").toExternalForm(), true);
+        ImageView backgroundView = new ImageView(backgroundImage);
+        backgroundView.setPreserveRatio(false);
+        backgroundView.setSmooth(true);
+        backgroundView.setCache(true);
 
-        // ---------- Logo (opcional) ----------
+        backgroundView.fitWidthProperty().bind(stage.widthProperty());
+        backgroundView.fitHeightProperty().bind(stage.heightProperty());
+
+        // ---------- Logo ----------
         Image logo = new Image(getClass().getResource("/images/logo.png").toExternalForm());
         ImageView logoView = new ImageView(logo);
-        logoView.setFitWidth(200);
+        logoView.setFitWidth(500); // más grande
         logoView.setPreserveRatio(true);
+        //VBox.setMargin(logoView, new Insets(0, 0, 400, 1200)); // más arriba
 
-        // Fade para logo
         FadeTransition fadeLogo = new FadeTransition(Duration.seconds(2), logoView);
         fadeLogo.setFromValue(0);
         fadeLogo.setToValue(1);
         fadeLogo.play();
 
-        // ---------- Título ----------
-        Label title = new Label("Inazuma Draft ⚡");
-        title.setFont(new Font("Arial", 36));
-        title.setTextFill(Color.WHITE);
+        // ---------- Botones de menú (derecha) ----------
+        Button playButton = new Button("Jugar Draft");
+        Button exitButton = new Button("Salir");
 
-        // Fade para título
-        FadeTransition fadeTitle = new FadeTransition(Duration.seconds(2), title);
-        fadeTitle.setFromValue(0);
-        fadeTitle.setToValue(1);
-        fadeTitle.setDelay(Duration.seconds(0.5));
-        fadeTitle.play();
+        // Personalización básica
+        String botonEstilo = "-fx-font-size: 36px; -fx-padding: 40px 80px; -fx-background-color: #0096C9; -fx-text-fill: white; -fx-background-radius: 10;";
+        playButton.setStyle(botonEstilo);
+        exitButton.setStyle(botonEstilo);
 
-        // ---------- Input ----------
-        TextField nameInput = new TextField();
-        nameInput.setPromptText("Introduce tu nombre");
+        playButton.setOnAction(e -> {
+            // Animación de rebote (escala)
+            ScaleTransition st = new ScaleTransition(Duration.millis(150), playButton);
+            st.setFromX(1.0);
+            st.setFromY(1.0);
+            st.setToX(1.1);  // Aumenta tamaño
+            st.setToY(1.1);
+            st.setAutoReverse(true);
+            st.setCycleCount(2); // Hace el rebote ida y vuelta
+            st.play();
 
-        // ---------- Botón ----------
-        Button continueButton = new Button("Comenzar");
-        Label message = new Label();
-        message.setTextFill(Color.LIGHTYELLOW);
-
-        continueButton.setOnAction(e -> {
-            String name = nameInput.getText().trim();
-            if (!name.isEmpty()) {
-                message.setText("¡Hola " + name + ", bienvenido!");
-                // TODO: cambiar a la siguiente pantalla
-            } else {
-                message.setText("Por favor, introduce un nombre.");
-            }
+            // Acción después de la animación
+            st.setOnFinished(ev -> {
+                System.out.println("Jugar Draft pulsado");
+                // Aquí puedes pasar a la siguiente pantalla en el futuro
+            });
         });
 
-        // ---------- Layout ----------
-        VBox layout = new VBox(20, logoView, title, nameInput, continueButton, message);
-        layout.setAlignment(Pos.CENTER);
-        layout.setBackground(new Background(backgroundImage));
-        layout.setPrefSize(600, 500);
-        layout.setPadding(new javafx.geometry.Insets(20));
 
-        // ---------- Mostrar ----------
-        Scene scene = new Scene(layout);
+        exitButton.setOnAction(e -> {
+            ScaleTransition st = new ScaleTransition(Duration.millis(150), exitButton);
+            st.setFromX(1.0);
+            st.setFromY(1.0);
+            st.setToX(1.1);
+            st.setToY(1.1);
+            st.setAutoReverse(true);
+            st.setCycleCount(2);
+            st.play();
+
+            st.setOnFinished(ev -> {
+                Platform.exit(); // Cierra la app
+            });
+        });
+
+
+        VBox menuDerecha = new VBox(80, logoView, playButton, exitButton);
+        menuDerecha.setAlignment(Pos.CENTER);
+        menuDerecha.setPadding(new Insets(0, 300, 100, 0)); // Alineado a la derecha
+
+        // ---------- Layout general con fondo ----------
+        BorderPane layout = new BorderPane();
+        layout.setRight(menuDerecha);
+
+        StackPane root = new StackPane(backgroundView, layout);
+
+        Scene scene = new Scene(root, 1200, 1000);
         stage.setScene(scene);
         stage.setTitle("Inazuma Draft ⚡");
+        stage.setMaximized(true);
         stage.show();
     }
 }
-
