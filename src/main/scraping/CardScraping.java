@@ -124,7 +124,15 @@ public class CardScraping {
     private String buscarFotoJugador(String equipoUrl, String nombreJugador) throws Exception {
         Document doc = Jsoup.connect(equipoUrl).get();
 
-        Elements filas = doc.select("div.table-wide table tbody tr");
+        Elements tablas = doc.select("table");
+
+        if (tablas.isEmpty()) {
+            System.out.println("❌ No hay tablas en la página: " + equipoUrl);
+            return null;
+        }
+
+        Element tablaPrincipal = tablas.get(0); // ⬅️ Usamos la primera tabla
+        Elements filas = tablaPrincipal.select("tbody > tr");
 
         String nombreJugadorNormalizado = normalizarTexto(nombreJugador);
 
@@ -133,23 +141,38 @@ public class CardScraping {
             Elements tds = fila.select("td");
 
             if (ths.size() >= 2 && tds.size() >= 1) {
-                // 🔥 El segundo <th> es el que contiene la imagen
+                // ---------------------
+                // 🔥 IMAGEN
+                // ---------------------
                 Element thImagen = ths.get(1);
-                Element img = thImagen.selectFirst("img");
+                Element img = thImagen.selectFirst("span[typeof=\"mw:File\"] a img");
 
-                // 🔥 El primer <td> es el que contiene el nombre
+                // ---------------------
+                // 🔥 NOMBRE
+                // ---------------------
                 Element tdNombre = tds.get(0);
-                String nombreEnlace = normalizarTexto(tdNombre.text());
+                Element linkNombre = tdNombre.selectFirst("a");
+                String nombreEnTabla = linkNombre != null ? normalizarTexto(linkNombre.text()) : "";
 
-                if (nombreJugadorNormalizado.contains(nombreEnlace) || nombreEnlace.contains(nombreJugadorNormalizado)) {
+                if (nombreJugadorNormalizado.equals(nombreEnTabla) ||
+                        nombreJugadorNormalizado.contains(nombreEnTabla) ||
+                        nombreEnTabla.contains(nombreJugadorNormalizado)) {
+
                     if (img != null) {
                         String fotoUrl = img.hasAttr("data-src") ? img.attr("data-src") : img.attr("src");
-                        return fotoUrl.startsWith("http") ? fotoUrl : "https:" + fotoUrl;
+
+                        if (fotoUrl != null && !fotoUrl.isEmpty()) {
+                            if (!fotoUrl.startsWith("http")) {
+                                fotoUrl = "https:" + fotoUrl;
+                            }
+                            return fotoUrl;
+                        }
                     }
                 }
             }
         }
 
+        System.out.println("❌ No se encontró el jugador: " + nombreJugador + " en " + equipoUrl);
         return null;
     }
 

@@ -18,7 +18,8 @@
     "move2": "Grenade Shot",
     "move3": "Majin The Hand",
     "move4": "Triple Defence",
-    "score": 88
+    "score": 88,
+    "photoPath": "images/players/mark_evans.jpg"
   },
   {
     "name": "Jack Wallside",
@@ -39,7 +40,8 @@
     "move2": "Super Armadillo",
     "move3": "Mole Fake",
     "move4": "Mega Quake",
-    "score": 74
+    "score": 74,
+    "photoPath": "images/players/jack_wallside.jpg"
   },
   {
     "name": "Jim Wraith",
@@ -60,7 +62,8 @@
     "move2": "About Face",
     "move3": "Afterimage",
     "move4": "Shadow Stitch",
-    "score": 71
+    "score": 71,
+    "photoPath": "images/players/jim_wraith.jpg"
   },
   {
     "name": "Bobby Shearer",
@@ -81,7 +84,8 @@
     "move2": "Blade Attack",
     "move3": "Back Tornado",
     "move4": "Hurricane Arrows",
-    "score": 83
+    "score": 83,
+    "photoPath": "images/players/bobby_shearer.jpg"
   },
   {
     "name": "Tod Ironside",
@@ -102,7 +106,8 @@
     "move2": "Comet Shot",
     "move3": "Monkey Turn",
     "move4": "Run Ball Run",
-    "score": 68
+    "score": 68,
+    "photoPath": "images/players/tod_ironside.jpg"
   },
   {
     "name": "Nathan Swift",
@@ -123,7 +128,8 @@
     "move2": "Quick Draw",
     "move3": "Fire Rooster",
     "move4": "Clone Faker",
-    "score": 71
+    "score": 71,
+    "photoPath": "images/players/nathan_swift.jpg"
   },
   {
     "name": "Steve Grim",
@@ -144,7 +150,8 @@
     "move2": "Zigzag Spark",
     "move3": "Cyclone",
     "move4": "Freeze Shot",
-    "score": 82
+    "score": 82,
+    "photoPath": "images/players/steve_grim.jpg"
   },
   {
     "name": "Tim Saunders",
@@ -165,7 +172,8 @@
     "move2": "Kung Fu Header",
     "move3": "Clone Faker",
     "move4": "Clone Shot",
-    "score": 73
+    "score": 73,
+    "photoPath": "images/players/tim_saunders.jpg"
   },
   {
     "name": "Sam Kincaid",
@@ -186,7 +194,8 @@
     "move2": "Bewildered",
     "move3": "Fake Ball",
     "move4": "Twin Boost",
-    "score": 71
+    "score": 71,
+    "photoPath": "images/players/sam_kincaid.jpg"
   },
   {
     "name": "Jude Sharp",
@@ -207,7 +216,8 @@
     "move2": "Illusion Ball",
     "move3": "Twin Boost",
     "move4": "Inazuma Break",
-    "score": 89
+    "score": 89,
+    "photoPath": "images/players/jude_sharp.jpg"
   },
   {
     "name": "Maxwell Carson",
@@ -228,7 +238,8 @@
     "move2": "Spiral Shot",
     "move3": "Illusion Ball",
     "move4": "Back Tornado",
-    "score": 74
+    "score": 74,
+    "photoPath": "images/players/maxwell_carson.jpg"
   },
   {
     "name": "Kevin Dragonfly",
@@ -249,7 +260,8 @@
     "move2": "Dragon Tornado",
     "move3": "Zigzag Spark",
     "move4": "Rolling Hell",
-    "score": 78
+    "score": 78,
+    "photoPath": "images/players/kevin_dragonfly.jpg"
   },
   {
     "name": "Axel Blaze",
@@ -270,7 +282,8 @@
     "move2": "Heat Tackle",
     "move3": "Inazuma Drop",
     "move4": "Quick Draw",
-    "score": 87
+    "score": 87,
+    "photoPath": "images/players/axel_blaze.jpg"
   },
   {
     "name": "William Glass",
@@ -291,7 +304,8 @@
     "move2": "Attack Scan",
     "move3": "Divine Arrows",
     "move4": "Rodeo Clown",
-    "score": 69
+    "score": 69,
+    "photoPath": "images/players/william_glass.jpg"
   },
   {
     "name": "Mask",
