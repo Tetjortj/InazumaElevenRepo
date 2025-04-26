@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Card {
     private String name;
     private Team team;
@@ -16,6 +19,7 @@ public class Card {
     private int fp, tp, kick, body, control, guard, speed, stamina, guts;
     private String move1, move2, move3, move4;
     private int score;
+    private String photoPath; // Nuevo campo para la imagen
 
     @JsonCreator
     public Card(
@@ -79,6 +83,9 @@ public class Card {
     public String getMove4() { return move4; }
     public double getScore() { return score; }
 
+    public String getPhotoPath() { return photoPath; }
+    public void setPhotoPath(String photoPath) { this.photoPath = photoPath; }
+
     public void setGrade(Grade grade) {
         this.grade = grade;
     }
@@ -108,11 +115,9 @@ public class Card {
         return (int) Math.round(escalado);
     }
 
-
     @Override
     public String toString() {
         return String.format("%s (%s) – %s – Score: %d",
                 name, position, team, score);
     }
 }
-
