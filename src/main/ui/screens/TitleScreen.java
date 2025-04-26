@@ -78,9 +78,7 @@ public class TitleScreen {
         volumeSlider.setBlockIncrement(0.1);
         volumeSlider.setStyle("-fx-pref-width: 300px;");
         volumeSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
-            if (MusicManager.getCurrentPlayer() != null) {
-                MusicManager.getCurrentPlayer().setVolume(newVal.doubleValue());
-            }
+            MusicManager.setVolume(newVal.doubleValue());
         });
 
         // ---------- Acciones de botones ----------

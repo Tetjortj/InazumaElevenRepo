@@ -10,6 +10,7 @@ import javafx.util.Duration;
 
 public class MusicManager {
     private static MediaPlayer currentPlayer;
+    private static double savedVolume = 0.4; // ⬅️ volumen guardado (inicialmente 40%)
 
     public static void playMusic(String path) {
         if (currentPlayer != null) {
@@ -20,8 +21,8 @@ public class MusicManager {
         if (resource != null) {
             Media media = new Media(resource.toExternalForm());
             currentPlayer = new MediaPlayer(media);
-            currentPlayer.setVolume(0.4); // Volumen inicial más bajo
             currentPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+            currentPlayer.setVolume(savedVolume); // ⬅️ aplicamos el volumen guardado
             currentPlayer.play();
         } else {
             System.err.println("No se encontró: " + path);
@@ -31,23 +32,26 @@ public class MusicManager {
     public static void stopMusic() {
         if (currentPlayer != null) {
             currentPlayer.stop();
-            currentPlayer = null;
         }
     }
 
-    public static MediaPlayer getCurrentPlayer() {
-        return currentPlayer;
+    public static void setVolume(double volume) {
+        savedVolume = volume;
+        if (currentPlayer != null) {
+            currentPlayer.setVolume(volume);
+        }
     }
 
-    // FADE OUT (bajar volumen suave hasta parar)
+    public static double getVolume() {
+        return savedVolume;
+    }
+
     public static void fadeOutMusic(Runnable afterFadeOut) {
         if (currentPlayer == null) return;
 
         Timeline fadeOut = new Timeline(
-                new KeyFrame(
-                        Duration.seconds(1.5),
-                        new KeyValue(currentPlayer.volumeProperty(), 0)
-                )
+                new KeyFrame(Duration.ZERO, new KeyValue(currentPlayer.volumeProperty(), currentPlayer.getVolume())),
+                new KeyFrame(Duration.seconds(1.5), new KeyValue(currentPlayer.volumeProperty(), 0))
         );
         fadeOut.setOnFinished(e -> {
             currentPlayer.stop();
@@ -58,18 +62,14 @@ public class MusicManager {
         fadeOut.play();
     }
 
-    // FADE IN (subir volumen suave)
     public static void fadeInMusic() {
         if (currentPlayer == null) return;
-
         currentPlayer.setVolume(0);
         currentPlayer.play();
 
         Timeline fadeIn = new Timeline(
-                new KeyFrame(
-                        Duration.seconds(1.5),
-                        new KeyValue(currentPlayer.volumeProperty(), 0.4) // volumen deseado
-                )
+                new KeyFrame(Duration.ZERO, new KeyValue(currentPlayer.volumeProperty(), 0)),
+                new KeyFrame(Duration.seconds(1.5), new KeyValue(currentPlayer.volumeProperty(), savedVolume)) // ⬅️ hacia volumen guardado
         );
         fadeIn.play();
     }
