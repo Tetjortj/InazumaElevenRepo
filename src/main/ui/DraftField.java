@@ -63,9 +63,15 @@ public class DraftField extends StackPane {
         CardSelectorModal selector = new CardSelectorModal(opciones, cardSeleccionada -> {
             jugadoresSeleccionados.put(cell.getIndex(), cardSeleccionada);
             cell.desbloquear(cardSeleccionada);
+            mostrarCartaEnCelda(cell, cardSeleccionada);
             statsPanel.actualizarStats(formation, jugadoresSeleccionados);
         });
 
         selector.showAndWait();
+    }
+
+    private void mostrarCartaEnCelda(PlayerCell cell, Card cardSeleccionada) {
+        cell.getChildren().clear(); // Limpiamos la celda
+        cell.getChildren().add(new CardView(cardSeleccionada)); // Añadimos la carta en JavaFX
     }
 }
