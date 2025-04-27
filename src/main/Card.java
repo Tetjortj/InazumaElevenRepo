@@ -83,7 +83,7 @@ public class Card {
     public String getMove2() { return move2; }
     public String getMove3() { return move3; }
     public String getMove4() { return move4; }
-    public double getScore() { return score; }
+    public int getScore() { return score; }
 
     public String getPhotoPath() { return photoPath; }
     public void setPhotoPath(String photoPath) { this.photoPath = photoPath; }
