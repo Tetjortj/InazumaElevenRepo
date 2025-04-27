@@ -4,13 +4,15 @@ public class MainScraping {
     public static void main(String[] args) throws Exception {
         CardScraping scraper = new CardScraping();
 
-        // ✅ Aquí indicas qué equipo quieres procesar
-        scraper.setEquipoAProcesar("Occult"); // Ejemplo: solo jugadores del Instituto Raimon
+        // ❌ No seleccionamos equipo, porque queremos actualizar todos
+        scraper.setEquipoAProcesar(null); // <- Esto es la clave: null = todos los equipos
 
-        // ✅ Aquí le pasas las rutas correctas (dentro de /resources)
+        // ✅ Actualizamos todo el JSON
         scraper.actualizarCartasConFotos(
-                "src/main/resources/jugadores.json",                 // entrada
-                "src/main/resources/jugadores_actualizados.json"     // salida
+                "src/main/resources/jugadores.json",                // JSON de entrada
+                "src/main/resources/jugadores_actualizados.json"     // JSON de salida
         );
+
+        System.out.println("✅ Proceso completado para TODOS los equipos.");
     }
 }
