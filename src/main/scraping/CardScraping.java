@@ -76,7 +76,7 @@ public class CardScraping {
         teamNameMapping.put("Farm", "Instituto Farm");
         teamNameMapping.put("Kirkwood", "Instituto Kirkwood");
         teamNameMapping.put("Zeus", "Instituto Zeus");
-        teamNameMapping.put("Raimon Old Boys", "Inazuma Eleven (Equipo)");
+        teamNameMapping.put("Raimon Old Boys", "Inazuma Eleven (equipo)");
         teamNameMapping.put("Street Sally\u0027s", "Sallys");
         teamNameMapping.put("Inazuma KFC", "Inazuma Kids FC");
         teamNameMapping.put("Umbrella", "Instituto Umbrella");

@@ -13,7 +13,7 @@ public class PhotoPathFixer {
 
     public static void main(String[] args) {
         try {
-            limpiarRutasFotos("src/main/resources/jugadores_actualizados.json", "src/main/resources/jugadores_limpio.json");
+            limpiarRutasFotos("src/main/resources/jugadores_limpio.json", "src/main/resources/jugadores_limpio.json");
             System.out.println("✅ JSON procesado correctamente.");
         } catch (Exception e) {
             e.printStackTrace();

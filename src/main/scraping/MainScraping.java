@@ -5,7 +5,7 @@ public class MainScraping {
         CardScraping scraper = new CardScraping();
 
         // ❌ No seleccionamos equipo, porque queremos actualizar todos
-        scraper.setEquipoAProcesar(null); // <- Esto es la clave: null = todos los equipos
+        scraper.setEquipoAProcesar("Inazuma Eleven (equipo)"); // <- Esto es la clave: null = todos los equipos
 
         // ✅ Actualizamos todo el JSON
         scraper.actualizarCartasConFotos(
