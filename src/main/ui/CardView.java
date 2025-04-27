@@ -127,8 +127,10 @@ public class CardView extends StackPane {
         teamAndScore.setAlignment(Pos.CENTER_LEFT);
 
         ImageView teamLogo = cargarEscudoEquipo(card.getTeam().name());
+        teamLogo.setFitWidth(30);
+        teamLogo.setFitHeight(30);
         Label scoreLabel = new Label(String.valueOf((int) card.getScore()));
-        scoreLabel.setFont(Font.font("Verdana", FontWeight.EXTRA_BOLD, 14));
+        scoreLabel.setFont(Font.font("Verdana", FontWeight.EXTRA_BOLD, 20));
         scoreLabel.setTextFill(Color.GOLDENROD);
 
         teamAndScore.getChildren().addAll(teamLogo, scoreLabel);
