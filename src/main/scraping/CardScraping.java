@@ -1,5 +1,7 @@
 package main.scraping;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -18,6 +20,27 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.lang.reflect.Type;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.text.Normalizer;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class CardScraping {
 
@@ -50,28 +73,17 @@ public class CardScraping {
     }
 
     public void actualizarCartasConFotos(String inputJsonPath, String outputJsonPath) throws Exception {
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-
-        // Copiar JSON original a uno temporal
+        ObjectMapper objectMapper = new ObjectMapper();
         Path copiaTemporal = Path.of("src/main/resources/copia_temp.json");
         Files.copy(Path.of(inputJsonPath), copiaTemporal, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
 
-        // Leer el JSON temporal
-        Type listType = new TypeToken<List<Card>>() {}.getType();
-        List<Card> cartas = gson.fromJson(new FileReader(copiaTemporal.toFile()), listType);
+        List<Card> cartas = objectMapper.readValue(copiaTemporal.toFile(), new TypeReference<List<Card>>() {});
 
-        // Asegurar que la carpeta de imágenes existe
         Files.createDirectories(Path.of(IMAGE_FOLDER));
-
-        // Construir mapa de equipos a enlaces
         Map<String, String> equipoUrls = obtenerUrlsEquipos();
 
         for (Card card : cartas) {
             if (card.getTeam() == null || !teamNameMapping.containsKey(card.getTeam().name())) {
-                continue;
-            }
-
-            if (equipoAProcesar != null && !card.getTeam().name().equalsIgnoreCase(equipoAProcesar)) {
                 continue;
             }
 
@@ -83,35 +95,38 @@ public class CardScraping {
                 continue;
             }
 
-            try {
-                String fotoUrl = buscarFotoJugador(equipoUrl, card.getName());
+            boolean debeActualizar = equipoAProcesar == null || card.getTeam().name().equalsIgnoreCase(equipoAProcesar);
 
-                if (fotoUrl != null) {
-                    String nombreImagen = generarNombreImagen(card.getName());
-                    descargarImagen(fotoUrl, nombreImagen);
-                    card.setPhotoPath("images/players/" + nombreImagen);
-                    System.out.println("Foto descargada para " + card.getName());
-                } else {
-                    System.out.println("No se encontró foto para: " + card.getName());
+            if (debeActualizar && (card.getPhotoPath() == null || card.getPhotoPath().isEmpty())) {
+                try {
+                    String fotoUrl = buscarFotoJugador(equipoUrl, card.getName());
+
+                    if (fotoUrl != null) {
+                        String nombreImagen = generarNombreImagen(card.getName());
+                        descargarImagen(fotoUrl, nombreImagen);
+                        card.setPhotoPath("images/players/" + nombreImagen);
+                        System.out.println("✅ Foto descargada para " + card.getName());
+                    } else {
+                        System.out.println("❌ No se encontró foto para: " + card.getName());
+                    }
+                } catch (Exception e) {
+                    System.out.println("⚠️ Error procesando jugador: " + card.getName() + " - " + e.getMessage());
                 }
-            } catch (Exception e) {
-                System.out.println("Error procesando jugador: " + card.getName() + " - " + e.getMessage());
+            } else if (!debeActualizar) {
+                System.out.println("ℹ️ Saltando jugador de otro equipo: " + card.getName());
+            } else {
+                System.out.println("ℹ️ Ya tenía foto: " + card.getName());
             }
         }
 
-        // Guardar JSON actualizado
-        try (FileWriter writer = new FileWriter(outputJsonPath)) {
-            gson.toJson(cartas, writer);
-        }
+        objectMapper.writerWithDefaultPrettyPrinter().writeValue(new File(outputJsonPath), cartas);
 
-        // Eliminar copia temporal
         Files.deleteIfExists(copiaTemporal);
     }
 
     private Map<String, String> obtenerUrlsEquipos() throws Exception {
         Map<String, String> map = new HashMap<>();
         Document doc = Jsoup.connect(CATEGORY_URL).get();
-
         Elements equipos = doc.select("div.category-page__members a.category-page__member-link");
         for (Element equipo : equipos) {
             String nombre = equipo.text();
@@ -122,49 +137,30 @@ public class CardScraping {
     }
 
     private String buscarFotoJugador(String equipoUrl, String nombreJugador) throws Exception {
-        Document doc = Jsoup.connect(equipoUrl).get();
-
-        Elements tablas = doc.select("table");
-
-        if (tablas.isEmpty()) {
-            System.out.println("❌ No hay tablas en la página: " + equipoUrl);
-            return null;
-        }
-
-        Element tablaPrincipal = tablas.get(0); // ⬅️ Usamos la primera tabla
-        Elements filas = tablaPrincipal.select("tbody > tr");
-
         String nombreJugadorNormalizado = normalizarTexto(nombreJugador);
+        Document doc = Jsoup.connect(equipoUrl).get();
+        Elements filas = doc.select("table tbody tr");
 
         for (Element fila : filas) {
             Elements ths = fila.select("th");
             Elements tds = fila.select("td");
 
             if (ths.size() >= 2 && tds.size() >= 1) {
-                // ---------------------
-                // 🔥 IMAGEN
-                // ---------------------
                 Element thImagen = ths.get(1);
                 Element img = thImagen.selectFirst("span[typeof=\"mw:File\"] a img");
 
-                // ---------------------
-                // 🔥 NOMBRE
-                // ---------------------
                 Element tdNombre = tds.get(0);
                 Element linkNombre = tdNombre.selectFirst("a");
                 String nombreEnTabla = linkNombre != null ? normalizarTexto(linkNombre.text()) : "";
 
-                if (nombreJugadorNormalizado.equals(nombreEnTabla) ||
-                        nombreJugadorNormalizado.contains(nombreEnTabla) ||
-                        nombreEnTabla.contains(nombreJugadorNormalizado)) {
-
+                if (!nombreEnTabla.isEmpty() && textosParecidos(nombreJugadorNormalizado, nombreEnTabla)) {
                     if (img != null) {
                         String fotoUrl = img.hasAttr("data-src") ? img.attr("data-src") : img.attr("src");
-
                         if (fotoUrl != null && !fotoUrl.isEmpty()) {
                             if (!fotoUrl.startsWith("http")) {
                                 fotoUrl = "https:" + fotoUrl;
                             }
+                            System.out.println("✅ Encontrado " + nombreJugador + " en tabla");
                             return fotoUrl;
                         }
                     }
@@ -172,7 +168,42 @@ public class CardScraping {
             }
         }
 
-        System.out.println("❌ No se encontró el jugador: " + nombreJugador + " en " + equipoUrl);
+        // Si no se encuentra en la tabla, buscar en la página individual del jugador
+        System.out.println("🔎 Buscando página individual de: " + nombreJugador);
+        Element linkJugador = doc.selectFirst("a[title=\"" + nombreJugador + "\"]");
+
+        if (linkJugador != null) {
+            String href = linkJugador.attr("href");
+            if (href != null && !href.isEmpty()) {
+                String urlJugador = BASE_URL + href;
+                return extraerFotoDePaginaJugador(urlJugador);
+            }
+        }
+
+        return null;
+    }
+
+    private String extraerFotoDePaginaJugador(String jugadorUrl) throws Exception {
+        Document docJugador = Jsoup.connect(jugadorUrl).get();
+
+        // Buscar la primera tabla
+        Element primeraTabla = docJugador.selectFirst("table");
+
+        if (primeraTabla != null) {
+            Element imagen = primeraTabla.selectFirst("img");
+            if (imagen != null) {
+                String fotoUrl = imagen.hasAttr("data-src") ? imagen.attr("data-src") : imagen.attr("src");
+                if (fotoUrl != null && !fotoUrl.isEmpty()) {
+                    if (!fotoUrl.startsWith("http")) {
+                        fotoUrl = "https:" + fotoUrl;
+                    }
+                    System.out.println("✅ Imagen encontrada en primera tabla de: " + jugadorUrl);
+                    return fotoUrl;
+                }
+            }
+        }
+
+        System.out.println("❌ No se encontró imagen en la primera tabla de: " + jugadorUrl);
         return null;
     }
 
@@ -187,16 +218,15 @@ public class CardScraping {
     }
 
     private String normalizarTexto(String texto) {
-        return texto.toLowerCase()
-                .replace("á", "a")
-                .replace("é", "e")
-                .replace("í", "i")
-                .replace("ó", "o")
-                .replace("ú", "u")
-                .replace("ñ", "n")
-                .replace("(", "").replace(")", "")
-                .replace("[", "").replace("]", "")
-                .replace("-", " ")
+        String normalized = Normalizer.normalize(texto, Normalizer.Form.NFD)
+                .replaceAll("\\p{M}", "") // Quitar acentos
+                .replaceAll("[^a-zA-Z0-9 ]", "") // Quitar paréntesis, guiones, etc.
+                .toLowerCase()
                 .trim();
+        return normalized;
+    }
+
+    private boolean textosParecidos(String texto1, String texto2) {
+        return texto1.equals(texto2) || texto1.contains(texto2) || texto2.contains(texto1);
     }
 }

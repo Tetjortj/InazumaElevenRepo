@@ -5,7 +5,7 @@ public class MainScraping {
         CardScraping scraper = new CardScraping();
 
         // ✅ Aquí indicas qué equipo quieres procesar
-        scraper.setEquipoAProcesar("Raimon"); // Ejemplo: solo jugadores del Instituto Raimon
+        scraper.setEquipoAProcesar("Occult"); // Ejemplo: solo jugadores del Instituto Raimon
 
         // ✅ Aquí le pasas las rutas correctas (dentro de /resources)
         scraper.actualizarCartasConFotos(

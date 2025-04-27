@@ -40,7 +40,8 @@ public class Card {
             @JsonProperty("move1") String move1,
             @JsonProperty("move2") String move2,
             @JsonProperty("move3") String move3,
-            @JsonProperty("move4") String move4
+            @JsonProperty("move4") String move4,
+            @JsonProperty("photoPath") String photoPath
     ) {
         this.name = name;
         this.team = team;
@@ -60,6 +61,7 @@ public class Card {
         this.move2 = move2;
         this.move3 = move3;
         this.move4 = move4;
+        this.photoPath = photoPath;
         this.score = calcularScore();
     }
 
