@@ -13,7 +13,7 @@ public class CardLoader {
     public List<Card> loadCards() {
         try {
             ObjectMapper mapper = new ObjectMapper();
-            InputStream is = getClass().getClassLoader().getResourceAsStream("jugadores.json");
+            InputStream is = getClass().getClassLoader().getResourceAsStream("jugadores_limpio.json");
 
             if (is == null) {
                 System.out.println("Archivo jugadores.json no encontrado en resources.");

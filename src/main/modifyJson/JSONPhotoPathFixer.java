@@ -14,8 +14,8 @@ import java.util.List;
 public class JSONPhotoPathFixer {
 
     public static void main(String[] args) throws Exception {
-        String inputJsonPath = "src/main/resources/jugadores_actualizados.json"; // Cambia esta ruta si hace falta
-        String outputJsonPath = "src/main/resources/jugadores_actualizados.json"; // Puedes sobrescribir el mismo si quieres
+        String inputJsonPath = "src/main/resources/jugadores_limpio.json"; // Cambia esta ruta si hace falta
+        String outputJsonPath = "src/main/resources/jugadores_limpio.json"; // Puedes sobrescribir el mismo si quieres
 
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         Type listType = new TypeToken<List<Card>>() {}.getType();

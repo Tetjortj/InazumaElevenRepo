@@ -19,7 +19,7 @@
     "move3": "Majin The Hand",
     "move4": "Triple Defence",
     "score": 88.0,
-    "photoPath": "images/players/mark_evans.jpg"
+    "photoPath": "mark_evans.jpg"
   },
   {
     "name": "Jack Wallside",
@@ -41,7 +41,7 @@
     "move3": "Mole Fake",
     "move4": "Mega Quake",
     "score": 74.0,
-    "photoPath": "images/players/jack_wallside.jpg"
+    "photoPath": "jack_wallside.jpg"
   },
   {
     "name": "Jim Wraith",
@@ -63,7 +63,7 @@
     "move3": "Afterimage",
     "move4": "Shadow Stitch",
     "score": 71.0,
-    "photoPath": "images/players/jim_wraith.jpg"
+    "photoPath": "jim_wraith.jpg"
   },
   {
     "name": "Bobby Shearer",
@@ -85,7 +85,7 @@
     "move3": "Back Tornado",
     "move4": "Hurricane Arrows",
     "score": 83.0,
-    "photoPath": "images/players/bobby_shearer.jpg"
+    "photoPath": "bobby_shearer.jpg"
   },
   {
     "name": "Tod Ironside",
@@ -107,7 +107,7 @@
     "move3": "Monkey Turn",
     "move4": "Run Ball Run",
     "score": 68.0,
-    "photoPath": "images/players/tod_ironside.jpg"
+    "photoPath": "tod_ironside.jpg"
   },
   {
     "name": "Nathan Swift",
@@ -129,7 +129,7 @@
     "move3": "Fire Rooster",
     "move4": "Clone Faker",
     "score": 71.0,
-    "photoPath": "images/players/nathan_swift.jpg"
+    "photoPath": "nathan_swift.jpg"
   },
   {
     "name": "Steve Grim",
@@ -151,7 +151,7 @@
     "move3": "Cyclone",
     "move4": "Freeze Shot",
     "score": 82.0,
-    "photoPath": "images/players/steve_grim.jpg"
+    "photoPath": "steve_grim.jpg"
   },
   {
     "name": "Tim Saunders",
@@ -173,7 +173,7 @@
     "move3": "Clone Faker",
     "move4": "Clone Shot",
     "score": 73.0,
-    "photoPath": "images/players/tim_saunders.jpg"
+    "photoPath": "tim_saunders.jpg"
   },
   {
     "name": "Sam Kincaid",
@@ -195,7 +195,7 @@
     "move3": "Fake Ball",
     "move4": "Twin Boost",
     "score": 71.0,
-    "photoPath": "images/players/sam_kincaid.jpg"
+    "photoPath": "sam_kincaid.jpg"
   },
   {
     "name": "Jude Sharp",
@@ -217,7 +217,7 @@
     "move3": "Twin Boost",
     "move4": "Inazuma Break",
     "score": 89.0,
-    "photoPath": "images/players/jude_sharp.jpg"
+    "photoPath": "jude_sharp.jpg"
   },
   {
     "name": "Maxwell Carson",
@@ -239,7 +239,7 @@
     "move3": "Illusion Ball",
     "move4": "Back Tornado",
     "score": 74.0,
-    "photoPath": "images/players/maxwell_carson.jpg"
+    "photoPath": "maxwell_carson.jpg"
   },
   {
     "name": "Kevin Dragonfly",
@@ -261,7 +261,7 @@
     "move3": "Zigzag Spark",
     "move4": "Rolling Hell",
     "score": 78.0,
-    "photoPath": "images/players/kevin_dragonfly.jpg"
+    "photoPath": "kevin_dragonfly.jpg"
   },
   {
     "name": "Axel Blaze",
@@ -283,7 +283,7 @@
     "move3": "Inazuma Drop",
     "move4": "Quick Draw",
     "score": 87.0,
-    "photoPath": "images/players/axel_blaze.jpg"
+    "photoPath": "axel_blaze.jpg"
   },
   {
     "name": "William Glass",
@@ -305,7 +305,7 @@
     "move3": "Divine Arrows",
     "move4": "Rodeo Clown",
     "score": 69.0,
-    "photoPath": "images/players/william_glass.jpg"
+    "photoPath": "william_glass.jpg"
   },
   {
     "name": "Mask",
@@ -327,7 +327,7 @@
     "move3": "Blade Attack",
     "move4": "Whirlwind",
     "score": 78.0,
-    "photoPath": "images/players/mask.jpg"
+    "photoPath": "mask.jpg"
   },
   {
     "name": "Zombie",
@@ -349,7 +349,7 @@
     "move3": "Teleport Shot",
     "move4": "Horn Train",
     "score": 58.0,
-    "photoPath": "images/players/zombie.jpg"
+    "photoPath": "zombie.jpg"
   },
   {
     "name": "Styx",
@@ -371,7 +371,7 @@
     "move3": "Black Magic",
     "move4": "Phantom Shot",
     "score": 67.0,
-    "photoPath": "images/players/styx.jpg"
+    "photoPath": "styx.jpg"
   },
   {
     "name": "Franky",
@@ -393,7 +393,7 @@
     "move3": "Blazing Knuckle",
     "move4": "Counter Strike",
     "score": 71.0,
-    "photoPath": "images/players/franky.jpg"
+    "photoPath": "franky.jpg"
   },
   {
     "name": "Undead",
@@ -415,7 +415,7 @@
     "move3": "Black Magic",
     "move4": "Shadow Stitch",
     "score": 71.0,
-    "photoPath": "images/players/undead.jpg"
+    "photoPath": "undead.jpg"
   },
   {
     "name": "Creepy",
@@ -437,7 +437,7 @@
     "move3": "Ghost Pull",
     "move4": "Fake Ball",
     "score": 68.0,
-    "photoPath": "images/players/creepy.jpg"
+    "photoPath": "creepy.jpg"
   },
   {
     "name": "Jiangshi",
@@ -459,7 +459,7 @@
     "move3": "Magic",
     "move4": "Warp Space",
     "score": 71.0,
-    "photoPath": "images/players/jiangshi.jpg"
+    "photoPath": "jiangshi.jpg"
   },
   {
     "name": "Mummy",
@@ -481,7 +481,7 @@
     "move3": "Spider Web",
     "move4": "Warp Space",
     "score": 72.0,
-    "photoPath": "images/players/mummy.jpg"
+    "photoPath": "mummy.jpg"
   },
   {
     "name": "Grave",
@@ -503,7 +503,7 @@
     "move3": "Phantom Shot",
     "move4": "Whirlwind Cut",
     "score": 73.0,
-    "photoPath": "images/players/grave.jpg"
+    "photoPath": "grave.jpg"
   },
   {
     "name": "Wolfy",
@@ -525,7 +525,7 @@
     "move3": "Moonsault",
     "move4": "Wild Claw",
     "score": 86.0,
-    "photoPath": "images/players/wolfy.jpg"
+    "photoPath": "wolfy.jpg"
   },
   {
     "name": "Ghost",
@@ -547,7 +547,7 @@
     "move3": "Horn Train",
     "move4": "Warp Space",
     "score": 63.0,
-    "photoPath": "images/players/ghost.jpg"
+    "photoPath": "ghost.jpg"
   },
   {
     "name": "Blood",
@@ -569,7 +569,7 @@
     "move3": "Poison Fog",
     "move4": "Rolling Hell",
     "score": 68.0,
-    "photoPath": "images/players/blood.jpg"
+    "photoPath": "blood.jpg"
   },
   {
     "name": "Dollman",
@@ -591,7 +591,7 @@
     "move3": "Doppelganger",
     "move4": "Rocket Kobushi",
     "score": 61.0,
-    "photoPath": "images/players/dollman.jpg"
+    "photoPath": "dollman.jpg"
   },
   {
     "name": "Noir",
@@ -613,7 +613,7 @@
     "move3": "Doppelganger",
     "move4": "Death Zone",
     "score": 61.0,
-    "photoPath": "images/players/noir.jpg"
+    "photoPath": "noir.jpg"
   },
   {
     "name": "Alien",
@@ -635,7 +635,7 @@
     "move3": "Kung Fu Header",
     "move4": "Ghost Pull",
     "score": 59.0,
-    "photoPath": "images/players/alien.jpg"
+    "photoPath": "alien.jpg"
   },
   {
     "name": "Talisman",
@@ -657,7 +657,7 @@
     "move3": "Freeze Shot",
     "move4": "Whirlwind Cut",
     "score": 73.0,
-    "photoPath": "images/players/talisman.jpg"
+    "photoPath": "talisman.jpg"
   },
   {
     "name": "Boar",
@@ -679,7 +679,7 @@
     "move3": "Blazing Knuckle",
     "move4": "Super Armadillo",
     "score": 72.0,
-    "photoPath": "images/players/boar.jpg"
+    "photoPath": "boar.jpg"
   },
   {
     "name": "Bullford",
@@ -701,7 +701,7 @@
     "move3": "Wild Claw",
     "move4": "Sumo Stomp",
     "score": 75.0,
-    "photoPath": "images/players/bullford.jpg"
+    "photoPath": "bullford.jpg"
   },
   {
     "name": "Toad",
@@ -723,7 +723,7 @@
     "move3": "Fake Ball",
     "move4": "Rolling Kick",
     "score": 61.0,
-    "photoPath": "images/players/toad.jpg"
+    "photoPath": "toad.jpg"
   },
   {
     "name": "Fishman",
@@ -745,7 +745,7 @@
     "move3": "Rodeo Clown",
     "move4": "Run Ball Run",
     "score": 66.0,
-    "photoPath": "images/players/fishman.jpg"
+    "photoPath": "fishman.jpg"
   },
   {
     "name": "Raccoon",
@@ -767,7 +767,7 @@
     "move3": "Horn Train",
     "move4": "About Face",
     "score": 59.0,
-    "photoPath": "images/players/raccoon.jpg"
+    "photoPath": "raccoon.jpg"
   },
   {
     "name": "Lion",
@@ -789,7 +789,7 @@
     "move3": "Counter Strike",
     "move4": "Run Ball Run",
     "score": 70.0,
-    "photoPath": "images/players/lion.jpg"
+    "photoPath": "lion.jpg"
   },
   {
     "name": "Monkey",
@@ -811,7 +811,7 @@
     "move3": "Coil Turn",
     "move4": "Moonsault",
     "score": 66.0,
-    "photoPath": "images/players/monkey.jpg"
+    "photoPath": "monkey.jpg"
   },
   {
     "name": "Chameleon",
@@ -833,7 +833,7 @@
     "move3": "About Face",
     "move4": "Teleport Shot",
     "score": 59.0,
-    "photoPath": "images/players/chameleon.jpg"
+    "photoPath": "chameleon.jpg"
   },
   {
     "name": "Mouseman",
@@ -855,7 +855,7 @@
     "move3": "Teleport Shot",
     "move4": "Afterimage",
     "score": 65.0,
-    "photoPath": "images/players/mouseman.jpg"
+    "photoPath": "mouseman.jpg"
   },
   {
     "name": "Koala",
@@ -877,7 +877,7 @@
     "move3": "Run Ball Run",
     "move4": "Illusion Ball",
     "score": 59.0,
-    "photoPath": "images/players/koala.jpg"
+    "photoPath": "koala.jpg"
   },
   {
     "name": "Chicken",
@@ -899,7 +899,7 @@
     "move3": "Whirlwind Cut",
     "move4": "Boost Glider",
     "score": 68.0,
-    "photoPath": "images/players/chicken.jpg"
+    "photoPath": "chicken.jpg"
   },
   {
     "name": "Eagle",
@@ -921,7 +921,7 @@
     "move3": "Illusion Ball",
     "move4": "Boost Glider",
     "score": 79.0,
-    "photoPath": "images/players/eagle.jpg"
+    "photoPath": "eagle.jpg"
   },
   {
     "name": "Panda",
@@ -943,7 +943,7 @@
     "move3": "Kung Fu Header",
     "move4": "Breakthrough",
     "score": 61.0,
-    "photoPath": "images/players/panda.jpg"
+    "photoPath": "panda.jpg"
   },
   {
     "name": "Cheetah",
@@ -965,7 +965,7 @@
     "move3": "Dynamite Shot",
     "move4": "Clone Shot",
     "score": 75.0,
-    "photoPath": "images/players/cheetah.jpg"
+    "photoPath": "cheetah.jpg"
   },
   {
     "name": "Gorilla",
@@ -987,7 +987,7 @@
     "move3": "Bewildered",
     "move4": "Utter Gutsiness Bat",
     "score": 78.0,
-    "photoPath": "images/players/gorilla.jpg"
+    "photoPath": "gorilla.jpg"
   },
   {
     "name": "Snake",
@@ -1009,7 +1009,7 @@
     "move3": "Cross Drive",
     "move4": "Spider Web",
     "score": 68.0,
-    "photoPath": "images/players/snake.jpg"
+    "photoPath": "snake.jpg"
   },
   {
     "name": "Feldt",
@@ -1367,7 +1367,7 @@
     "move3": "Toughness Block",
     "move4": "Fireball Knuckle",
     "score": 68.0,
-    "photoPath": "images/players/idol.jpg"
+    "photoPath": "idol.jpg"
   },
   {
     "name": "Eldorado",
@@ -1389,7 +1389,7 @@
     "move3": "Horn Train",
     "move4": "Breakthrough",
     "score": 71.0,
-    "photoPath": "images/players/eldorado.jpg"
+    "photoPath": "eldorado.jpg"
   },
   {
     "name": "Train",
@@ -1411,7 +1411,7 @@
     "move3": "Zigzag Spark",
     "move4": "Utter Gutsiness Bat",
     "score": 66.0,
-    "photoPath": "images/players/train.jpg"
+    "photoPath": "train.jpg"
   },
   {
     "name": "Vox",
@@ -1433,7 +1433,7 @@
     "move3": "Defence Scan",
     "move4": "Cyclone",
     "score": 62.0,
-    "photoPath": "images/players/vox.jpg"
+    "photoPath": "vox.jpg"
   },
   {
     "name": "Cosplay",
@@ -1455,7 +1455,7 @@
     "move3": "Earthquake",
     "move4": "Sliding Goal",
     "score": 67.0,
-    "photoPath": "images/players/cosplay.jpg"
+    "photoPath": "cosplay.jpg"
   },
   {
     "name": "Formby",
@@ -1477,7 +1477,7 @@
     "move3": "Spider Web",
     "move4": "Rocket Kobushi",
     "score": 62.0,
-    "photoPath": "images/players/formby.jpg"
+    "photoPath": "formby.jpg"
   },
   {
     "name": "Net",
@@ -1499,7 +1499,7 @@
     "move3": "Heat Tackle",
     "move4": "Cross Drive",
     "score": 63.0,
-    "photoPath": "images/players/net.jpg"
+    "photoPath": "net.jpg"
   },
   {
     "name": "Hero",
@@ -1521,7 +1521,7 @@
     "move3": "Comet Shot",
     "move4": "Dynamite Shot",
     "score": 72.0,
-    "photoPath": "images/players/hero.jpg"
+    "photoPath": "hero.jpg"
   },
   {
     "name": "Signalman",
@@ -1543,7 +1543,7 @@
     "move3": "Spinning Cut",
     "move4": "Patriot Shot",
     "score": 65.0,
-    "photoPath": "images/players/signalman.jpg"
+    "photoPath": "signalman.jpg"
   },
   {
     "name": "Robot",
@@ -1565,7 +1565,7 @@
     "move3": "Coil Turn",
     "move4": "Wrath Shot",
     "score": 65.0,
-    "photoPath": "images/players/robot.jpg"
+    "photoPath": "robot.jpg"
   },
   {
     "name": "Novel",
@@ -1587,7 +1587,7 @@
     "move3": "Dash Accelerator",
     "move4": "Bewildered",
     "score": 67.0,
-    "photoPath": "images/players/novel.jpg"
+    "photoPath": "novel.jpg"
   },
   {
     "name": "Online",
@@ -1609,7 +1609,7 @@
     "move3": "Defence Scan",
     "move4": "Attack Scan",
     "score": 66.0,
-    "photoPath": "images/players/online.jpg"
+    "photoPath": "online.jpg"
   },
   {
     "name": "Custom",
@@ -1631,7 +1631,7 @@
     "move3": "Cyclone",
     "move4": "Freeze Shot",
     "score": 67.0,
-    "photoPath": "images/players/custom.jpg"
+    "photoPath": "custom.jpg"
   },
   {
     "name": "Gamer",
@@ -1653,7 +1653,7 @@
     "move3": "Fake Ball",
     "move4": "Shine Drive",
     "score": 70.0,
-    "photoPath": "images/players/gamer.jpg"
+    "photoPath": "gamer.jpg"
   },
   {
     "name": "Artist",
@@ -1675,7 +1675,7 @@
     "move3": "Doppelganger",
     "move4": "Blade Attack",
     "score": 66.0,
-    "photoPath": "images/players/artist.jpg"
+    "photoPath": "artist.jpg"
   },
   {
     "name": "Arcade",
@@ -1697,7 +1697,7 @@
     "move3": "Cross Drive",
     "move4": "Utter Gutsiness Bat",
     "score": 67.0,
-    "photoPath": "images/players/arcade.jpg"
+    "photoPath": "arcade.jpg"
   },
   {
     "name": "Joe King",
@@ -2034,7 +2034,7 @@
     "move3": "Clone Shot",
     "move4": "Warp Space",
     "score": 69.0,
-    "photoPath": "images/players/hood.jpg"
+    "photoPath": "hood.jpg"
   },
   {
     "name": "Castle",
@@ -2056,7 +2056,7 @@
     "move3": "Power Shield",
     "move4": "Whirlwind",
     "score": 71.0,
-    "photoPath": "images/players/castle.jpg"
+    "photoPath": "castle.jpg"
   },
   {
     "name": "Bandit",
@@ -2078,7 +2078,7 @@
     "move3": "Fake Ball",
     "move4": "Mole Fake",
     "score": 67.0,
-    "photoPath": "images/players/bandit.jpg"
+    "photoPath": "bandit.jpg"
   },
   {
     "name": "Crackshot",
@@ -2100,7 +2100,7 @@
     "move3": "Bewildered",
     "move4": "Dirt Ball",
     "score": 71.0,
-    "photoPath": "images/players/crackshot.jpg"
+    "photoPath": "crackshot.jpg"
   },
   {
     "name": "Hopper",
@@ -2122,7 +2122,7 @@
     "move3": "Meteor Attack",
     "move4": "Moonsault",
     "score": 71.0,
-    "photoPath": "images/players/hopper.jpg"
+    "photoPath": "hopper.jpg"
   },
   {
     "name": "Hillfort",
@@ -2144,7 +2144,7 @@
     "move3": "Shadow Stitch",
     "move4": "Clone Shot",
     "score": 69.0,
-    "photoPath": "images/players/hillfort.jpg"
+    "photoPath": "hillfort.jpg"
   },
   {
     "name": "Thunder",
@@ -2166,7 +2166,7 @@
     "move3": "Shadow Stitch",
     "move4": "Spider Web",
     "score": 72.0,
-    "photoPath": "images/players/thunder.jpg"
+    "photoPath": "thunder.jpg"
   },
   {
     "name": "Cleats",
@@ -2188,7 +2188,7 @@
     "move3": "Afterimage",
     "move4": "Moonsault",
     "score": 72.0,
-    "photoPath": "images/players/cleats.jpg"
+    "photoPath": "cleats.jpg"
   },
   {
     "name": "Spook",
@@ -2210,7 +2210,7 @@
     "move3": "Spider Web",
     "move4": "Shadow Stitch",
     "score": 68.0,
-    "photoPath": "images/players/spook.jpg"
+    "photoPath": "spook.jpg"
   },
   {
     "name": "Trops",
@@ -2232,7 +2232,7 @@
     "move3": "Harvest",
     "move4": "Rolling Hell",
     "score": 73.0,
-    "photoPath": "images/players/trops.jpg"
+    "photoPath": "trops.jpg"
   },
   {
     "name": "Star",
@@ -2254,7 +2254,7 @@
     "move3": "Doppelganger",
     "move4": "Clone Shot",
     "score": 70.0,
-    "photoPath": "images/players/star.jpg"
+    "photoPath": "star.jpg"
   },
   {
     "name": "Hattori",
@@ -2276,7 +2276,7 @@
     "move3": "Flurry Dash",
     "move4": "Shadow Stitch",
     "score": 70.0,
-    "photoPath": "images/players/hattori.jpg"
+    "photoPath": "hattori.jpg"
   },
   {
     "name": "Code",
@@ -2298,7 +2298,7 @@
     "move3": "Whirlwind Cut",
     "move4": "Hurricane Arrows",
     "score": 71.0,
-    "photoPath": "images/players/code.jpg"
+    "photoPath": "code.jpg"
   },
   {
     "name": "Samurai",
@@ -2320,7 +2320,7 @@
     "move3": "Shadow Stitch",
     "move4": "Fire Rooster",
     "score": 70.0,
-    "photoPath": "images/players/samurai.jpg"
+    "photoPath": "samurai.jpg"
   },
   {
     "name": "Ronin",
@@ -2342,7 +2342,7 @@
     "move3": "Clone Shot",
     "move4": "Afterimage",
     "score": 71.0,
-    "photoPath": "images/players/ronin.jpg"
+    "photoPath": "ronin.jpg"
   },
   {
     "name": "Cloak",
@@ -2364,7 +2364,7 @@
     "move3": "Afterimage",
     "move4": "Fire Rooster",
     "score": 68.0,
-    "photoPath": "images/players/cloak.jpg"
+    "photoPath": "cloak.jpg"
   },
   {
     "name": "Greeny",
@@ -2386,7 +2386,7 @@
     "move3": "Infinite Wall",
     "move4": "About Face",
     "score": 79.0,
-    "photoPath": "images/players/greeny.jpg"
+    "photoPath": "greeny.jpg"
   },
   {
     "name": "Mower",
@@ -2408,7 +2408,7 @@
     "move3": "Super Armadillo",
     "move4": "Kung Fu Header",
     "score": 73.0,
-    "photoPath": "images/players/mower.jpg"
+    "photoPath": "mower.jpg"
   },
   {
     "name": "Sherman",
@@ -2430,7 +2430,7 @@
     "move3": "About Face",
     "move4": "Infinite Wall",
     "score": 79.0,
-    "photoPath": "images/players/sherman.jpg"
+    "photoPath": "sherman.jpg"
   },
   {
     "name": "Hillvalley",
@@ -2452,7 +2452,7 @@
     "move3": "Sumo Stomp",
     "move4": "Infinite Wall",
     "score": 77.0,
-    "photoPath": "images/players/hillvalley.jpg"
+    "photoPath": "hillvalley.jpg"
   },
   {
     "name": "Lively",
@@ -2474,7 +2474,7 @@
     "move3": "Poison Fog",
     "move4": "Harvest",
     "score": 72.0,
-    "photoPath": "images/players/lively.jpg"
+    "photoPath": "lively.jpg"
   },
   {
     "name": "Hayseed",
@@ -2496,7 +2496,7 @@
     "move3": "Whirlwind Twister",
     "move4": "Run Ball Run",
     "score": 76.0,
-    "photoPath": "images/players/hayseed.jpg"
+    "photoPath": "hayseed.jpg"
   },
   {
     "name": "Grower",
@@ -2518,7 +2518,7 @@
     "move3": "About Face",
     "move4": "Whirlwind Cut",
     "score": 74.0,
-    "photoPath": "images/players/grower.jpg"
+    "photoPath": "grower.jpg"
   },
   {
     "name": "Nevis",
@@ -2540,7 +2540,7 @@
     "move3": "Tarzan Kick",
     "move4": "Whirlwind Cut",
     "score": 72.0,
-    "photoPath": "images/players/nevis.jpg"
+    "photoPath": "nevis.jpg"
   },
   {
     "name": "Work",
@@ -2562,7 +2562,7 @@
     "move3": "Flurry Dash",
     "move4": "Kung Fu Header",
     "score": 73.0,
-    "photoPath": "images/players/work.jpg"
+    "photoPath": "work.jpg"
   },
   {
     "name": "Howells",
@@ -2584,7 +2584,7 @@
     "move3": "Monkey Turn",
     "move4": "Cyclone",
     "score": 76.0,
-    "photoPath": "images/players/howells.jpg"
+    "photoPath": "howells.jpg"
   },
   {
     "name": "Milky",
@@ -2606,7 +2606,7 @@
     "move3": "Spinning Cut",
     "move4": "Killer Blade",
     "score": 65.0,
-    "photoPath": "images/players/milky.jpg"
+    "photoPath": "milky.jpg"
   },
   {
     "name": "Dawson",
@@ -2628,7 +2628,7 @@
     "move3": "Coil Turn",
     "move4": "Blade Attack",
     "score": 72.0,
-    "photoPath": "images/players/dawson.jpg"
+    "photoPath": "dawson.jpg"
   },
   {
     "name": "Spray",
@@ -2650,7 +2650,7 @@
     "move3": "Wild Claw",
     "move4": "Full Power Shield",
     "score": 73.0,
-    "photoPath": "images/players/spray.jpg"
+    "photoPath": "spray.jpg"
   },
   {
     "name": "Mother",
@@ -2672,7 +2672,7 @@
     "move3": "Killer Slide",
     "move4": "Spinning Cut",
     "score": 68.0,
-    "photoPath": "images/players/mother.jpg"
+    "photoPath": "mother.jpg"
   },
   {
     "name": "Roast",
@@ -2694,7 +2694,7 @@
     "move3": "Mole Fake",
     "move4": "Shine Drive",
     "score": 72.0,
-    "photoPath": "images/players/roast.jpg"
+    "photoPath": "roast.jpg"
   },
   {
     "name": "Muffs",
@@ -2716,7 +2716,7 @@
     "move3": "Flurry Dash",
     "move4": "About Face",
     "score": 73.0,
-    "photoPath": "images/players/muffs.jpg"
+    "photoPath": "muffs.jpg"
   },
   {
     "name": "John Neville",
@@ -2738,7 +2738,7 @@
     "move3": "The Wall",
     "move4": "Gigant Wall",
     "score": 75.0,
-    "photoPath": "images/players/john_neville.jpg"
+    "photoPath": "john_neville.jpg"
   },
   {
     "name": "Simon Calier",
@@ -2760,7 +2760,7 @@
     "move3": "Moonsault",
     "move4": "Run Ball Run",
     "score": 67.0,
-    "photoPath": "images/players/simon_calier.jpg"
+    "photoPath": "simon_calier.jpg"
   },
   {
     "name": "Malcom Night",
@@ -2782,7 +2782,7 @@
     "move3": "Spinning Cut",
     "move4": "Cyclone",
     "score": 87.0,
-    "photoPath": "images/players/malcom_night.jpg"
+    "photoPath": "malcom_night.jpg"
   },
   {
     "name": "Ricky Clover",
@@ -2804,7 +2804,7 @@
     "move3": "Meteor Attack",
     "move4": "Back Tornado",
     "score": 65.0,
-    "photoPath": "images/players/ricky_clover.jpg"
+    "photoPath": "ricky_clover.jpg"
   },
   {
     "name": "Alfred Meenan",
@@ -2826,7 +2826,7 @@
     "move3": "Moonsault",
     "move4": "Illusion Ball",
     "score": 68.0,
-    "photoPath": "images/players/alfred_meenan.jpg"
+    "photoPath": "alfred_meenan.jpg"
   },
   {
     "name": "Dan Mirthful",
@@ -2848,7 +2848,7 @@
     "move3": "Kung Fu Header",
     "move4": "Shine Drive",
     "score": 72.0,
-    "photoPath": "images/players/dan_mirthful.jpg"
+    "photoPath": "dan_mirthful.jpg"
   },
   {
     "name": "Eren Middleton",
@@ -2870,7 +2870,7 @@
     "move3": "Illusion Ball",
     "move4": "Utter Gutsiness Bat",
     "score": 59.0,
-    "photoPath": "images/players/eren_middleton.jpg"
+    "photoPath": "eren_middleton.jpg"
   },
   {
     "name": "Peter Wells",
@@ -2892,7 +2892,7 @@
     "move3": "Cyclone",
     "move4": "Back Tornado",
     "score": 59.0,
-    "photoPath": "images/players/peter_wells.jpg"
+    "photoPath": "peter_wells.jpg"
   },
   {
     "name": "Zachary Moore",
@@ -2914,7 +2914,7 @@
     "move3": "Twin Boost",
     "move4": "Boost Glider",
     "score": 70.0,
-    "photoPath": "images/players/zachary_moore.jpg"
+    "photoPath": "zachary_moore.jpg"
   },
   {
     "name": "Toby Damian",
@@ -2936,7 +2936,7 @@
     "move3": "Quick Draw",
     "move4": "Spinning Shot",
     "score": 67.0,
-    "photoPath": "images/players/toby_damian.jpg"
+    "photoPath": "toby_damian.jpg"
   },
   {
     "name": "York Nashmith",
@@ -2958,7 +2958,7 @@
     "move3": "Monkey Turn",
     "move4": "Back Tornado",
     "score": 67.0,
-    "photoPath": "images/players/york_nashmith.jpg"
+    "photoPath": "york_nashmith.jpg"
   },
   {
     "name": "Brody Gloom",
@@ -2980,7 +2980,7 @@
     "move3": "Ghost Pull",
     "move4": "Warp Space",
     "score": 59.0,
-    "photoPath": "images/players/brody_gloom.jpg"
+    "photoPath": "brody_gloom.jpg"
   },
   {
     "name": "Victor Talis",
@@ -3002,7 +3002,7 @@
     "move3": "Dynamite Shot",
     "move4": "Hurricane Arrows",
     "score": 60.0,
-    "photoPath": "images/players/victor_talis.jpg"
+    "photoPath": "victor_talis.jpg"
   },
   {
     "name": "Tyler Murdock",
@@ -3024,7 +3024,7 @@
     "move3": "Breakthrough",
     "move4": "Triangle Z",
     "score": 81.0,
-    "photoPath": "images/players/tyler_murdock.jpg"
+    "photoPath": "tyler_murdock.jpg"
   },
   {
     "name": "Thomas Murdock",
@@ -3046,7 +3046,7 @@
     "move3": "Killer Slide",
     "move4": "Triangle Z",
     "score": 79.0,
-    "photoPath": "images/players/thomas_murdock.jpg"
+    "photoPath": "thomas_murdock.jpg"
   },
   {
     "name": "Marvin Murdock",
@@ -3068,7 +3068,7 @@
     "move3": "Grenade Shot",
     "move4": "Boost Glider",
     "score": 76.0,
-    "photoPath": "images/players/marvin_murdock.jpg"
+    "photoPath": "marvin_murdock.jpg"
   },
   {
     "name": "Icarus",
@@ -3090,7 +3090,7 @@
     "move3": "Spinning Cut",
     "move4": "Heaven\u0027s Time",
     "score": 82.0,
-    "photoPath": "images/players/icarus.jpg"
+    "photoPath": "icarus.jpg"
   },
   {
     "name": "Apollo",
@@ -3112,7 +3112,7 @@
     "move3": "Magic",
     "move4": "Dash Storm",
     "score": 81.0,
-    "photoPath": "images/players/apollo.jpg"
+    "photoPath": "apollo.jpg"
   },
   {
     "name": "Hephestus",
@@ -3134,7 +3134,7 @@
     "move3": "Fire Tornado",
     "move4": "Fire Rooster",
     "score": 81.0,
-    "photoPath": "images/players/hephestus.jpg"
+    "photoPath": "hephestus.jpg"
   },
   {
     "name": "Ares",
@@ -3156,7 +3156,7 @@
     "move3": "Breakthrough",
     "move4": "Rolling Hell",
     "score": 83.0,
-    "photoPath": "images/players/ares.jpg"
+    "photoPath": "ares.jpg"
   },
   {
     "name": "Dionysus",
@@ -3178,7 +3178,7 @@
     "move3": "Earthquake",
     "move4": "Reflect Buster",
     "score": 82.0,
-    "photoPath": "images/players/dionysus.jpg"
+    "photoPath": "dionysus.jpg"
   },
   {
     "name": "Heracles",
@@ -3200,7 +3200,7 @@
     "move3": "Breakthrough",
     "move4": "Mega Quake",
     "score": 83.0,
-    "photoPath": "images/players/heracles.jpg"
+    "photoPath": "heracles.jpg"
   },
   {
     "name": "Chronos",
@@ -3222,7 +3222,7 @@
     "move3": "Illusion Ball",
     "move4": "Dash Accelerator",
     "score": 82.0,
-    "photoPath": "images/players/chronos.jpg"
+    "photoPath": "chronos.jpg"
   },
   {
     "name": "Artemis",
@@ -3244,7 +3244,7 @@
     "move3": "Illusion Ball",
     "move4": "Doppelganger",
     "score": 73.0,
-    "photoPath": "images/players/artemis.jpg"
+    "photoPath": "artemis.jpg"
   },
   {
     "name": "Medusa",
@@ -3266,7 +3266,7 @@
     "move3": "Freeze Shot",
     "move4": "Snake Shot",
     "score": 84.0,
-    "photoPath": "images/players/medusa.jpg"
+    "photoPath": "medusa.jpg"
   },
   {
     "name": "Hera",
@@ -3288,7 +3288,7 @@
     "move3": "Killer Slide",
     "move4": "Breakthrough",
     "score": 75.0,
-    "photoPath": "images/players/hera.jpg"
+    "photoPath": "hera.jpg"
   },
   {
     "name": "Hermes",
@@ -3310,7 +3310,7 @@
     "move3": "Cyclone",
     "move4": "Whirlwind",
     "score": 76.0,
-    "photoPath": "images/players/hermes.jpg"
+    "photoPath": "hermes.jpg"
   },
   {
     "name": "Athena",
@@ -3332,7 +3332,7 @@
     "move3": "Defence Scan",
     "move4": "Attack Scan",
     "score": 79.0,
-    "photoPath": "images/players/athena.jpg"
+    "photoPath": "athena.jpg"
   },
   {
     "name": "Demeter",
@@ -3354,7 +3354,7 @@
     "move3": "Divine Arrows",
     "move4": "Horn Train",
     "score": 86.0,
-    "photoPath": "images/players/demeter.jpg"
+    "photoPath": "demeter.jpg"
   },
   {
     "name": "Achilles",
@@ -3376,7 +3376,7 @@
     "move3": "Divine Stamp",
     "move4": "Divine Arrows",
     "score": 83.0,
-    "photoPath": "images/players/achilles.jpg"
+    "photoPath": "achilles.jpg"
   },
   {
     "name": "Hairtown",
@@ -4280,7 +4280,7 @@
     "move3": "Whirlwind",
     "move4": "Back Tornado",
     "score": 79.0,
-    "photoPath": "images/players/ingram.jpg"
+    "photoPath": "ingram.jpg"
   },
   {
     "name": "Banker",
@@ -4302,7 +4302,7 @@
     "move3": "Phantom Shot",
     "move4": "Wrath Shot",
     "score": 70.0,
-    "photoPath": "images/players/banker.jpg"
+    "photoPath": "banker.jpg"
   },
   {
     "name": "Sefton",
@@ -4324,7 +4324,7 @@
     "move3": "Kung Fu Header",
     "move4": "Spider Web",
     "score": 66.0,
-    "photoPath": "images/players/sefton.jpg"
+    "photoPath": "sefton.jpg"
   },
   {
     "name": "Caperock",
@@ -4346,7 +4346,7 @@
     "move3": "Blade Attack",
     "move4": "Utter Gutsiness Bat",
     "score": 59.0,
-    "photoPath": "images/players/caperock.jpg"
+    "photoPath": "caperock.jpg"
   },
   {
     "name": "Strike",
@@ -4368,7 +4368,7 @@
     "move3": "Blade Attack",
     "move4": "Cross Drive",
     "score": 63.0,
-    "photoPath": "images/players/strike.jpg"
+    "photoPath": "strike.jpg"
   },
   {
     "name": "Chops",
@@ -4390,7 +4390,7 @@
     "move3": "Monkey Turn",
     "move4": "Cyclone",
     "score": 63.0,
-    "photoPath": "images/players/chops.jpg"
+    "photoPath": "chops.jpg"
   },
   {
     "name": "Porter",
@@ -4412,7 +4412,7 @@
     "move3": "The Wall",
     "move4": "Rolling Hell",
     "score": 64.0,
-    "photoPath": "images/players/porter.jpg"
+    "photoPath": "porter.jpg"
   },
   {
     "name": "Molehill",
@@ -4434,7 +4434,7 @@
     "move3": "Afterimage",
     "move4": "Twin Boost",
     "score": 62.0,
-    "photoPath": "images/players/molehill.jpg"
+    "photoPath": "molehill.jpg"
   },
   {
     "name": "Most",
@@ -4456,7 +4456,7 @@
     "move3": "Sumo Stomp",
     "move4": "Pressure Punch",
     "score": 76.0,
-    "photoPath": "images/players/most.jpg"
+    "photoPath": "most.jpg"
   },
   {
     "name": "Chaney",
@@ -4478,7 +4478,7 @@
     "move3": "Utter Gutsiness Bat",
     "move4": "Back Tornado",
     "score": 61.0,
-    "photoPath": "images/players/chaney.jpg"
+    "photoPath": "chaney.jpg"
   },
   {
     "name": "Rhymes",
@@ -4500,7 +4500,7 @@
     "move3": "Run Ball Run",
     "move4": "Rolling Hell",
     "score": 58.0,
-    "photoPath": "images/players/rhymes.jpg"
+    "photoPath": "rhymes.jpg"
   },
   {
     "name": "Tunk",
@@ -4522,7 +4522,7 @@
     "move3": "Breakthrough",
     "move4": "Tarzan Kick",
     "score": 60.0,
-    "photoPath": "images/players/tunk.jpg"
+    "photoPath": "tunk.jpg"
   },
   {
     "name": "Morefield",
@@ -4544,7 +4544,7 @@
     "move3": "Dynamite Shot",
     "move4": "Freeze Shot",
     "score": 68.0,
-    "photoPath": "images/players/morefield.jpg"
+    "photoPath": "morefield.jpg"
   },
   {
     "name": "Scott",
@@ -4566,7 +4566,7 @@
     "move3": "Fake Ball",
     "move4": "Attack Scan",
     "score": 60.0,
-    "photoPath": "images/players/scott.jpg"
+    "photoPath": "scott.jpg"
   },
   {
     "name": "Cyborg",
@@ -4588,7 +4588,7 @@
     "move3": "Zigzag Spark",
     "move4": "Patriot Shot",
     "score": 65.0,
-    "photoPath": "images/players/cyborg.jpg"
+    "photoPath": "cyborg.jpg"
   },
   {
     "name": "Balt Decker",

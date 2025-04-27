@@ -9,8 +9,8 @@ public class MainScraping {
 
         // ✅ Actualizamos todo el JSON
         scraper.actualizarCartasConFotos(
-                "src/main/resources/jugadores.json",                // JSON de entrada
-                "src/main/resources/jugadores_actualizados.json"     // JSON de salida
+                "src/main/resources/jugadores_limpio.json",                // JSON de entrada
+                "src/main/resources/jugadores_limpio.json"     // JSON de salida
         );
 
         System.out.println("✅ Proceso completado para TODOS los equipos.");

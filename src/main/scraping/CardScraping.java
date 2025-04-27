@@ -69,16 +69,16 @@ public class CardScraping {
         teamNameMapping.put("Raimon", "Instituto Raimon");
         teamNameMapping.put("Occult", "Instituto Occult");
         teamNameMapping.put("Wild", "Instituto Wild");
-        teamNameMapping.put("Brain", "Instituto Brain");
+        teamNameMapping.put("Brainwashing", "Instituto Brain");
         teamNameMapping.put("Otaku", "Instituto Otaku");
-        teamNameMapping.put("Royal_Academy", "Royal Academy");
+        teamNameMapping.put("Royal Academy", "Royal Academy");
         teamNameMapping.put("Shuriken", "Instituto Shuriken");
         teamNameMapping.put("Farm", "Instituto Farm");
         teamNameMapping.put("Kirkwood", "Instituto Kirkwood");
         teamNameMapping.put("Zeus", "Instituto Zeus");
-        teamNameMapping.put("Raimon_Old_Boys", "Inazuma Eleven (Equipo)");
-        teamNameMapping.put("Street_Sallys", "Sallys");
-        teamNameMapping.put("Inazuma_KFC", "Inazuma Kids FC");
+        teamNameMapping.put("Raimon Old Boys", "Inazuma Eleven (Equipo)");
+        teamNameMapping.put("Street Sally\u0027s", "Sallys");
+        teamNameMapping.put("Inazuma KFC", "Inazuma Kids FC");
         teamNameMapping.put("Umbrella", "Instituto Umbrella");
     }
 

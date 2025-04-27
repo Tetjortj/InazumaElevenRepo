@@ -13,6 +13,10 @@ import javafx.scene.text.Font;
 import main.Card;
 
 import java.io.File;
+import java.io.InputStream;
+
+import java.net.URL;
+
 
 public class CardView extends StackPane {
 
@@ -40,16 +44,8 @@ public class CardView extends StackPane {
 
         // Imagen principal del jugador
         if (card.getPhotoPath() != null && !card.getPhotoPath().isEmpty()) {
-            try {
-                Image img = new Image(new File("src/main/resources/" + card.getPhotoPath()).toURI().toString());
-                ImageView imageView = new ImageView(img);
-                imageView.setFitWidth(100);
-                imageView.setFitHeight(100);
-                imageView.setPreserveRatio(true);
-                content.getChildren().add(imageView);
-            } catch (Exception e) {
-                System.out.println("No se pudo cargar imagen de " + card.getName());
-            }
+            System.out.println(card.getPhotoPath());
+            content.getChildren().add(cargarFotoJugador(card.getPhotoPath()));
         }
 
         // Iconos de Elemento, Posición y Grado
@@ -83,6 +79,9 @@ public class CardView extends StackPane {
         content.getChildren().add(score);
     }
 
+    private ImageView cargarFotoJugador(String rutaRelativa) {
+        return cargarIcono("images/players/" + rutaRelativa, 30, 30);
+    }
     private ImageView cargarIconoElemento(String elemento) {
         return cargarIcono("images/elements/" + elemento.toLowerCase() + ".jpg", 30, 30);
     }
@@ -108,14 +107,20 @@ public class CardView extends StackPane {
 
     private ImageView cargarIcono(String ruta, int ancho, int alto) {
         try {
-            Image img = new Image(new File("src/main/resources/" + ruta).toURI().toString());
+            System.out.println(ruta);
+            InputStream is = getClass().getClassLoader().getResourceAsStream(ruta);
+            if (is == null) {
+                System.out.println("No se encontró icono: " + ruta);
+                return new ImageView();
+            }
+            Image img = new Image(is);
             ImageView imageView = new ImageView(img);
             imageView.setFitWidth(ancho);
             imageView.setFitHeight(alto);
             imageView.setPreserveRatio(true);
             return imageView;
         } catch (Exception e) {
-            System.out.println("No se pudo cargar icono: " + ruta);
+            System.out.println("Error cargando icono: " + ruta);
             return new ImageView();
         }
     }
