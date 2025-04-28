@@ -1,6 +1,7 @@
 package main.ui;
 
 import javafx.animation.ScaleTransition;
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -62,33 +63,46 @@ public class CardView extends StackPane {
                 );
                 setBackground(new Background(backgroundImage));
             } else {
-                System.out.println("⚠️ No se encontró el fondo de carta.");
+                System.out.println("\u26a0\ufe0f No se encontr\u00f3 el fondo de carta.");
                 setStyle("-fx-background-color: linear-gradient(to bottom right, #fdf6e3, #f5deb3);");
             }
         } catch (Exception e) {
-            System.out.println("⚠️ Error cargando el fondo: " + e.getMessage());
+            System.out.println("\u26a0\ufe0f Error cargando el fondo: " + e.getMessage());
         }
     }
 
     private void inicializarContenido() {
         content.setAlignment(Pos.TOP_CENTER);
-        content.setPadding(new Insets(8, 8, 8, 8));
+        content.setPadding(new Insets(-5, 8, 8, 8));
 
-        // TopRow: iconos + imagen
         HBox topRow = new HBox(5);
         topRow.setAlignment(Pos.TOP_LEFT);
 
-        VBox atributos = new VBox(8);
-        atributos.setAlignment(Pos.TOP_CENTER);
+        // ESCUDO aparte
+        VBox escudoBox = new VBox();
+        escudoBox.setAlignment(Pos.CENTER);
+        escudoBox.setPrefWidth(40); // espacio reservado para escudo
+        escudoBox.setMinWidth(40);
+        escudoBox.setMaxWidth(40);
+        escudoBox.setPadding(new Insets(0, 0, 50, 0));
+        ImageView teamLogo = cargarEscudoEquipo(card.getTeam().name());
+        escudoBox.getChildren().add(teamLogo);
 
-        atributos.getChildren().addAll(
+        // ICONOS (posición, elemento, grado)
+        VBox iconos = new VBox(5);
+        iconos.setAlignment(Pos.BOTTOM_LEFT);
+        iconos.getChildren().addAll(
                 cargarIconoPosicion(card.getPosition().name()),
                 cargarIconoElemento(card.getElement().name()),
                 cargarIconoGrado(card.getGrade().name())
         );
 
+        // Imagen del jugador
         StackPane imagenJugadorFrame = crearMarcoJugador();
-        topRow.getChildren().addAll(atributos, imagenJugadorFrame);
+
+        // Ahora añades al HBox (escudo, iconos y foto jugador)
+        topRow.getChildren().addAll(escudoBox, iconos, imagenJugadorFrame);
+
         content.getChildren().add(topRow);
 
         // Nombre grande
@@ -97,7 +111,7 @@ public class CardView extends StackPane {
         nameLabel.setTextFill(Color.BLACK);
         nameLabel.setWrapText(true);
         nameLabel.setAlignment(Pos.CENTER);
-        nameLabel.setPadding(new Insets(5, 0, 0, 0));
+        nameLabel.setPadding(new Insets(-5, 0, 0, 0));
 
         DropShadow sombraNombre = new DropShadow();
         sombraNombre.setRadius(3);
@@ -108,7 +122,7 @@ public class CardView extends StackPane {
 
         content.getChildren().add(nameLabel);
 
-        // Stats + Escudo y Score
+        // Stats + Score
         GridPane statsGrid = new GridPane();
         statsGrid.setAlignment(Pos.CENTER);
         statsGrid.setHgap(10);
@@ -122,20 +136,20 @@ public class CardView extends StackPane {
         addStat(statsGrid, "Stam", card.getStamina(), 1, 2);
         addStat(statsGrid, "Guts", card.getGuts(), 0, 3);
 
-        // Añadimos escudo + score a la derecha de Guts
-        HBox teamAndScore = new HBox(3);
-        teamAndScore.setAlignment(Pos.CENTER_LEFT);
-
-        ImageView teamLogo = cargarEscudoEquipo(card.getTeam().name());
-        teamLogo.setFitWidth(30);
-        teamLogo.setFitHeight(30);
         Label scoreLabel = new Label(String.valueOf((int) card.getScore()));
-        scoreLabel.setFont(Font.font("Verdana", FontWeight.EXTRA_BOLD, 20));
-        scoreLabel.setTextFill(Color.GOLDENROD);
+        scoreLabel.setFont(Font.font("Verdana", FontWeight.EXTRA_BOLD, 24));
+        scoreLabel.setTextFill(Color.BLACK);
+        scoreLabel.setAlignment(Pos.CENTER_RIGHT);
+        GridPane.setHalignment(scoreLabel, HPos.RIGHT);
+        scoreLabel.setBackground(new Background(new BackgroundFill(
+                Color.WHITE, new CornerRadii(5), Insets.EMPTY
+        )));
+        scoreLabel.setBorder(new Border(new BorderStroke(
+                Color.BLACK, BorderStrokeStyle.SOLID, new CornerRadii(5), BorderWidths.DEFAULT
+        )));
+        scoreLabel.setPadding(new Insets(5));
 
-        teamAndScore.getChildren().addAll(teamLogo, scoreLabel);
-
-        statsGrid.add(teamAndScore, 1, 3);
+        statsGrid.add(scoreLabel, 1, 3);
 
         content.getChildren().add(statsGrid);
     }
@@ -143,8 +157,10 @@ public class CardView extends StackPane {
     private StackPane crearMarcoJugador() {
         StackPane imagenJugadorFrame = new StackPane();
         imagenJugadorFrame.setPrefSize(100, 100);
-        imagenJugadorFrame.setMaxSize(100, 100);
-        imagenJugadorFrame.setMinSize(100, 100);
+
+        VBox contenedorImagen = new VBox();
+        contenedorImagen.setAlignment(Pos.TOP_CENTER);
+        contenedorImagen.setPadding(new Insets(8, 0, 0, 0));
 
         ImageView fondoJugador = cargarFondoJugador();
         fondoJugador.setFitWidth(96);
@@ -171,7 +187,8 @@ public class CardView extends StackPane {
         bordeNegro.setPrefSize(96, 96);
         bordeNegro.setAlignment(Pos.CENTER);
 
-        imagenJugadorFrame.getChildren().add(bordeNegro);
+        contenedorImagen.getChildren().add(bordeNegro);
+        imagenJugadorFrame.getChildren().add(contenedorImagen);
         return imagenJugadorFrame;
     }
 
@@ -205,7 +222,7 @@ public class CardView extends StackPane {
         try {
             URL resource = getClass().getClassLoader().getResource("images/players/" + rutaRelativa);
             if (resource == null) {
-                System.out.println("No se encontró imagen jugador: " + rutaRelativa);
+                System.out.println("No se encontr\u00f3 imagen jugador: " + rutaRelativa);
                 return new ImageView();
             }
             Image img = new Image(resource.toString());
@@ -222,7 +239,7 @@ public class CardView extends StackPane {
         try {
             URL resource = getClass().getClassLoader().getResource("images/card_player_background.png");
             if (resource == null) {
-                System.out.println("No se encontró fondo jugador.");
+                System.out.println("No se encontr\u00f3 fondo jugador.");
                 return new ImageView();
             }
             return new ImageView(new Image(resource.toString()));
@@ -233,11 +250,11 @@ public class CardView extends StackPane {
     }
 
     private ImageView cargarIconoElemento(String elemento) {
-        return cargarIcono("images/elements/" + elemento.toLowerCase() + ".jpg", 25, 25);
+        return cargarIcono("images/elements/" + elemento.toLowerCase() + ".jpg", 22, 22);
     }
 
     private ImageView cargarIconoPosicion(String posicion) {
-        return cargarIcono("images/positions/" + posicion.toUpperCase() + ".jpg", 25, 25);
+        return cargarIcono("images/positions/" + posicion.toUpperCase() + ".jpg", 22, 22);
     }
 
     private ImageView cargarIconoGrado(String grado) {
@@ -247,19 +264,27 @@ public class CardView extends StackPane {
             case "THIRD_YEAR" -> "3rd.jpg";
             default -> "1st.jpg";
         };
-        return cargarIcono("images/grade/" + fileName, 25, 25);
+        return cargarIcono("images/grade/" + fileName, 22, 22);
     }
 
     private ImageView cargarEscudoEquipo(String equipo) {
         String fileName = equipo.toLowerCase() + ".jpg";
-        return cargarIcono("images/teams/" + fileName, 30, 30);
+        int ancho = 50, alto = 50;
+        if (equipo.equalsIgnoreCase("Street_Sallys")) {
+            ancho = 35;
+            alto = 35;
+        } else if(equipo.equalsIgnoreCase("Raimon") || equipo.equalsIgnoreCase("Zeus")) {
+            ancho = 40;
+            alto = 40;
+        }
+        return cargarIcono("images/teams/" + fileName, ancho, alto);
     }
 
     private ImageView cargarIcono(String ruta, int ancho, int alto) {
         try {
             URL resource = getClass().getClassLoader().getResource(ruta);
             if (resource == null) {
-                System.out.println("No se encontró icono: " + ruta);
+                System.out.println("No se encontr\u00f3 icono: " + ruta);
                 return new ImageView();
             }
             Image img = new Image(resource.toString());
