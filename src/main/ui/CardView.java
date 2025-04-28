@@ -138,14 +138,14 @@ public class CardView extends StackPane {
         statsGrid.setHgap(10);
         statsGrid.setVgap(2);
 
-        addStat(statsGrid, "Kic", card.getKick(), 0, 0);
-        addStat(statsGrid, "Bod", card.getBody(), 1, 0);
-        addStat(statsGrid, "Con", card.getControl(), 0, 1);
-        addStat(statsGrid, "Gua", card.getGuard(), 1, 1);
-        addStat(statsGrid, "Spe", card.getSpeed(), 0, 2);
-        addStat(statsGrid, "Sta", card.getStamina(), 1, 2);
+        addStat(statsGrid, "KIC", card.getKick(), 0, 0);
+        addStat(statsGrid, "BOD", card.getBody(), 1, 0);
+        addStat(statsGrid, "CON", card.getControl(), 0, 1);
+        addStat(statsGrid, "GUA", card.getGuard(), 1, 1);
+        addStat(statsGrid, "SPE", card.getSpeed(), 0, 2);
+        addStat(statsGrid, "STA", card.getStamina(), 1, 2);
 
-        Label gutsLabel = new Label(card.getGuts() + " Guts");
+        Label gutsLabel = new Label(card.getGuts() + " GUTS");
         gutsLabel.setFont(Font.font("Verdana", FontWeight.EXTRA_BOLD, 14));
         gutsLabel.setTextFill(Color.BLACK);
         gutsLabel.setWrapText(true);
@@ -307,6 +307,7 @@ public class CardView extends StackPane {
             case "FIRST_YEAR" -> "1st.jpg";
             case "SECOND_YEAR" -> "2nd.jpg";
             case "THIRD_YEAR" -> "3rd.jpg";
+            case "ADULT" -> "adult.jpg";
             default -> "1st.jpg";
         };
         return cargarIcono("images/grade/" + fileName, 22, 22);

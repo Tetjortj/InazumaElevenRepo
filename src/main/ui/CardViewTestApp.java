@@ -24,8 +24,13 @@ public class CardViewTestApp extends Application {
         List<Card> delanteros = playerPool.getByPosition(Position.FW);
 
         // Barajamos y elegimos algunos delanteros
+        /*
         Collections.shuffle(delanteros);
         List<Card> delanterosParaMostrar = delanteros.stream().limit(6).toList();
+        */
+
+        Collections.shuffle(todasLasCartas);
+        List<Card> todasLasCartasMostrar = todasLasCartas.stream().limit(6).toList();
 
         // Grid de cartas
         TilePane grid = new TilePane();
@@ -38,14 +43,14 @@ public class CardViewTestApp extends Application {
         // Fondo general bonito para todas las cartas
         grid.setStyle("-fx-background-color: linear-gradient(to bottom right, #ffffff, #d3d3d3);");
 
-        for (Card card : delanterosParaMostrar) {
+        for (Card card : todasLasCartasMostrar) {
             CardView cardView = new CardView(card);
             grid.getChildren().add(cardView);
         }
 
         Scene scene = new Scene(grid, 800, 600);
 
-        primaryStage.setTitle("Vista de Delanteros - Test");
+        primaryStage.setTitle("Vista de Cartas - Test");
         primaryStage.setScene(scene);
         primaryStage.show();
     }
