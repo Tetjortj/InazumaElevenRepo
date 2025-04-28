@@ -5,6 +5,7 @@ import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
+import javafx.scene.control.Separator;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -40,7 +41,8 @@ public class CardView extends StackPane {
         inicializarContenido();
         inicializarHoverEfect();
 
-        this.getChildren().add(content);
+        // Añadirlo al StackPane (detrás del content)
+        this.getChildren().addAll(content);
     }
 
     private void inicializarClip() {
@@ -73,22 +75,21 @@ public class CardView extends StackPane {
 
     private void inicializarContenido() {
         content.setAlignment(Pos.TOP_CENTER);
-        content.setPadding(new Insets(-5, 8, 8, 8));
+        content.setPadding(new Insets(8, 8, 8, 8)); // Margen general pequeño
 
+        // --- TopRow con escudo, iconos y foto
         HBox topRow = new HBox(5);
         topRow.setAlignment(Pos.TOP_LEFT);
 
-        // ESCUDO aparte
         VBox escudoBox = new VBox();
-        escudoBox.setAlignment(Pos.CENTER);
-        escudoBox.setPrefWidth(40); // espacio reservado para escudo
+        escudoBox.setAlignment(Pos.BOTTOM_CENTER);
+        escudoBox.setPrefWidth(40);
         escudoBox.setMinWidth(40);
         escudoBox.setMaxWidth(40);
-        escudoBox.setPadding(new Insets(0, 0, 50, 0));
+        escudoBox.setPadding(new Insets(0, 0, 0, 0));
         ImageView teamLogo = cargarEscudoEquipo(card.getTeam().name());
         escudoBox.getChildren().add(teamLogo);
 
-        // ICONOS (posición, elemento, grado)
         VBox iconos = new VBox(5);
         iconos.setAlignment(Pos.BOTTOM_LEFT);
         iconos.getChildren().addAll(
@@ -97,15 +98,10 @@ public class CardView extends StackPane {
                 cargarIconoGrado(card.getGrade().name())
         );
 
-        // Imagen del jugador
         StackPane imagenJugadorFrame = crearMarcoJugador();
-
-        // Ahora añades al HBox (escudo, iconos y foto jugador)
         topRow.getChildren().addAll(escudoBox, iconos, imagenJugadorFrame);
 
-        content.getChildren().add(topRow);
-
-        // Nombre grande
+        // --- Nombre del jugador
         Label nameLabel = new Label(card.getName());
         nameLabel.setFont(Font.font("Verdana", FontWeight.EXTRA_BOLD, 18));
         nameLabel.setTextFill(Color.BLACK);
@@ -120,38 +116,80 @@ public class CardView extends StackPane {
         sombraNombre.setColor(Color.rgb(255, 255, 255, 0.8));
         nameLabel.setEffect(sombraNombre);
 
-        content.getChildren().add(nameLabel);
+        // --- Línea separadora
+        Rectangle lineaSeparadora = new Rectangle();
+        lineaSeparadora.setWidth(160);
+        lineaSeparadora.setHeight(1);
+        lineaSeparadora.setFill(Color.rgb(0, 0, 0, 0.5));
 
-        // Stats + Score
+        // --- Agrupar la parte superior
+        VBox parteSuperior = new VBox(5);
+        parteSuperior.setAlignment(Pos.TOP_CENTER);
+        parteSuperior.setPadding(new Insets(40, 0, 0, 5)); // No tocar aquí
+        parteSuperior.getChildren().addAll(topRow, nameLabel, lineaSeparadora);
+
+        // --- Fondo para las stats
+        Rectangle fondoStats = new Rectangle(180, 130);
+        fondoStats.setFill(Color.rgb(255, 255, 255, 0.6));
+
+        // --- Grid de stats
         GridPane statsGrid = new GridPane();
         statsGrid.setAlignment(Pos.CENTER);
         statsGrid.setHgap(10);
-        statsGrid.setVgap(5);
+        statsGrid.setVgap(2);
 
-        addStat(statsGrid, "Kick", card.getKick(), 0, 0);
-        addStat(statsGrid, "Body", card.getBody(), 1, 0);
-        addStat(statsGrid, "Ctrl", card.getControl(), 0, 1);
-        addStat(statsGrid, "Guard", card.getGuard(), 1, 1);
-        addStat(statsGrid, "Spd", card.getSpeed(), 0, 2);
-        addStat(statsGrid, "Stam", card.getStamina(), 1, 2);
-        addStat(statsGrid, "Guts", card.getGuts(), 0, 3);
+        addStat(statsGrid, "Kic", card.getKick(), 0, 0);
+        addStat(statsGrid, "Bod", card.getBody(), 1, 0);
+        addStat(statsGrid, "Con", card.getControl(), 0, 1);
+        addStat(statsGrid, "Gua", card.getGuard(), 1, 1);
+        addStat(statsGrid, "Spe", card.getSpeed(), 0, 2);
+        addStat(statsGrid, "Sta", card.getStamina(), 1, 2);
 
+        Label gutsLabel = new Label(card.getGuts() + " Guts");
+        gutsLabel.setFont(Font.font("Verdana", FontWeight.EXTRA_BOLD, 14));
+        gutsLabel.setTextFill(Color.BLACK);
+        gutsLabel.setWrapText(true);
+        gutsLabel.setAlignment(Pos.CENTER);
+
+        // Sombra
+        DropShadow sombraStat = new DropShadow();
+        sombraStat.setRadius(3);
+        sombraStat.setOffsetX(1);
+        sombraStat.setOffsetY(1);
+        sombraStat.setColor(Color.rgb(255, 255, 255, 0.8));
+        gutsLabel.setEffect(sombraStat);
+
+        gutsLabel.setPadding(new Insets(2, 5, 2, 5));
+
+        // 📍 Ahora Guts ocupa 2 columnas (columna 0, fila 3, span 2 columnas)
+        statsGrid.add(gutsLabel, 0, 3, 2, 1);
+        GridPane.setHalignment(gutsLabel, HPos.CENTER); // Centrarlo
+
+        StackPane statsBackground = new StackPane();
+        statsBackground.setPrefSize(160, 100);
+        statsBackground.getChildren().addAll(fondoStats, statsGrid);
+
+        VBox parteInferior = new VBox();
+        parteInferior.setAlignment(Pos.TOP_CENTER);
+        parteInferior.setPadding(new Insets(0, 0, 25, 0));
+        parteInferior.getChildren().add(statsBackground);
+
+        content.getChildren().addAll(parteSuperior, parteInferior);
+
+        // --- Score flotante encima de todo (¡IMPORTANTE! fuera de content)
         Label scoreLabel = new Label(String.valueOf((int) card.getScore()));
-        scoreLabel.setFont(Font.font("Verdana", FontWeight.EXTRA_BOLD, 24));
-        scoreLabel.setTextFill(Color.BLACK);
-        scoreLabel.setAlignment(Pos.CENTER_RIGHT);
-        GridPane.setHalignment(scoreLabel, HPos.RIGHT);
-        scoreLabel.setBackground(new Background(new BackgroundFill(
-                Color.WHITE, new CornerRadii(5), Insets.EMPTY
-        )));
-        scoreLabel.setBorder(new Border(new BorderStroke(
-                Color.BLACK, BorderStrokeStyle.SOLID, new CornerRadii(5), BorderWidths.DEFAULT
-        )));
-        scoreLabel.setPadding(new Insets(5));
+        scoreLabel.setFont(Font.font("Verdana", FontWeight.EXTRA_BOLD, 30));
+        scoreLabel.setTextFill(Color.YELLOW);
+        DropShadow sombraScore = new DropShadow();
+        sombraScore.setRadius(3);
+        sombraScore.setOffsetX(1);
+        sombraScore.setOffsetY(1);
+        sombraScore.setColor(Color.rgb(255, 255, 255, 0.8));
+        scoreLabel.setEffect(sombraScore);
 
-        statsGrid.add(scoreLabel, 1, 3);
-
-        content.getChildren().add(statsGrid);
+        StackPane.setAlignment(scoreLabel, Pos.TOP_LEFT);
+        StackPane.setMargin(scoreLabel, new Insets(5, 0, 0, 15));
+        this.getChildren().add(scoreLabel); // 👈 Fíjate: se añade al StackPane (CardView), no al content
     }
 
     private StackPane crearMarcoJugador() {
@@ -206,15 +244,22 @@ public class CardView extends StackPane {
     }
 
     private void addStat(GridPane grid, String label, int value, int col, int row) {
-        Label stat = new Label(label + ": " + value);
-        stat.setFont(Font.font("Verdana", FontWeight.BOLD, 12));
+        Label stat = new Label(value+ " " + label);
+        stat.setFont(Font.font("Verdana", FontWeight.EXTRA_BOLD, 14)); // Igual que el nombre
         stat.setTextFill(Color.BLACK);
-        stat.setBackground(new Background(new BackgroundFill(
-                Color.rgb(255, 255, 255, 0.6),
-                new CornerRadii(3),
-                Insets.EMPTY
-        )));
+        stat.setWrapText(true);
+        stat.setAlignment(Pos.CENTER);
+
+        // Aplicar sombra blanca
+        DropShadow sombraStat = new DropShadow();
+        sombraStat.setRadius(3);
+        sombraStat.setOffsetX(1);
+        sombraStat.setOffsetY(1);
+        sombraStat.setColor(Color.rgb(255, 255, 255, 0.8));
+        stat.setEffect(sombraStat);
+
         stat.setPadding(new Insets(2, 5, 2, 5));
+
         grid.add(stat, col, row);
     }
 
