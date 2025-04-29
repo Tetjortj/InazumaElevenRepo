@@ -1,9 +1,13 @@
 package main.ui;
 
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.text.Font;
 import main.Card;
 import main.Formation;
 import main.PlayerPlacement;
@@ -11,7 +15,7 @@ import main.PlayerPool;
 
 import java.util.*;
 
-public class DraftView extends BorderPane {
+public class DraftView extends HBox {
 
     private final GridPane fieldGrid = new GridPane();
     private final List<PlayerCell> playerCells = new ArrayList<>();
@@ -30,22 +34,14 @@ public class DraftView extends BorderPane {
     }
 
     private void inicializarVista() {
-        // Fondo general
-        try {
-            Image fondo = new Image(getClass().getResource("/images/draft_background.png").toExternalForm());
-            BackgroundImage backgroundImage = new BackgroundImage(
-                    fondo,
-                    BackgroundRepeat.NO_REPEAT,
-                    BackgroundRepeat.NO_REPEAT,
-                    BackgroundPosition.CENTER,
-                    new BackgroundSize(100, 100, true, true, false, true)
-            );
-            this.setBackground(new Background(backgroundImage));
-        } catch (Exception e) {
-            this.setStyle("-fx-background-color: green;");
-        }
+        // --- Fondo e imagen del campo
+        Image fondo = new Image(getClass().getResource("/images/draft_background2.png").toExternalForm());
+        ImageView backgroundView = new ImageView(fondo);
+        backgroundView.setPreserveRatio(false);
+        backgroundView.fitWidthProperty().bind(widthProperty().multiply(0.7)); // 70% para el campo
+        backgroundView.fitHeightProperty().bind(heightProperty());
 
-        // Campo de juego
+        // --- Campo
         fieldGrid.setHgap(20);
         fieldGrid.setVgap(20);
         fieldGrid.setAlignment(Pos.CENTER);
@@ -64,21 +60,35 @@ public class DraftView extends BorderPane {
             });
         }
 
-        StackPane centro = new StackPane(fieldGrid);
-        centro.setPadding(new Insets(20));
-        this.setCenter(centro);
+        StackPane campoStack = new StackPane(backgroundView, fieldGrid);
+        campoStack.setPadding(new Insets(20));
+        StackPane.setAlignment(fieldGrid, Pos.CENTER);
 
-        // Panel lateral
-        VBox derecha = new VBox(statsPanel);
-        derecha.setPadding(new Insets(20));
-        derecha.setAlignment(Pos.TOP_CENTER);
-        derecha.setPrefWidth(300);
-        this.setRight(derecha);
+        VBox campoWrapper = new VBox(campoStack);
+        campoWrapper.setPrefWidth(0); // lo fijamos por bindings luego
+        VBox.setVgrow(campoStack, Priority.ALWAYS);
+        campoWrapper.prefWidthProperty().bind(widthProperty().multiply(0.7));
+        campoWrapper.prefHeightProperty().bind(heightProperty());
 
-        // Banquillo
+        Button salirButton = new Button("Salir");
+        salirButton.setFont(Font.font(16));
+        salirButton.setStyle("-fx-background-color: #c62828; -fx-text-fill: white;");
+        salirButton.setOnAction(e -> Platform.exit());
+
+        // --- Lateral derecho: stats y banquillo
+        VBox panelDerecho = new VBox(20, salirButton, statsPanel, banquilloBox);
+        panelDerecho.setPadding(new Insets(20));
+        panelDerecho.setAlignment(Pos.TOP_CENTER);
+        panelDerecho.setPrefWidth(400);
+        panelDerecho.setStyle("-fx-background-color: #111;"); // fondo negro temporal
+
+        VBox.setVgrow(statsPanel, Priority.ALWAYS);
         banquilloBox.setAlignment(Pos.CENTER);
         banquilloBox.setPadding(new Insets(10));
-        this.setBottom(banquilloBox);
+
+        // --- Ensamblar vista
+        this.getChildren().addAll(campoWrapper, panelDerecho);
+        this.setPrefSize(1600, 900); // tamaño base de referencia
     }
 
     private void seleccionarJugador(PlayerCell cell) {
