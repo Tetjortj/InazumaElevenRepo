@@ -1,8 +1,8 @@
 package main.ui;
 
 import javafx.geometry.Pos;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
+import javafx.scene.image.Image;
+import javafx.scene.layout.*;
 import main.Card;
 import main.Formation;
 import main.PlayerPlacement;
@@ -52,7 +52,18 @@ public class DraftField extends StackPane {
         }
 
         this.getChildren().add(fieldGrid);
-        this.setStyle("-fx-background-color: green;");
+
+        Image fondo = new Image(getClass().getResource("/images/draft_background.png").toExternalForm());
+        BackgroundImage backgroundImage = new BackgroundImage(
+                fondo,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.CENTER,
+                new BackgroundSize(
+                        100, 100, true, true, false, false // 100% del ancho y alto
+                )
+        );
+        this.setBackground(new Background(backgroundImage));
     }
 
     private void seleccionarJugador(PlayerCell cell) {

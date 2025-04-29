@@ -20,32 +20,44 @@ public class PlayerCell extends StackPane {
     private final Label label;
     private final Rectangle fondo;
 
+    // Tamaño fijo de celda (coincide con carta escalada)
+    private static final double CELL_WIDTH = 125;
+    private static final double CELL_HEIGHT = 175;
+
     public PlayerCell(int index, Position position) {
         this.index = index;
         this.position = position;
 
-        // Fondo visible antes de desbloquear
-        fondo = new Rectangle(80, 80);
+        fondo = new Rectangle(CELL_WIDTH, CELL_HEIGHT);
         fondo.setFill(Color.GRAY);
         fondo.setStroke(Color.BLACK);
 
         label = new Label(position.name() + "\n[" + index + "]");
         label.setTextFill(Color.WHITE);
         label.setAlignment(Pos.CENTER);
+        label.setWrapText(true);
 
         this.setAlignment(Pos.CENTER);
         this.getChildren().addAll(fondo, label);
+
+        // Fijar el tamaño de la celda para mantener consistencia
+        this.setPrefSize(CELL_WIDTH, CELL_HEIGHT);
+        this.setMinSize(CELL_WIDTH, CELL_HEIGHT);
+        this.setMaxSize(CELL_WIDTH, CELL_HEIGHT);
     }
 
     public void desbloquear(Card card) {
         this.unlocked = true;
 
-        // Eliminar fondo y texto una vez desbloqueado
-        this.getChildren().clear(); // elimina fondo y label
-        this.setStyle(null); // elimina cualquier borde o color aplicado por estilo CSS
-        this.setPrefSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE);
-        this.setMinSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE);
-        this.setMaxSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE);
+        // Eliminar fondo y label al colocar carta
+        this.getChildren().clear();
+        this.setStyle(null);
+
+        // ⚠️ OPCIONAL: si quieres que siga ocupando el mismo espacio exactamente, puedes mantener el tamaño fijo.
+        // Si no, puedes usar computed_size como antes.
+        this.setPrefSize(CELL_WIDTH, CELL_HEIGHT);
+        this.setMinSize(CELL_WIDTH, CELL_HEIGHT);
+        this.setMaxSize(CELL_WIDTH, CELL_HEIGHT);
     }
 
     public boolean isUnlocked() {

@@ -50,42 +50,6 @@ public class DraftScreen {
         // Música
         MusicManager.playMusic("/music/draft-theme.wav");
 
-        // Volumen
-        Slider volumeSlider = new Slider(0, 1, MusicManager.getVolume());
-        volumeSlider.setShowTickLabels(true);
-        volumeSlider.setShowTickMarks(true);
-        volumeSlider.setMajorTickUnit(0.2);
-        volumeSlider.setMinorTickCount(1);
-        volumeSlider.setBlockIncrement(0.1);
-        volumeSlider.setPrefWidth(200);
-        volumeSlider.setMaxWidth(200);
-        volumeSlider.valueProperty().addListener((obs, oldVal, newVal) -> MusicManager.setVolume(newVal.doubleValue()));
-
-        HBox volumenBox = new HBox(volumeSlider);
-        volumenBox.setAlignment(Pos.BOTTOM_RIGHT);
-        volumenBox.setPadding(new Insets(0, 20, 20, 0));
-
-        StackPane root = new StackPane(volumenBox);
-        root.setStyle("-fx-background-color: #222;");
-
-        Scene scene = new Scene(root);
-        stage.setScene(scene);
-
-        // ✅ Usamos los límites visibles para que siempre se ajuste
-        Rectangle2D visualBounds = Screen.getPrimary().getVisualBounds();
-        stage.setX(visualBounds.getMinX());
-        stage.setY(visualBounds.getMinY());
-        stage.setWidth(visualBounds.getWidth());
-        stage.setHeight(visualBounds.getHeight());
-        stage.setTitle("Pantalla de Draft");
-        stage.show();
-
-        // Animación de entrada
-        FadeTransition fadeIn = new FadeTransition(Duration.millis(700), root);
-        fadeIn.setFromValue(0.0);
-        fadeIn.setToValue(1.0);
-        fadeIn.play();
-
         // Selección de alineación
         Platform.runLater(() -> {
             mostrarSeleccionAlineacion(stage);
@@ -106,18 +70,18 @@ public class DraftScreen {
         // Stats
         StatsPanel statsPanel = new StatsPanel();
 
-        // Crear vista principal
+        // Crear vista final (fusionada)
         DraftView draftView = new DraftView(selectedFormation, playerPool, statsPanel);
 
-        // ✅ Vinculamos el tamaño de DraftView a la escena
+        // Crear escena con DraftView
         Scene draftScene = new Scene(draftView);
         draftView.prefWidthProperty().bind(draftScene.widthProperty());
         draftView.prefHeightProperty().bind(draftScene.heightProperty());
 
-        // ✅ Establecemos la escena y maximizamos
+        // Mostrar en pantalla completa
         stage.setScene(draftScene);
         stage.setMaximized(true);
-        stage.setFullScreenExitHint(""); // Si prefieres ocultar el mensaje de "Presiona ESC para salir"
+        stage.setFullScreenExitHint("");
     }
 
     private void mostrarSeleccionAlineacion(Stage ownerStage) {
