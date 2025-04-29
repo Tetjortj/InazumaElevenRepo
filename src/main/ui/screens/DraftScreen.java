@@ -4,6 +4,7 @@ import javafx.animation.FadeTransition;
 import javafx.animation.ScaleTransition;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.*;
@@ -39,16 +40,17 @@ import main.CardLoader;
 import main.PlayerPool;
 import main.ui.DraftField;
 import main.ui.StatsPanel;
+import main.ui.DraftView;
 
 public class DraftScreen {
 
-    private Formation selectedFormation; // Guardar aquí la formación elegida
+    private Formation selectedFormation;
 
     public void show(Stage stage) {
-        // Music manager
+        // Música
         MusicManager.playMusic("/music/draft-theme.wav");
 
-        // ---------- Volumen ----------
+        // Volumen
         Slider volumeSlider = new Slider(0, 1, MusicManager.getVolume());
         volumeSlider.setShowTickLabels(true);
         volumeSlider.setShowTickMarks(true);
@@ -57,37 +59,36 @@ public class DraftScreen {
         volumeSlider.setBlockIncrement(0.1);
         volumeSlider.setPrefWidth(200);
         volumeSlider.setMaxWidth(200);
-        volumeSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
-            MusicManager.setVolume(newVal.doubleValue());
-        });
+        volumeSlider.valueProperty().addListener((obs, oldVal, newVal) -> MusicManager.setVolume(newVal.doubleValue()));
 
         HBox volumenBox = new HBox(volumeSlider);
         volumenBox.setAlignment(Pos.BOTTOM_RIGHT);
         volumenBox.setPadding(new Insets(0, 20, 20, 0));
 
-        StackPane root = new StackPane();
-        root.getChildren().add(volumenBox);
-
+        StackPane root = new StackPane(volumenBox);
         root.setStyle("-fx-background-color: #222;");
 
         Scene scene = new Scene(root);
         stage.setScene(scene);
-        stage.setWidth(Screen.getPrimary().getVisualBounds().getWidth());
-        stage.setHeight(Screen.getPrimary().getVisualBounds().getHeight());
-        stage.setX(0);
-        stage.setY(0);
+
+        // ✅ Usamos los límites visibles para que siempre se ajuste
+        Rectangle2D visualBounds = Screen.getPrimary().getVisualBounds();
+        stage.setX(visualBounds.getMinX());
+        stage.setY(visualBounds.getMinY());
+        stage.setWidth(visualBounds.getWidth());
+        stage.setHeight(visualBounds.getHeight());
         stage.setTitle("Pantalla de Draft");
         stage.show();
 
+        // Animación de entrada
         FadeTransition fadeIn = new FadeTransition(Duration.millis(700), root);
         fadeIn.setFromValue(0.0);
         fadeIn.setToValue(1.0);
         fadeIn.play();
 
-        // 🔥 Justo después, lanzar selección de alineación y luego cargar el campo
+        // Selección de alineación
         Platform.runLater(() -> {
             mostrarSeleccionAlineacion(stage);
-
             if (selectedFormation != null) {
                 cargarPantallaDraft(stage);
             } else {
@@ -97,24 +98,26 @@ public class DraftScreen {
     }
 
     private void cargarPantallaDraft(Stage stage) {
-        // Crear el pool de cartas
+        // Cargar cartas
         CardLoader loader = new CardLoader();
         List<Card> todasLasCartas = loader.loadCards();
         PlayerPool playerPool = new PlayerPool(todasLasCartas);
 
-        // Crear el panel de stats
+        // Stats
         StatsPanel statsPanel = new StatsPanel();
 
-        // Crear el campo de draft usando la formación elegida
-        DraftField draftField = new DraftField(selectedFormation, playerPool, statsPanel);
+        // Crear vista principal
+        DraftView draftView = new DraftView(selectedFormation, playerPool, statsPanel);
 
-        // Mostrar todo en un BorderPane
-        BorderPane pantallaPrincipal = new BorderPane();
-        pantallaPrincipal.setCenter(draftField);
-        pantallaPrincipal.setRight(statsPanel);
+        // ✅ Vinculamos el tamaño de DraftView a la escena
+        Scene draftScene = new Scene(draftView);
+        draftView.prefWidthProperty().bind(draftScene.widthProperty());
+        draftView.prefHeightProperty().bind(draftScene.heightProperty());
 
-        Scene draftScene = new Scene(pantallaPrincipal, Screen.getPrimary().getVisualBounds().getWidth(), Screen.getPrimary().getVisualBounds().getHeight());
+        // ✅ Establecemos la escena y maximizamos
         stage.setScene(draftScene);
+        stage.setMaximized(true);
+        stage.setFullScreenExitHint(""); // Si prefieres ocultar el mensaje de "Presiona ESC para salir"
     }
 
     private void mostrarSeleccionAlineacion(Stage ownerStage) {
@@ -127,11 +130,8 @@ public class DraftScreen {
         seleccionStage.initStyle(StageStyle.UNDECORATED);
         seleccionStage.setTitle("Selecciona tu alineación");
 
-        seleccionStage.setOnCloseRequest(event -> {
-            event.consume(); // No permitir cerrar
-        });
+        seleccionStage.setOnCloseRequest(event -> event.consume());
 
-        // Título arriba
         Label titulo = new Label("Escoge tu formación");
         titulo.setFont(Font.font("Arial", FontWeight.BOLD, 36));
         titulo.setTextFill(Color.WHITE);
@@ -162,6 +162,6 @@ public class DraftScreen {
 
         Scene scene = new Scene(layout, 800, 600);
         seleccionStage.setScene(scene);
-        seleccionStage.showAndWait(); // 🔥 Espera a que el jugador elija
+        seleccionStage.showAndWait();
     }
 }

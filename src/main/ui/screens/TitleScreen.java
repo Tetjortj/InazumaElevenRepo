@@ -37,51 +37,52 @@ import java.net.URL;
 public class TitleScreen {
 
     public void show(Stage stage) {
-        // Music manager
+        // Música
         MusicManager.playMusic("/music/menu-theme.wav");
 
-        // ---------- Imagen de fondo ----------
+        // Imagen de fondo
         Image backgroundImage = new Image(getClass().getResource("/images/background2.png").toExternalForm(), true);
         ImageView backgroundView = new ImageView(backgroundImage);
         backgroundView.setPreserveRatio(false);
         backgroundView.setSmooth(true);
         backgroundView.setCache(true);
-
         backgroundView.fitWidthProperty().bind(stage.widthProperty());
         backgroundView.fitHeightProperty().bind(stage.heightProperty());
 
-        // ---------- Logo ----------
+        // Logo
         Image logo = new Image(getClass().getResource("/images/logo.png").toExternalForm());
         ImageView logoView = new ImageView(logo);
-        logoView.setFitWidth(500);
         logoView.setPreserveRatio(true);
+        logoView.fitWidthProperty().bind(stage.widthProperty().multiply(0.3));
 
         FadeTransition fadeLogo = new FadeTransition(Duration.seconds(3), logoView);
         fadeLogo.setFromValue(0);
         fadeLogo.setToValue(1);
         fadeLogo.play();
 
-        // ---------- Botones de menú ----------
+        // Botones
         Button playButton = new Button("Jugar Draft");
         Button exitButton = new Button("Salir");
 
-        String botonEstilo = "-fx-font-size: 36px; -fx-padding: 40px 80px; -fx-background-color: #0096C9; -fx-text-fill: white; -fx-background-radius: 10;";
+        String botonEstilo = "-fx-font-size: 32px; -fx-padding: 30px 70px; "
+                + "-fx-background-color: #0096C9; -fx-text-fill: white; "
+                + "-fx-background-radius: 10;";
         playButton.setStyle(botonEstilo);
         exitButton.setStyle(botonEstilo);
 
-        // ---------- Volumen ----------
+        // Volumen
         Slider volumeSlider = new Slider(0, 1, 0.4);
         volumeSlider.setShowTickLabels(true);
         volumeSlider.setShowTickMarks(true);
         volumeSlider.setMajorTickUnit(0.2);
         volumeSlider.setMinorTickCount(1);
         volumeSlider.setBlockIncrement(0.1);
-        volumeSlider.setStyle("-fx-pref-width: 300px;");
+        volumeSlider.setPrefWidth(400); // Este sí hace efecto
         volumeSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
             MusicManager.setVolume(newVal.doubleValue());
         });
 
-        // ---------- Acciones de botones ----------
+        // Acciones de botones
         playButton.setOnAction(e -> {
             ScaleTransition st = new ScaleTransition(Duration.millis(150), playButton);
             st.setFromX(1.0);
@@ -96,7 +97,6 @@ public class TitleScreen {
                 FadeTransition fadeOut = new FadeTransition(Duration.millis(700), stage.getScene().getRoot());
                 fadeOut.setFromValue(1.0);
                 fadeOut.setToValue(0.0);
-
                 fadeOut.setOnFinished(e2 -> {
                     new DraftScreen().show(stage);
                     MusicManager.fadeInMusic();
@@ -114,27 +114,33 @@ public class TitleScreen {
             st.setAutoReverse(true);
             st.setCycleCount(2);
             st.play();
-
-            st.setOnFinished(ev -> {
-                Platform.exit();
-            });
+            st.setOnFinished(ev -> Platform.exit());
         });
 
-        // ---------- Layout de menú ----------
-        VBox menuDerecha = new VBox(60, logoView, playButton, exitButton, volumeSlider);
-        menuDerecha.setAlignment(Pos.CENTER);
-        menuDerecha.setPadding(new Insets(0, 300, 100, 0));
+        VBox botonesBox = new VBox(40, playButton, exitButton); // Solo botones, separados 30px entre sí
+        botonesBox.setAlignment(Pos.CENTER);
 
-        // ---------- Layout general ----------
+        VBox menuVBox = new VBox(0, logoView, botonesBox); // Logo más pegado a los botones
+        menuVBox.setAlignment(Pos.CENTER);
+
+        // Crear un HBox para el slider alineado a la derecha
+        HBox volumeContainer = new HBox();
+        volumeContainer.setAlignment(Pos.CENTER_RIGHT);
+        volumeContainer.getChildren().add(volumeSlider);
+        volumeContainer.setPadding(new Insets(0, 40, 20, 0)); // margen derecho e inferior
+
+        // Layout principal
         BorderPane layout = new BorderPane();
-        layout.setRight(menuDerecha);
+        layout.setCenter(menuVBox);
+        layout.setBottom(volumeContainer);
 
         StackPane root = new StackPane(backgroundView, layout);
 
         Scene scene = new Scene(root, 1200, 1000);
         stage.setScene(scene);
         stage.setTitle("Inazuma Draft ⚡");
-        stage.setMaximized(true);
+        stage.setFullScreen(true);
+        stage.setFullScreenExitHint("");
         stage.show();
     }
 }

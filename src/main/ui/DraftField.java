@@ -72,6 +72,10 @@ public class DraftField extends StackPane {
 
     private void mostrarCartaEnCelda(PlayerCell cell, Card cardSeleccionada) {
         cell.getChildren().clear(); // Limpiamos la celda
-        cell.getChildren().add(new CardView(cardSeleccionada)); // Añadimos la carta en JavaFX
+        CardView miniCard = new CardView(cardSeleccionada);
+        // Escalado para campo
+        miniCard.setScaleX(0.5);
+        miniCard.setScaleY(0.5);
+        cell.getChildren().add(miniCard);
     }
 }
