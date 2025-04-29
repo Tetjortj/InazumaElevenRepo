@@ -25,4 +25,20 @@ public class Formation {
     public Map<Integer, List<Integer>> getLinks() {
         return links;
     }
+
+    public int getMinFila() {
+        return placements.stream().mapToInt(PlayerPlacement::getFila).min().orElse(0);
+    }
+
+    public int getMaxFila() {
+        return placements.stream().mapToInt(PlayerPlacement::getFila).max().orElse(0);
+    }
+
+    public int getMinColumna() {
+        return placements.stream().mapToInt(PlayerPlacement::getColumna).min().orElse(0);
+    }
+
+    public int getMaxColumna() {
+        return placements.stream().mapToInt(PlayerPlacement::getColumna).max().orElse(0);
+    }
 }

@@ -21,8 +21,8 @@ public class PlayerCell extends StackPane {
     private final Rectangle fondo;
 
     // Tamaño fijo de celda (coincide con carta escalada)
-    private static final double CELL_WIDTH = 125;
-    private static final double CELL_HEIGHT = 175;
+    private static final double CELL_WIDTH = 90;
+    private static final double CELL_HEIGHT = 130;
 
     public PlayerCell(int index, Position position) {
         this.index = index;

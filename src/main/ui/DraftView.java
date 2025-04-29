@@ -17,7 +17,7 @@ import java.util.*;
 
 public class DraftView extends HBox {
 
-    private final GridPane fieldGrid = new GridPane();
+    private final Pane jugadorLayer = new Pane();
     private final List<PlayerCell> playerCells = new ArrayList<>();
     private final Map<Integer, Card> jugadoresSeleccionados = new HashMap<>();
     private final PlayerPool playerPool;
@@ -29,66 +29,106 @@ public class DraftView extends HBox {
         this.formation = formation;
         this.playerPool = playerPool;
         this.statsPanel = statsPanel;
-
         inicializarVista();
     }
 
     private void inicializarVista() {
-        // --- Fondo e imagen del campo
+        // Fondo del campo
         Image fondo = new Image(getClass().getResource("/images/draft_background2.png").toExternalForm());
         ImageView backgroundView = new ImageView(fondo);
         backgroundView.setPreserveRatio(false);
-        backgroundView.fitWidthProperty().bind(widthProperty().multiply(0.7)); // 70% para el campo
+        backgroundView.fitWidthProperty().bind(widthProperty().multiply(0.7));
         backgroundView.fitHeightProperty().bind(heightProperty());
 
-        // --- Campo
-        fieldGrid.setHgap(20);
-        fieldGrid.setVgap(20);
-        fieldGrid.setAlignment(Pos.CENTER);
-
-        for (int i = 0; i < formation.getPlacements().size(); i++) {
-            PlayerPlacement placement = formation.getPlacements().get(i);
-            PlayerCell cell = new PlayerCell(i, placement.getPosition());
-            playerCells.add(cell);
-
-            fieldGrid.add(cell, placement.getColumna(), placement.getFila());
-
-            cell.setOnMouseClicked(event -> {
-                if (!cell.isUnlocked()) {
-                    seleccionarJugador(cell);
-                }
-            });
-        }
-
-        StackPane campoStack = new StackPane(backgroundView, fieldGrid);
+        // Contenedor del campo
+        StackPane campoStack = new StackPane(backgroundView, jugadorLayer);
         campoStack.setPadding(new Insets(20));
-        StackPane.setAlignment(fieldGrid, Pos.CENTER);
+        StackPane.setAlignment(jugadorLayer, Pos.CENTER);
 
         VBox campoWrapper = new VBox(campoStack);
-        campoWrapper.setPrefWidth(0); // lo fijamos por bindings luego
-        VBox.setVgrow(campoStack, Priority.ALWAYS);
         campoWrapper.prefWidthProperty().bind(widthProperty().multiply(0.7));
         campoWrapper.prefHeightProperty().bind(heightProperty());
 
+        // Lateral derecho: stats + banquillo + botón salir
         Button salirButton = new Button("Salir");
         salirButton.setFont(Font.font(16));
         salirButton.setStyle("-fx-background-color: #c62828; -fx-text-fill: white;");
         salirButton.setOnAction(e -> Platform.exit());
 
-        // --- Lateral derecho: stats y banquillo
         VBox panelDerecho = new VBox(20, salirButton, statsPanel, banquilloBox);
         panelDerecho.setPadding(new Insets(20));
         panelDerecho.setAlignment(Pos.TOP_CENTER);
         panelDerecho.setPrefWidth(400);
-        panelDerecho.setStyle("-fx-background-color: #111;"); // fondo negro temporal
+        panelDerecho.setStyle("-fx-background-color: #111;");
 
         VBox.setVgrow(statsPanel, Priority.ALWAYS);
         banquilloBox.setAlignment(Pos.CENTER);
         banquilloBox.setPadding(new Insets(10));
 
-        // --- Ensamblar vista
         this.getChildren().addAll(campoWrapper, panelDerecho);
-        this.setPrefSize(1600, 900); // tamaño base de referencia
+        this.setPrefSize(1600, 900);
+
+        // Renderizar alineacion
+        Platform.runLater(() -> renderizarAlineacion());
+    }
+
+    private void renderizarAlineacion() {
+        jugadorLayer.getChildren().clear();
+
+        int minFila = formation.getMinFila();
+        int maxFila = formation.getPlacements().stream().mapToInt(PlayerPlacement::getFila).max().orElse(0);
+        int minCol = formation.getMinColumna();
+        int maxCol = formation.getPlacements().stream().mapToInt(PlayerPlacement::getColumna).max().orElse(0);
+
+        int filas = maxFila - minFila + 1;
+        int columnas = maxCol - minCol + 1;
+
+        double anchoCampo = jugadorLayer.getWidth();
+        double altoCampo = jugadorLayer.getHeight() * 0.8;
+
+        if (anchoCampo == 0 || altoCampo == 0) {
+            jugadorLayer.layoutBoundsProperty().addListener((obs, oldVal, newVal) -> renderizarAlineacion());
+            return;
+        }
+
+        double spacingX = 20, spacingY = 20;
+
+        double cartaAncho = (anchoCampo - spacingX * (columnas - 1)) / columnas;
+        double cartaAlto = (altoCampo - spacingY * (filas - 1)) / filas;
+
+        double cartaFinalWidth = Math.min(125, cartaAncho);
+        double cartaFinalHeight = Math.min(175, cartaAlto);
+
+        for (int i = 0; i < formation.getPlacements().size(); i++) {
+            PlayerPlacement p = formation.getPlacements().get(i);
+            int fila = p.getFila() - minFila;
+            int col = p.getColumna() - minCol;
+
+            PlayerCell cell = new PlayerCell(i, p.getPosition());
+            playerCells.add(cell);
+
+            cell.setPrefSize(cartaFinalWidth, cartaFinalHeight);
+            cell.setMinSize(cartaFinalWidth, cartaFinalHeight);
+            cell.setMaxSize(cartaFinalWidth, cartaFinalHeight);
+
+            double x = col * (cartaFinalWidth + spacingX);
+            double y = fila * (cartaFinalHeight + spacingY);
+            cell.setLayoutX(x);
+            cell.setLayoutY(y);
+
+            jugadorLayer.getChildren().add(cell);
+
+            cell.setOnMouseClicked(event -> {
+                if (!cell.isUnlocked()) seleccionarJugador(cell);
+            });
+        }
+
+        // Centrado manual del layer
+        double totalWidth = columnas * cartaFinalWidth + (columnas - 1) * spacingX;
+        double totalHeight = filas * cartaFinalHeight + (filas - 1) * spacingY;
+        jugadorLayer.setTranslateX((jugadorLayer.getWidth() - totalWidth) / 2);
+        jugadorLayer.setTranslateY((jugadorLayer.getHeight() - totalHeight) / 2);
+
     }
 
     private void seleccionarJugador(PlayerCell cell) {
