@@ -107,7 +107,7 @@ public class CardView extends StackPane {
         nameLabel.setTextFill(Color.BLACK);
         nameLabel.setWrapText(true);
         nameLabel.setAlignment(Pos.CENTER);
-        nameLabel.setPadding(new Insets(-5, 0, 0, 0));
+        nameLabel.setPadding(new Insets(10, 0, 0, 0));
 
         DropShadow sombraNombre = new DropShadow();
         sombraNombre.setRadius(3);
@@ -117,26 +117,27 @@ public class CardView extends StackPane {
         nameLabel.setEffect(sombraNombre);
 
         // --- Línea separadora
-        Rectangle lineaSeparadora = new Rectangle();
-        lineaSeparadora.setWidth(160);
-        lineaSeparadora.setHeight(1);
-        lineaSeparadora.setFill(Color.rgb(0, 0, 0, 0.5));
+        Rectangle lineaSeparadoraAbajo = new Rectangle();
+        lineaSeparadoraAbajo.setWidth(160);
+        lineaSeparadoraAbajo.setHeight(1);
+        lineaSeparadoraAbajo.setFill(Color.rgb(0, 0, 0, 0.5));
 
         // --- Agrupar la parte superior
         VBox parteSuperior = new VBox(5);
         parteSuperior.setAlignment(Pos.TOP_CENTER);
         parteSuperior.setPadding(new Insets(40, 0, 0, 5)); // No tocar aquí
-        parteSuperior.getChildren().addAll(topRow, nameLabel, lineaSeparadora);
+        parteSuperior.getChildren().addAll(topRow, nameLabel, lineaSeparadoraAbajo);
 
         // --- Fondo para las stats
         Rectangle fondoStats = new Rectangle(180, 130);
-        fondoStats.setFill(Color.rgb(255, 255, 255, 0.6));
+        fondoStats.setFill(Color.rgb(4, 127, 191, 0.5));
+        fondoStats.setHeight(90);
 
         // --- Grid de stats
         GridPane statsGrid = new GridPane();
         statsGrid.setAlignment(Pos.CENTER);
         statsGrid.setHgap(10);
-        statsGrid.setVgap(2);
+        statsGrid.setVgap(-5);
 
         addStat(statsGrid, "KIC", card.getKick(), 0, 0);
         addStat(statsGrid, "BOD", card.getBody(), 1, 0);
@@ -147,7 +148,7 @@ public class CardView extends StackPane {
 
         Label gutsLabel = new Label(card.getGuts() + " GUTS");
         gutsLabel.setFont(Font.font("Verdana", FontWeight.EXTRA_BOLD, 14));
-        gutsLabel.setTextFill(Color.BLACK);
+        gutsLabel.setTextFill(Color.YELLOW);
         gutsLabel.setWrapText(true);
         gutsLabel.setAlignment(Pos.CENTER);
 
@@ -246,7 +247,7 @@ public class CardView extends StackPane {
     private void addStat(GridPane grid, String label, int value, int col, int row) {
         Label stat = new Label(value+ " " + label);
         stat.setFont(Font.font("Verdana", FontWeight.EXTRA_BOLD, 14)); // Igual que el nombre
-        stat.setTextFill(Color.BLACK);
+        stat.setTextFill(Color.YELLOW);
         stat.setWrapText(true);
         stat.setAlignment(Pos.CENTER);
 
