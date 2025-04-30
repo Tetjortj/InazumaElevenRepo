@@ -38,22 +38,23 @@ import java.net.URL;
 public class TitleScreen {
 
     public void show(Stage stage) {
-        // 1) Música
+        // 1) Start music (unchanged)
         MusicManager.playMusic("/music/menu-theme.wav");
 
-        // 2) Fondo y logo
-        Image backgroundImage = new Image(getClass().getResource("/images/background2.png").toExternalForm(), true);
-        ImageView backgroundView = new ImageView(backgroundImage);
+        // 2) Background
+        ImageView backgroundView = new ImageView(new Image(
+                getClass().getResource("/images/background2.png").toExternalForm(), true));
         backgroundView.setPreserveRatio(false);
         backgroundView.fitWidthProperty().bind(stage.widthProperty());
         backgroundView.fitHeightProperty().bind(stage.heightProperty());
 
-        Image logo = new Image(getClass().getResource("/images/logo.png").toExternalForm());
-        ImageView logoView = new ImageView(logo);
+        // 3) Logo
+        ImageView logoView = new ImageView(new Image(
+                getClass().getResource("/images/logo.png").toExternalForm()));
         logoView.setPreserveRatio(true);
         logoView.fitWidthProperty().bind(stage.widthProperty().multiply(0.3));
 
-        // 3) Botones
+        // 4) Buttons
         Button playButton = new Button("Jugar Draft");
         Button exitButton = new Button("Salir");
         String botonEstilo = "-fx-font-size:32px;-fx-padding:30px 70px;"
@@ -61,20 +62,26 @@ public class TitleScreen {
         playButton.setStyle(botonEstilo);
         exitButton.setStyle(botonEstilo);
 
-        // 4) Slider de volumen
-        Slider volumeSlider = new Slider(0, 1, MusicManager.getVolume());
+        // 5) Volume slider
+        Slider volumeSlider = new Slider(0,1, MusicManager.getVolume());
         volumeSlider.setShowTickLabels(true);
         volumeSlider.setMajorTickUnit(0.2);
         volumeSlider.setBlockIncrement(0.1);
         volumeSlider.setPrefWidth(400);
-        volumeSlider.valueProperty().addListener((o, __, nv) -> MusicManager.setVolume(nv.doubleValue()));
+        volumeSlider.valueProperty().addListener((o,__,nv) ->
+                MusicManager.setVolume(nv.doubleValue())
+        );
 
-        // 5) Layout
-        VBox botonesBox = new VBox(40, playButton, exitButton);
+        // 6) Layout of logo + buttons, shifted upward
+        VBox botonesBox = new VBox(60, playButton, exitButton);
         botonesBox.setAlignment(Pos.CENTER);
-        VBox menuVBox   = new VBox(0, logoView, botonesBox);
-        menuVBox.setAlignment(Pos.CENTER);
-        HBox volumeBox  = new HBox(volumeSlider);
+
+        VBox menuVBox = new VBox(30, logoView, botonesBox);
+        menuVBox.setAlignment(Pos.TOP_CENTER);
+        // push it down a bit from very top:
+        BorderPane.setMargin(menuVBox, new Insets(50,0,0,0));
+
+        HBox volumeBox = new HBox(volumeSlider);
         volumeBox.setAlignment(Pos.CENTER_RIGHT);
         volumeBox.setPadding(new Insets(0,40,20,0));
 
@@ -84,14 +91,22 @@ public class TitleScreen {
 
         StackPane root = new StackPane(backgroundView, layout);
 
-        // 6) Creamos la escena **UNA VEZ**
+        // 7) set up scene once
         Scene scene = new Scene(root, 1200, 1000);
         stage.setScene(scene);
         stage.setFullScreen(true);
         stage.setFullScreenExitHint("");
+
+        // start with transparent and then fade in
+        root.setOpacity(0);
         stage.show();
 
-        // 7) Transición al pulsar Jugar
+        FadeTransition fadeIn = new FadeTransition(Duration.seconds(2), root);
+        fadeIn.setFromValue(0);
+        fadeIn.setToValue(1);
+        fadeIn.play();
+
+        // 8) Button transitions (unchanged)
         playButton.setOnAction(e -> {
             ScaleTransition st = new ScaleTransition(Duration.millis(150), playButton);
             st.setFromX(1); st.setFromY(1);
@@ -105,8 +120,6 @@ public class TitleScreen {
                 fadeOut.setFromValue(1);
                 fadeOut.setToValue(0);
                 fadeOut.setOnFinished(e2 -> {
-                    // **Aquí** no hacemos `stage.setScene(...)` ni `stage.show()` de nuevo,
-                    // simplemente delegamos al DraftScreen para que cambie el root.
                     new DraftScreen().show(stage);
                     MusicManager.fadeInMusic();
                 });
