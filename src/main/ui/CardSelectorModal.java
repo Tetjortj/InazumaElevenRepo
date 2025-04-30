@@ -14,6 +14,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import main.Card;
 
@@ -25,6 +26,7 @@ public class CardSelectorModal extends Stage {
 
     public CardSelectorModal(List<Card> opciones, Consumer<Card> onSelect) {
         this.initModality(Modality.APPLICATION_MODAL);
+        this.initOwner(FxUtils.getCurrentStage());
         this.setTitle("Selecciona una carta");
 
         VBox layout = new VBox(30);
@@ -62,7 +64,14 @@ public class CardSelectorModal extends Stage {
 
         layout.getChildren().addAll(titulo, cartasBox);
         Scene scene = new Scene(layout, 1300, 550);
+
+        this.initStyle(StageStyle.UNDECORATED);
+
         this.setScene(scene);
+
+        this.setOnCloseRequest(event -> {
+            event.consume(); // Evita que se cierre
+        });
 
         // Si el usuario hace clic en cualquier parte y aún no han terminado las animaciones, se fuerzan
         scene.setOnMouseClicked(event -> {

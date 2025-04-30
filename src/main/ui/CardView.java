@@ -27,6 +27,8 @@ public class CardView extends StackPane {
 
     private final Card card;
     private final VBox content;
+    private double originalScaleX;
+    private double originalScaleY;
 
     public CardView(Card card) {
         this.card = card;
@@ -40,6 +42,9 @@ public class CardView extends StackPane {
         inicializarFondo();
         inicializarContenido();
         inicializarHoverEfect();
+
+        originalScaleX = getScaleX();
+        originalScaleY = getScaleY();
 
         // Añadirlo al StackPane (detrás del content)
         this.getChildren().addAll(content);
@@ -233,15 +238,24 @@ public class CardView extends StackPane {
 
     private void inicializarHoverEfect() {
         ScaleTransition scaleIn = new ScaleTransition(Duration.millis(200), this);
-        scaleIn.setToX(1.05);
-        scaleIn.setToY(1.05);
-
         ScaleTransition scaleOut = new ScaleTransition(Duration.millis(200), this);
-        scaleOut.setToX(1);
-        scaleOut.setToY(1);
 
-        this.setOnMouseEntered(e -> scaleIn.playFromStart());
-        this.setOnMouseExited(e -> scaleOut.playFromStart());
+        this.setOnMouseEntered(e -> {
+            originalScaleX = getScaleX();
+            originalScaleY = getScaleY();
+
+            // Aumentamos un 10%
+            scaleIn.setToX(originalScaleX * 1.1);
+            scaleIn.setToY(originalScaleY * 1.1);
+
+            scaleIn.playFromStart();
+        });
+
+        this.setOnMouseExited(e -> {
+            scaleOut.setToX(originalScaleX);
+            scaleOut.setToY(originalScaleY);
+            scaleOut.playFromStart();
+        });
     }
 
     private void addStat(GridPane grid, String label, int value, int col, int row) {

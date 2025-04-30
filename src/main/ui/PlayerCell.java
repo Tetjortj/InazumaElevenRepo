@@ -1,7 +1,11 @@
 package main.ui;
 
-import javafx.scene.layout.Region;
-import javafx.scene.layout.StackPane;
+import javafx.geometry.Insets;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.*;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import main.Card;
 import main.Position;
 import javafx.geometry.Pos;
@@ -17,47 +21,83 @@ public class PlayerCell extends StackPane {
     private final int index;
     private final Position position;
     private boolean unlocked = false;
-    private final Label label;
-    private final Rectangle fondo;
 
-    // Tamaño fijo de celda (coincide con carta escalada)
-    private static final double CELL_WIDTH = 90;
-    private static final double CELL_HEIGHT = 130;
+    private final StackPane cartaContainer = new StackPane();
+    private final Label pivote;
+
+    public static final double CELL_WIDTH = 90;
+    public static final double CELL_HEIGHT = 130;
 
     public PlayerCell(int index, Position position) {
         this.index = index;
         this.position = position;
 
-        fondo = new Rectangle(CELL_WIDTH, CELL_HEIGHT);
+        // 1) Fondo gris redondeado (placeholder)
+        Rectangle fondo = new Rectangle(CELL_WIDTH, CELL_HEIGHT);
         fondo.setFill(Color.GRAY);
-        fondo.setStroke(Color.BLACK);
+        fondo.setArcWidth(20);
+        fondo.setArcHeight(20);
+        fondo.setStroke(Color.DARKGRAY);
 
-        label = new Label(position.name() + "\n[" + index + "]");
-        label.setTextFill(Color.WHITE);
-        label.setAlignment(Pos.CENTER);
-        label.setWrapText(true);
+        // 2) Logo centrado dentro del placeholder
+        ImageView logo = new ImageView(new Image(
+                getClass().getResource("/images/logo.png").toExternalForm()
+        ));
+        logo.setFitWidth(CELL_WIDTH * 0.5);
+        logo.setPreserveRatio(true);
 
+        StackPane logoWrapper = new StackPane(logo);
+        logoWrapper.setAlignment(Pos.CENTER);
+
+        // 3) Carta container: donde luego insertaremos la CardView escalada
+        cartaContainer.setPrefSize(CELL_WIDTH, CELL_HEIGHT);
+        cartaContainer.setMinSize(CELL_WIDTH, CELL_HEIGHT);
+        cartaContainer.setMaxSize(CELL_WIDTH, CELL_HEIGHT);
+        cartaContainer.getChildren().add(new StackPane(fondo, logoWrapper));
+        cartaContainer.setAlignment(Pos.CENTER);
+
+        // 4) Pivote justo debajo: posición + química (inicial 0)
+        pivote = new Label(position.name() + " 0");
+        pivote.setFont(javafx.scene.text.Font.font("Verdana", javafx.scene.text.FontWeight.BOLD, 12));
+        pivote.setTextFill(Color.WHITE);
+        pivote.setBackground(new Background(new BackgroundFill(
+                Color.rgb(30, 30, 30), new CornerRadii(8), Insets.EMPTY
+        )));
+        pivote.setPadding(new Insets(2, 6, 2, 6));
+
+        // 5) Agrupamos cartaContainer + pivote en un VBox CENTRADO
+        VBox wrapper = new VBox(0, cartaContainer, pivote);
+        wrapper.setAlignment(Pos.CENTER);
+        wrapper.setFillWidth(false);
+
+        // 6) Este StackPane (PlayerCell) centra el wrapper
         this.setAlignment(Pos.CENTER);
-        this.getChildren().addAll(fondo, label);
+        this.getChildren().add(wrapper);
 
-        // Fijar el tamaño de la celda para mantener consistencia
-        this.setPrefSize(CELL_WIDTH, CELL_HEIGHT);
-        this.setMinSize(CELL_WIDTH, CELL_HEIGHT);
-        this.setMaxSize(CELL_WIDTH, CELL_HEIGHT);
+        // 7) Fijamos tamaño total: altura carta + espacio para pivote (~20px)
+        this.setPrefSize(CELL_WIDTH, CELL_HEIGHT + 20);
+        this.setMinSize(CELL_WIDTH, CELL_HEIGHT + 20);
+        this.setMaxSize(CELL_WIDTH, CELL_HEIGHT + 20);
     }
 
+    /**
+     * Coloca la carta seleccionada en la celda.
+     * Solo limpia el placeholder; el CardView se inyecta desde DraftView
+     * vía getCartaContainer().
+     */
     public void desbloquear(Card card) {
         this.unlocked = true;
+        cartaContainer.getChildren().clear();
+    }
 
-        // Eliminar fondo y label al colocar carta
-        this.getChildren().clear();
-        this.setStyle(null);
+    /** Para que DraftView pueda añadir la CardView escalada. */
+    public StackPane getCartaContainer() {
+        return cartaContainer;
+    }
 
-        // ⚠️ OPCIONAL: si quieres que siga ocupando el mismo espacio exactamente, puedes mantener el tamaño fijo.
-        // Si no, puedes usar computed_size como antes.
-        this.setPrefSize(CELL_WIDTH, CELL_HEIGHT);
-        this.setMinSize(CELL_WIDTH, CELL_HEIGHT);
-        this.setMaxSize(CELL_WIDTH, CELL_HEIGHT);
+    /** Actualiza el texto del pivote con la química actual. */
+    public void setQuimica(int valor) {
+        pivote.setText(position.name() + " " + valor);
     }
 
     public boolean isUnlocked() {
@@ -70,5 +110,10 @@ public class PlayerCell extends StackPane {
 
     public Position getPosition() {
         return position;
+    }
+
+    /** Si necesitas acceder al Label del pivote desde fuera. */
+    public Label getPivoteLabel() {
+        return pivote;
     }
 }

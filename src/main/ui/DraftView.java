@@ -133,6 +133,10 @@ public class DraftView extends HBox {
 
     private void seleccionarJugador(PlayerCell cell) {
         List<Card> opciones = new ArrayList<>(playerPool.getByPosition(cell.getPosition()));
+
+        // ⚠️ Eliminar cartas ya seleccionadas
+        opciones.removeAll(jugadoresSeleccionados.values());
+
         Collections.shuffle(opciones);
         opciones = opciones.stream().limit(5).toList();
 
@@ -147,11 +151,25 @@ public class DraftView extends HBox {
     }
 
     private void mostrarCartaEnCelda(PlayerCell cell, Card cardSeleccionada) {
-        cell.getChildren().clear();
+        // 1) Recuperamos solo el contenedor de la carta (el pivote es hermano en el wrapper)
+        StackPane container = cell.getCartaContainer();
+        // 2) Limpiamos el placeholder (logo gris), sin tocar el pivote
+        container.getChildren().clear();
+
+        // 3) Creamos la vista real de la carta
         CardView miniCard = new CardView(cardSeleccionada);
-        miniCard.setScaleX(0.5);
-        miniCard.setScaleY(0.5);
-        cell.getChildren().add(miniCard);
+
+        // 4) Calculamos la escala para que quepa EXACTAMENTE en el CELL_WIDTH/HEIGHT
+        double scaleX = PlayerCell.CELL_WIDTH  / miniCard.getPrefWidth();
+        double scaleY = PlayerCell.CELL_HEIGHT / miniCard.getPrefHeight();
+        double scale = Math.min(scaleX, scaleY);
+
+        miniCard.setScaleX(scale);
+        miniCard.setScaleY(scale);
+
+        // 5) La añadimos y centramos en el container
+        container.getChildren().add(miniCard);
+        container.setAlignment(Pos.CENTER);
     }
 
     public HBox getBanquilloBox() {
