@@ -10,22 +10,25 @@ import javafx.util.Duration;
 
 public class MusicManager {
     private static MediaPlayer currentPlayer;
-    private static double savedVolume = 0.4; // ⬅️ volumen guardado (inicialmente 40%)
+    private static String currentPath = "";
+    private static double savedVolume = 0.4;
 
     public static void playMusic(String path) {
+        // si es la misma ruta, no lo reiniciamos
+        if (path.equals(currentPath) && currentPlayer != null) {
+            return;
+        }
+        currentPath = path;
         if (currentPlayer != null) {
             currentPlayer.stop();
         }
-
-        URL resource = MusicManager.class.getResource(path);
-        if (resource != null) {
-            Media media = new Media(resource.toExternalForm());
-            currentPlayer = new MediaPlayer(media);
+        URL res = MusicManager.class.getResource(path);
+        if (res != null) {
+            Media m = new Media(res.toExternalForm());
+            currentPlayer = new MediaPlayer(m);
             currentPlayer.setCycleCount(MediaPlayer.INDEFINITE);
-            currentPlayer.setVolume(savedVolume); // ⬅️ aplicamos el volumen guardado
+            currentPlayer.setVolume(savedVolume);
             currentPlayer.play();
-        } else {
-            System.err.println("No se encontró: " + path);
         }
     }
 
