@@ -21,19 +21,20 @@ public class FormationPreview extends StackPane {
     private final Pane markers;
 
     public FormationPreview(Formation formation, Runnable onSelect) {
-        // --- Fondo del campo
+        // --- Fondo del campo ---
         field = new ImageView(
-                new Image(getClass().getResource("/images/draft_background2.png").toExternalForm())
+                new Image(getClass().getResource("/images/draft_background2.png")
+                        .toExternalForm())
         );
         field.setPreserveRatio(false);
 
-        // --- Capa de marcadores
+        // --- Capa de marcadores ---
         markers = new Pane();
         buildMarkers(formation);
 
         getChildren().addAll(field, markers);
 
-        // --- Hover small scale
+        // --- Hover pequeña escala ---
         ScaleTransition stIn  = new ScaleTransition(Duration.millis(200), this);
         ScaleTransition stOut = new ScaleTransition(Duration.millis(200), this);
         stIn .setToX(1.05); stIn .setToY(1.05);
@@ -68,7 +69,7 @@ public class FormationPreview extends StackPane {
             dot.setStroke(Color.WHITE);
             dot.setStrokeWidth(1);
 
-            // bind al tamaño REAL del preview (this), no al fitWidth del ImageView
+            // Bind al tamaño real de este StackPane
             dot.layoutXProperty().bind(
                     widthProperty().divide(columns)
                             .multiply(col + 0.5)
@@ -83,16 +84,15 @@ public class FormationPreview extends StackPane {
 
     @Override
     protected void layoutChildren() {
-        double w = getWidth();
-        double h = getHeight();
-
-        // 1) Estiramos el fondo al 100%
+        double w = getWidth(), h = getHeight();
         field.setFitWidth(w);
         field.setFitHeight(h);
-
-        // 2) Hacemos que la capa de marcadores abarque también todo el área
         markers.resizeRelocate(0, 0, w, h);
-
         super.layoutChildren();
+    }
+
+    /** Para la animación: poder acceder a las bolitas */
+    public Pane getMarkers() {
+        return markers;
     }
 }

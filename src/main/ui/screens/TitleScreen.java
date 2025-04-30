@@ -39,7 +39,7 @@ public class TitleScreen {
 
     public void show(Stage stage) {
         // 1) Start music (unchanged)
-        MusicManager.playMusic("/music/menu-theme.wav");
+        MusicManager.playMusic("/music/menu-theme2.wav");
 
         // 2) Background
         ImageView backgroundView = new ImageView(new Image(
