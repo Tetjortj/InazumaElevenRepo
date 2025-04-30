@@ -52,10 +52,11 @@ public class CardSelectorModal extends Stage {
 
             // Solo permitir selección si las cartas están activas
             cardView.setOnMouseClicked(e -> {
-                if (cartasActivas[0]) {
-                    onSelect.accept(carta);
-                    this.close();
-                }
+                if (!cartasActivas[0]) return;
+                // 1) cerramos el modal de inmediato
+                this.close();
+                // 2) y ya fuera del diálogo, hacemos el onSelect
+                onSelect.accept(carta);
             });
 
             cartasBox.getChildren().add(cardView);

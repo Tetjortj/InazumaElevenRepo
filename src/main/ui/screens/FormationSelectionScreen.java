@@ -30,7 +30,7 @@ public class FormationSelectionScreen extends BorderPane {
     public FormationSelectionScreen(List<Formation> opts, Consumer<Formation> onSelect) {
         // 1) Fondo de toda la escena
         Image bg = new Image(
-                getClass().getResource("/images/background1.png")
+                getClass().getResource("/images/selection_formation_background.png")
                         .toExternalForm()
         );
         BackgroundImage bgi = new BackgroundImage(
