@@ -1,0 +1,19 @@
+-Enlaces entre jugadores
+-Label de quimica y puntuacion
+-Animacion de entrada de las cartas mejorar
+-Transición entre seleccion y draft mejorar
+-Banquillo
+-Capitan
+-Movimiento entre jugadores ya en el campo
+-Marcador puntuacion final
+-Guardar records anteriores
+-Logros
+-Segunda temporada
+-Animacion de colocacion de las cartas en el campo
+-Holder en seleccion de cartas para preveer el campo con la implementacion
+-Mejora del pivote
+-Ajuste del background y labels de pantalla del draft
+-Visual del selector de cartas
+-Solucionar problema de tapado visual entre cells en draft, tambien ubicacion de estas segun player placement
+-Poner efectos de sonido en cosas como las cartas
+-Acabar de completar las alineaciones
