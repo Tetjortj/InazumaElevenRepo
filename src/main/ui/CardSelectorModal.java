@@ -33,7 +33,8 @@ public class CardSelectorModal extends Stage {
         layout.setAlignment(Pos.CENTER);
 
         Label titulo = new Label("Selecciona una carta");
-        titulo.setStyle("-fx-text-fill: white; -fx-font-size: 24px; -fx-font-weight: bold;");
+        titulo.setStyle("-fx-text-fill: white; -fx-font-size: 40px; -fx-font-weight: bold;");
+        titulo.setTranslateY(-45);
 
         HBox cartasBox = new HBox(40);
         cartasBox.setAlignment(Pos.CENTER);
