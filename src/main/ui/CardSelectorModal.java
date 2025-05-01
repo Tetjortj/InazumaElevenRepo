@@ -1,9 +1,6 @@
 package main.ui;
 
-import javafx.animation.Animation;
-import javafx.animation.FadeTransition;
-import javafx.animation.ParallelTransition;
-import javafx.animation.TranslateTransition;
+import javafx.animation.*;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -12,6 +9,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -29,6 +27,7 @@ public class CardSelectorModal extends Stage {
         this.initOwner(FxUtils.getCurrentStage());
         this.setTitle("Selecciona una carta");
 
+        // 1) Contenedor raíz
         VBox layout = new VBox(30);
         layout.setStyle("-fx-background-color: #222; -fx-padding: 30;");
         layout.setAlignment(Pos.CENTER);
@@ -53,9 +52,7 @@ public class CardSelectorModal extends Stage {
             // Solo permitir selección si las cartas están activas
             cardView.setOnMouseClicked(e -> {
                 if (!cartasActivas[0]) return;
-                // 1) cerramos el modal de inmediato
                 this.close();
-                // 2) y ya fuera del diálogo, hacemos el onSelect
                 onSelect.accept(carta);
             });
 
@@ -66,28 +63,39 @@ public class CardSelectorModal extends Stage {
         layout.getChildren().addAll(titulo, cartasBox);
         Scene scene = new Scene(layout, 1300, 550);
 
-        this.initStyle(StageStyle.UNDECORATED);
-
         this.setScene(scene);
+        this.initStyle(StageStyle.TRANSPARENT);
+        scene.setFill(Color.TRANSPARENT);
 
-        this.setOnCloseRequest(event -> {
-            event.consume(); // Evita que se cierre
-        });
 
-        // Si el usuario hace clic en cualquier parte y aún no han terminado las animaciones, se fuerzan
+        this.setOnCloseRequest(event -> event.consume());
+
+        // fuerza fin de entrada si se clickea rápido
         scene.setOnMouseClicked(event -> {
             if (!cartasActivas[0] && !animacionCancelada[0]) {
                 animacionCancelada[0] = true;
-                for (Animation anim : animaciones) anim.stop();
-                for (CardView cv : vistasCartas) {
+                animaciones.forEach(Animation::stop);
+                vistasCartas.forEach(cv -> {
                     cv.setOpacity(1);
                     cv.setTranslateY(0);
-                }
+                });
                 cartasActivas[0] = true;
             }
         });
 
-        // Animación de entrada (más lenta, separadas)
+        // 2) ANIMACIÓN DE ENTRADA DEL PANEL
+        // Lo movemos primero fuera de pantalla a la izquierda
+        layout.setTranslateX(-scene.getWidth());
+        // Y en cuanto el Stage esté listo, lo deslizaremos
+        this.setOnShown(ev -> {
+            TranslateTransition slideIn = new TranslateTransition(Duration.millis(400), layout);
+            slideIn.setFromX(-scene.getWidth());
+            slideIn.setToX(0);
+            slideIn.setInterpolator(Interpolator.EASE_OUT);
+            slideIn.play();
+        });
+
+        // 3) Animación de las cartas (igual que antes)
         Platform.runLater(() -> {
             for (int i = 0; i < vistasCartas.size(); i++) {
                 CardView cv = vistasCartas.get(i);
@@ -105,7 +113,6 @@ public class CardSelectorModal extends Stage {
                 ParallelTransition anim = new ParallelTransition(fade, slide);
                 animaciones.add(anim);
 
-                // Si es la última animación, activar selección al terminar
                 if (i == vistasCartas.size() - 1) {
                     anim.setOnFinished(e -> cartasActivas[0] = true);
                 }
