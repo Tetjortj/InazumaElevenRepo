@@ -7,9 +7,12 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.effect.Glow;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.transform.Rotate;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -22,10 +25,15 @@ import java.util.function.Consumer;
 
 public class CardSelectorModal extends Stage {
 
+    private static final Duration PANEL_SLIDE_DURATION = Duration.millis(400);
+    private static final Duration CARD_REVEAL_DURATION = Duration.millis(600);
+    private static final Duration CARD_REVEAL_STAGGER  = Duration.millis(300);
+
     public CardSelectorModal(List<Card> opciones, Consumer<Card> onSelect) {
-        this.initModality(Modality.APPLICATION_MODAL);
-        this.initOwner(FxUtils.getCurrentStage());
-        this.setTitle("Selecciona una carta");
+        initModality(Modality.APPLICATION_MODAL);
+        initOwner(FxUtils.getCurrentStage());
+        initStyle(StageStyle.TRANSPARENT);
+        setTitle("Selecciona una carta");
 
         // 1) Contenedor raíz
         VBox layout = new VBox(30);
@@ -40,86 +48,80 @@ public class CardSelectorModal extends Stage {
         cartasBox.setAlignment(Pos.CENTER);
         cartasBox.setPadding(new Insets(0, 40, 0, 40));
 
+        // 2) Preparamos vistas y estados
         List<CardView> vistasCartas = new ArrayList<>();
-        List<Animation> animaciones = new ArrayList<>();
+        List<Animation> cardRevealAnims = new ArrayList<>();
         final boolean[] cartasActivas = {false};
-        final boolean[] animacionCancelada = {false};
 
         for (Card carta : opciones) {
-            CardView cardView = new CardView(carta);
-            cardView.setOpacity(0);
-            cardView.setTranslateY(50);
+            CardView cv = new CardView(carta);
 
-            // Solo permitir selección si las cartas están activas
-            cardView.setOnMouseClicked(e -> {
+            // girada 180° en Y al inicio
+            cv.setRotationAxis(Rotate.Y_AXIS);
+            cv.setRotate(180);
+
+            // efecto de glow preparado
+            Glow glow = new Glow(0);
+            cv.setEffect(glow);
+
+            // click solo tras revelado
+            cv.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
                 if (!cartasActivas[0]) return;
-                this.close();
+                close();
                 onSelect.accept(carta);
             });
 
-            cartasBox.getChildren().add(cardView);
-            vistasCartas.add(cardView);
+            cartasBox.getChildren().add(cv);
+            vistasCartas.add(cv);
         }
 
         layout.getChildren().addAll(titulo, cartasBox);
         Scene scene = new Scene(layout, 1300, 550);
-
-        this.setScene(scene);
-        this.initStyle(StageStyle.TRANSPARENT);
         scene.setFill(Color.TRANSPARENT);
+        setScene(scene);
 
+        // impedir cierres prematuros
+        setOnCloseRequest(e -> e.consume());
 
-        this.setOnCloseRequest(event -> event.consume());
-
-        // fuerza fin de entrada si se clickea rápido
-        scene.setOnMouseClicked(event -> {
-            if (!cartasActivas[0] && !animacionCancelada[0]) {
-                animacionCancelada[0] = true;
-                animaciones.forEach(Animation::stop);
-                vistasCartas.forEach(cv -> {
-                    cv.setOpacity(1);
-                    cv.setTranslateY(0);
-                });
-                cartasActivas[0] = true;
-            }
-        });
-
-        // 2) ANIMACIÓN DE ENTRADA DEL PANEL
-        // Lo movemos primero fuera de pantalla a la izquierda
+        // 3) Slide-in del panel desde la izquierda
         layout.setTranslateX(-scene.getWidth());
-        // Y en cuanto el Stage esté listo, lo deslizaremos
-        this.setOnShown(ev -> {
-            TranslateTransition slideIn = new TranslateTransition(Duration.millis(400), layout);
+        setOnShown(e -> {
+            TranslateTransition slideIn = new TranslateTransition(PANEL_SLIDE_DURATION, layout);
             slideIn.setFromX(-scene.getWidth());
             slideIn.setToX(0);
             slideIn.setInterpolator(Interpolator.EASE_OUT);
+            slideIn.setOnFinished(ev -> playCardReveal(vistasCartas, cardRevealAnims, cartasActivas));
             slideIn.play();
         });
+    }
 
-        // 3) Animación de las cartas (igual que antes)
-        Platform.runLater(() -> {
-            for (int i = 0; i < vistasCartas.size(); i++) {
-                CardView cv = vistasCartas.get(i);
+    private void playCardReveal(List<CardView> vistas,
+                                List<Animation> anims,
+                                boolean[] cartasActivas) {
+        // Revelado secuencial con brillo
+        for (int i = 0; i < vistas.size(); i++) {
+            CardView cv = vistas.get(i);
+            Glow glow = (Glow) cv.getEffect();
 
-                FadeTransition fade = new FadeTransition(Duration.millis(1200), cv);
-                fade.setFromValue(0);
-                fade.setToValue(1);
-                fade.setDelay(Duration.millis(i * 300));
+            // rotación Y de 180° → 0°
+            RotateTransition rot = new RotateTransition(CARD_REVEAL_DURATION, cv);
+            rot.setAxis(Rotate.Y_AXIS);
+            rot.setFromAngle(180);
+            rot.setToAngle(0);
 
-                TranslateTransition slide = new TranslateTransition(Duration.millis(1200), cv);
-                slide.setFromY(50);
-                slide.setToY(0);
-                slide.setDelay(Duration.millis(i * 300));
+            // glow rápido: 1 → 0
+            Timeline shine = new Timeline(
+                    new KeyFrame(Duration.ZERO, new KeyValue(glow.levelProperty(), 1.0)),
+                    new KeyFrame(CARD_REVEAL_DURATION, new KeyValue(glow.levelProperty(), 0.0))
+            );
 
-                ParallelTransition anim = new ParallelTransition(fade, slide);
-                animaciones.add(anim);
-
-                if (i == vistasCartas.size() - 1) {
-                    anim.setOnFinished(e -> cartasActivas[0] = true);
-                }
-
-                anim.play();
+            ParallelTransition reveal = new ParallelTransition(rot, shine);
+            reveal.setDelay(CARD_REVEAL_STAGGER.multiply(i));
+            if (i == vistas.size() - 1) {
+                reveal.setOnFinished(e -> cartasActivas[0] = true);
             }
-        });
+            anims.add(reveal);
+            reveal.play();
+        }
     }
 }
