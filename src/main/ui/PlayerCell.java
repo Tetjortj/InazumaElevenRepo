@@ -1,11 +1,14 @@
 package main.ui;
 
 import javafx.animation.ScaleTransition;
+import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
+import javafx.geometry.Point2D;
 import javafx.scene.Cursor;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.shape.Polygon;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.util.Duration;
@@ -27,11 +30,14 @@ public class PlayerCell extends StackPane {
     public static final double CELL_HEIGHT = MiniCardView.VISIBLE_HEIGHT;
 
     private final StackPane cartaContainer = new StackPane();
-    private final Label pivote;
+    private final Label pivoteLabel;
     private boolean unlocked = false;
     private final int index;
     private final Position position;
     private double baseScale = 1.0;
+
+    private final Polygon pivoteTip;
+    private final VBox pivoteContainer;
 
     public PlayerCell(int index, Position position) {
         this.index    = index;
@@ -57,23 +63,32 @@ public class PlayerCell extends StackPane {
         cartaContainer.setPrefSize(CELL_WIDTH, CELL_HEIGHT);
 
         // 2) Pivote justo abajo, sin espacio extra
-        pivote = new Label(position.name() + " 0");
-        pivote.setFont(Font.font("Verdana", FontWeight.BOLD, 12));
-        pivote.setTextFill(Color.WHITE);
-        pivote.setBackground(new Background(new BackgroundFill(
+        pivoteLabel = new Label(position.name() + " 0");
+        pivoteLabel.setFont(Font.font("Verdana", FontWeight.BOLD, 12));
+        pivoteLabel.setTextFill(Color.WHITE);
+        pivoteLabel.setBackground(new Background(new BackgroundFill(
                 Color.rgb(30,30,30), new CornerRadii(6), Insets.EMPTY
         )));
-        pivote.setPadding(new Insets(2,8,2,8));
+        pivoteLabel.setPadding(new Insets(2,8,2,8));
 
-        // 3) Agrupamos sin separación para que pivote toque la mini-carta
-        VBox wrapper = new VBox(0, cartaContainer, pivote);
-        wrapper.setAlignment(Pos.CENTER);
+        //    y triángulo salida
+        pivoteTip = new Polygon(
+                0.0, 0.0,
+                12.0, 0.0,
+                6.0, 6.0
+        );
+        pivoteTip.setFill(Color.rgb(30,30,30));
 
-        getChildren().setAll(wrapper);
+        // 3) Contenedor vertical pivot
+        pivoteContainer = new VBox(0, cartaContainer, pivoteLabel, pivoteTip);
+        pivoteContainer.setAlignment(Pos.TOP_CENTER);
+
+        // 4) Ensamblar todo
+        getChildren().setAll(pivoteContainer);
         setAlignment(Pos.CENTER);
 
-        // 4) Tamaño total = carta + pivote (alto pivote ≈ fontSize + padding)
-        double pivotHeight = pivote.getFont().getSize() + 4;
+        // 5) Ajustar tamaño total
+        double pivotHeight = pivoteLabel.getFont().getSize() + 4 + 6; // etiqueta + triángulo
         setPrefSize(CELL_WIDTH, CELL_HEIGHT + pivotHeight);
         setMinSize (CELL_WIDTH, CELL_HEIGHT + pivotHeight);
         setMaxSize (CELL_WIDTH, CELL_HEIGHT + pivotHeight);
@@ -131,23 +146,51 @@ public class PlayerCell extends StackPane {
 
         // 2) Sólo si no es fullSize creamos pivote
         if (!fullSize) {
-            pivote = new Label(position.name() + " 0");
-            pivote.setFont(Font.font("Verdana", FontWeight.BOLD, 12));
-            pivote.setTextFill(Color.WHITE);
-            pivote.setBackground(new Background(new BackgroundFill(
+            // 2) Pivote justo abajo, sin espacio extra
+            pivoteLabel = new Label(position.name() + " 0");
+            pivoteLabel.setFont(Font.font("Verdana", FontWeight.BOLD, 12));
+            pivoteLabel.setTextFill(Color.WHITE);
+            pivoteLabel.setBackground(new Background(new BackgroundFill(
                     Color.rgb(30,30,30), new CornerRadii(6), Insets.EMPTY
             )));
-            pivote.setPadding(new Insets(2,8,2,8));
+            pivoteLabel.setPadding(new Insets(2,8,2,8));
+
+            //    y triángulo salida
+            pivoteTip = new Polygon(
+                    0.0, 0.0,
+                    12.0, 0.0,
+                    6.0, 6.0
+            );
+            pivoteTip.setFill(Color.rgb(30,30,30));
+
+            // 3) Contenedor vertical pivot
+            pivoteContainer = new VBox(0, cartaContainer, pivoteLabel, pivoteTip);
+            pivoteContainer.setAlignment(Pos.TOP_CENTER);
+
+            // 4) Ensamblar todo
+            getChildren().setAll(pivoteContainer);
+            double pivotHeight = pivoteLabel.getFont().getSize() + 4 + 6;
+            setPrefSize(w, h + pivotHeight);
+            setMinSize (w, h + pivotHeight);
+            setMaxSize (w, h + pivotHeight);
+
         } else {
-            pivote = null;
+            // si es fullSize, simplemente inicialízalos a algo (aunque no los uses)
+            pivoteLabel     = null;
+            pivoteTip       = new Polygon();     // o null, pero si lo pones null quita el final de getPivotTipLocation
+            pivoteContainer = null;
+            getChildren().setAll(cartaContainer);
+            setPrefSize(w, h);
+            setMinSize (w, h);
+            setMaxSize (w, h);
         }
 
         // 3) Agrupamos
-        if (pivote != null) {
-            VBox wrapper = new VBox(0, cartaContainer, pivote);
+        if (pivoteLabel != null) {
+            VBox wrapper = new VBox(0, cartaContainer, pivoteLabel);
             wrapper.setAlignment(Pos.CENTER);
             getChildren().setAll(wrapper);
-            double pivotHeight = pivote.getFont().getSize() + 4;
+            double pivotHeight = pivoteLabel.getFont().getSize() + 4;
             setPrefSize(w, h + pivotHeight);
             setMinSize (w, h + pivotHeight);
             setMaxSize (w, h + pivotHeight);
@@ -194,6 +237,17 @@ public class PlayerCell extends StackPane {
     public int getIndex()                  { return index; }
     public Position getPosition()          { return position; }
     public StackPane getCartaContainer()   { return cartaContainer; }
-    public void setQuimica(int q)          { pivote.setText(position.name() + " " + q); }
-    public Label getPivoteNode()           { return pivote; }
+    public void setQuimica(int q)          { pivoteLabel.setText(position.name() + " " + q); }
+    public Label getPivoteNode()           { return pivoteLabel; }
+    public Point2D getPivotTipLocation(Pane linkLayer) {
+        // 1) Punto en local: centro-base del triángulo, altura total
+        Bounds tipB = pivoteTip.getBoundsInLocal();
+        Point2D localTip = new Point2D(tipB.getWidth()/2, tipB.getHeight());
+
+        // 2) A escena (incluye layoutX/Y de todos los ancestros)
+        Point2D scenePt = pivoteTip.localToScene(localTip);
+
+        // 3) De escena a coordenadas de linkLayer
+        return linkLayer.sceneToLocal(scenePt);
+    }
 }

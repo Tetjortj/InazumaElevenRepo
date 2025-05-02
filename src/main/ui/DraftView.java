@@ -3,6 +3,7 @@ package main.ui;
 import javafx.application.Platform;
 import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
+import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -153,7 +154,7 @@ public class DraftView extends HBox {
             cell.setMinSize(cardW, cardH);
             cell.setMaxSize(cardW, cardH);
 
-            cell.setBaseScale(0.75);
+            cell.setBaseScale(1);
 
             double x = spacingX + col * (cardW + spacingX);
             double y = spacingY + row * (cardH + spacingY);
@@ -210,7 +211,7 @@ public class DraftView extends HBox {
         jugadorLayer.setTranslateY((jugadorLayer.getHeight() - totalH) / 2);
 
         // 8) Dibujar conexiones
-        renderConnections();
+        Platform.runLater(this::renderConnections);
     }
 
 
@@ -237,44 +238,28 @@ public class DraftView extends HBox {
 
     private void renderConnections() {
         linkLayer.getChildren().clear();
-        Map<Integer,List<Integer>> links = formation.getLinks();
+        Map<Integer, List<Integer>> links = formation.getLinks();
         if (playerCells.isEmpty()) return;
 
         for (var entry : links.entrySet()) {
             int fromIdx = entry.getKey();
-            if (fromIdx<0 || fromIdx>=playerCells.size()) continue;
+            if (fromIdx < 0 || fromIdx >= playerCells.size()) continue;
             PlayerCell fromCell = playerCells.get(fromIdx);
-            // obtenemos el Label pivote de la celda origen
-            Label fromPivot = fromCell.getPivoteNode();
+
+            // obtenemos el punto exacto de la punta del triángulo
+            Point2D fromPoint = fromCell.getPivotTipLocation(linkLayer);
 
             for (Integer toIdx : entry.getValue()) {
-                if (toIdx<0 || toIdx>=playerCells.size()) continue;
+                if (toIdx < 0 || toIdx >= playerCells.size()) continue;
                 PlayerCell toCell = playerCells.get(toIdx);
-                Label toPivot = toCell.getPivoteNode();
+                Point2D toPoint = toCell.getPivotTipLocation(linkLayer);
 
                 Line l = new Line();
-                // bind start en el centro-inferior del pivote origen
-                l.startXProperty().bind(
-                        fromCell.layoutXProperty()
-                                .add(fromPivot.layoutXProperty())
-                                .add(fromPivot.widthProperty().divide(2))
-                );
-                l.startYProperty().bind(
-                        fromCell.layoutYProperty()
-                                .add(fromPivot.layoutYProperty())
-                                .add(fromPivot.heightProperty())
-                );
-                // bind end en el centro-inferior del pivote destino
-                l.endXProperty().bind(
-                        toCell.layoutXProperty()
-                                .add(toPivot.layoutXProperty())
-                                .add(toPivot.widthProperty().divide(2))
-                );
-                l.endYProperty().bind(
-                        toCell.layoutYProperty()
-                                .add(toPivot.layoutYProperty())
-                                .add(toPivot.heightProperty())
-                );
+                // fijamos coordenadas absolutas
+                l.setStartX(fromPoint.getX());
+                l.setStartY(fromPoint.getY());
+                l.setEndX(toPoint.getX());
+                l.setEndY(toPoint.getY());
 
                 l.setStroke(Color.LIGHTGRAY);
                 l.setStrokeWidth(2);
