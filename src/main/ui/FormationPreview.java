@@ -23,7 +23,7 @@ public class FormationPreview extends StackPane {
     public FormationPreview(Formation formation, Runnable onSelect) {
         // --- Fondo del campo ---
         field = new ImageView(
-                new Image(getClass().getResource("/images/draft_background2.png")
+                new Image(getClass().getResource("/images/draft_background_43.png")
                         .toExternalForm())
         );
         field.setPreserveRatio(false);

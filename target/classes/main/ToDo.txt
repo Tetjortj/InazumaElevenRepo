@@ -1,6 +1,6 @@
 -Enlaces entre jugadores
 -Label de quimica y puntuacion
--Animacion de entrada de las cartas mejorar
+-Animacion de entrada de las cartas mejorar ✅
 -Transición entre seleccion y draft mejorar
 -Banquillo
 -Capitan
