@@ -226,6 +226,7 @@ public class DraftView extends HBox {
             cell.desbloquear(carta);
             mostrarCartaEnCelda(cell, carta);
             statsPanel.actualizarStats(formation, jugadoresSeleccionados);
+            Platform.runLater(this::renderConnections);
         });
         sel.showAndWait();
     }
@@ -245,8 +246,6 @@ public class DraftView extends HBox {
             int fromIdx = entry.getKey();
             if (fromIdx < 0 || fromIdx >= playerCells.size()) continue;
             PlayerCell fromCell = playerCells.get(fromIdx);
-
-            // obtenemos el punto exacto de la punta del triángulo
             Point2D fromPoint = fromCell.getPivotTipLocation(linkLayer);
 
             for (Integer toIdx : entry.getValue()) {
@@ -254,16 +253,43 @@ public class DraftView extends HBox {
                 PlayerCell toCell = playerCells.get(toIdx);
                 Point2D toPoint = toCell.getPivotTipLocation(linkLayer);
 
-                Line l = new Line();
-                // fijamos coordenadas absolutas
-                l.setStartX(fromPoint.getX());
-                l.setStartY(fromPoint.getY());
-                l.setEndX(toPoint.getX());
-                l.setEndY(toPoint.getY());
-
-                l.setStroke(Color.LIGHTGRAY);
-                l.setStrokeWidth(2);
+                // 1) Crear línea base (fina y gris) para todos los enlaces
+                Line l = new Line(
+                        fromPoint.getX(), fromPoint.getY(),
+                        toPoint.getX(),   toPoint.getY()
+                );
+                l.setStrokeWidth(6);
+                l.setStroke(Color.DARKSLATEGRAY);
                 linkLayer.getChildren().add(l);
+
+                // 2) Si ambos extremos tienen carta seleccionada, recalcular química
+                if (jugadoresSeleccionados.containsKey(fromIdx) &&
+                        jugadoresSeleccionados.containsKey(toIdx)) {
+
+                    Card a = jugadoresSeleccionados.get(fromIdx);
+                    Card b = jugadoresSeleccionados.get(toIdx);
+
+                    double score;
+                    if (a.getTeam() == b.getTeam() ||
+                            (a.getElement() == b.getElement() && a.getGrade() == b.getGrade())) {
+                        score = 1.0;
+                    } else if ((a.getElement() == b.getElement() && a.getGrade() != b.getGrade()) ||
+                            (a.getElement() != b.getElement() && a.getGrade() == b.getGrade())) {
+                        score = 0.5;
+                    } else {
+                        score = 0.25;
+                    }
+
+                    // 3) Ajustar grosor y color según score
+                    l.setStrokeWidth(6);
+                    if (score == 1.0) {
+                        l.setStroke(Color.CHARTREUSE);
+                    } else if (score == 0.5) {
+                        l.setStroke(Color.GOLD);
+                    } else {
+                        l.setStroke(Color.FIREBRICK);
+                    }
+                }
             }
         }
     }
