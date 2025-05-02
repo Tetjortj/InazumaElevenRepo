@@ -5,6 +5,7 @@ import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -109,7 +110,7 @@ public class DraftView extends HBox {
         int columnas = maxCol - minCol + 1;
 
         // 2) Obtener espacio disponible en el campo
-        double W = jugadorLayer.getWidth();
+        double W = jugadorLayer.getWidth() * 0.9;
         double H = jugadorLayer.getHeight() * 0.8;
         if (W == 0 || H == 0) {
             // Si aún no está layoutado, reintentar tras el próximo layout
@@ -152,8 +153,11 @@ public class DraftView extends HBox {
             cell.setMinSize(cardW, cardH);
             cell.setMaxSize(cardW, cardH);
 
+            cell.setBaseScale(0.75);
+
             double x = spacingX + col * (cardW + spacingX);
             double y = spacingY + row * (cardH + spacingY);
+
             cell.relocate(x, y);
 
             cell.setOnMouseClicked(evt -> {
@@ -233,30 +237,45 @@ public class DraftView extends HBox {
 
     private void renderConnections() {
         linkLayer.getChildren().clear();
-        Map<Integer, List<Integer>> links = formation.getLinks();
+        Map<Integer,List<Integer>> links = formation.getLinks();
+        if (playerCells.isEmpty()) return;
 
-        // Si no hay celdas aún, salimos
-        if (playerCells.isEmpty()) {
-            return;
-        }
+        for (var entry : links.entrySet()) {
+            int fromIdx = entry.getKey();
+            if (fromIdx<0 || fromIdx>=playerCells.size()) continue;
+            PlayerCell fromCell = playerCells.get(fromIdx);
+            // obtenemos el Label pivote de la celda origen
+            Label fromPivot = fromCell.getPivoteNode();
 
-        for (Map.Entry<Integer, List<Integer>> e : links.entrySet()) {
-            int fromIdx = e.getKey();
-            // Validamos que el índice exista
-            if (fromIdx < 0 || fromIdx >= playerCells.size()) continue;
+            for (Integer toIdx : entry.getValue()) {
+                if (toIdx<0 || toIdx>=playerCells.size()) continue;
+                PlayerCell toCell = playerCells.get(toIdx);
+                Label toPivot = toCell.getPivoteNode();
 
-            PlayerCell from = playerCells.get(fromIdx);
-            for (Integer toIdx : e.getValue()) {
-                // Validamos también el índice destino
-                if (toIdx < 0 || toIdx >= playerCells.size()) continue;
-
-                PlayerCell to = playerCells.get(toIdx);
                 Line l = new Line();
-                // Salen del centro X y borde inferior de cada carta
-                l.startXProperty().bind(from.layoutXProperty().add(from.getWidth() / 2));
-                l.startYProperty().bind(from.layoutYProperty().add(from.getHeight()));
-                l.endXProperty().bind(to.layoutXProperty().add(to.getWidth() / 2));
-                l.endYProperty().bind(to.layoutYProperty().add(to.getHeight()));
+                // bind start en el centro-inferior del pivote origen
+                l.startXProperty().bind(
+                        fromCell.layoutXProperty()
+                                .add(fromPivot.layoutXProperty())
+                                .add(fromPivot.widthProperty().divide(2))
+                );
+                l.startYProperty().bind(
+                        fromCell.layoutYProperty()
+                                .add(fromPivot.layoutYProperty())
+                                .add(fromPivot.heightProperty())
+                );
+                // bind end en el centro-inferior del pivote destino
+                l.endXProperty().bind(
+                        toCell.layoutXProperty()
+                                .add(toPivot.layoutXProperty())
+                                .add(toPivot.widthProperty().divide(2))
+                );
+                l.endYProperty().bind(
+                        toCell.layoutYProperty()
+                                .add(toPivot.layoutYProperty())
+                                .add(toPivot.heightProperty())
+                );
+
                 l.setStroke(Color.LIGHTGRAY);
                 l.setStrokeWidth(2);
                 linkLayer.getChildren().add(l);

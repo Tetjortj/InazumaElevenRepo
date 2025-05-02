@@ -31,6 +31,7 @@ public class PlayerCell extends StackPane {
     private boolean unlocked = false;
     private final int index;
     private final Position position;
+    private double baseScale = 1.0;
 
     public PlayerCell(int index, Position position) {
         this.index    = index;
@@ -80,15 +81,20 @@ public class PlayerCell extends StackPane {
         // 5) Hover anima TODO el PlayerCell (no sólo el texto interno)
         ScaleTransition stIn  = new ScaleTransition(Duration.millis(200), this);
         ScaleTransition stOut = new ScaleTransition(Duration.millis(200), this);
-        stIn .setToX(1.05); stIn .setToY(1.05);
-        stOut.setToX(1.00); stOut.setToY(1.00);
+
         setOnMouseEntered(e -> {
             stOut.stop();
+            double target = baseScale * 1.05;
+            stIn.setToX(target);
+            stIn.setToY(target);
             stIn.playFromStart();
             setCursor(Cursor.HAND);
         });
+
         setOnMouseExited(e -> {
             stIn.stop();
+            stOut.setToX(baseScale);
+            stOut.setToY(baseScale);
             stOut.playFromStart();
             setCursor(Cursor.DEFAULT);
         });
@@ -178,9 +184,16 @@ public class PlayerCell extends StackPane {
         cartaContainer.getChildren().clear();
     }
 
+    public void setBaseScale(double scale) {
+        this.baseScale = scale;
+        setScaleX(scale);
+        setScaleY(scale);
+    }
+
     public boolean isUnlocked()            { return unlocked; }
     public int getIndex()                  { return index; }
     public Position getPosition()          { return position; }
     public StackPane getCartaContainer()   { return cartaContainer; }
     public void setQuimica(int q)          { pivote.setText(position.name() + " " + q); }
+    public Label getPivoteNode()           { return pivote; }
 }

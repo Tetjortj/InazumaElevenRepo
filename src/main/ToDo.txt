@@ -17,3 +17,4 @@
 -Solucionar problema de tapado visual entre cells en draft, tambien ubicacion de estas segun player placement
 -Poner efectos de sonido en cosas como las cartas
 -Acabar de completar las alineaciones
+-Cambiar diseño parte de detras de las cartas
