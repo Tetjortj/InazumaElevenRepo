@@ -94,6 +94,84 @@ public class PlayerCell extends StackPane {
         });
     }
 
+    /** Placeholder “full–size” (sin pivote) */
+    public PlayerCell(int index, Position position, boolean fullSize) {
+        this.index    = index;
+        this.position = position;
+
+        double w = fullSize ? 180 : CELL_WIDTH;
+        double h = fullSize ? 260 : CELL_HEIGHT;
+
+        // 1) Placeholder gris redondeado + logo
+        Rectangle fondo = new Rectangle(w, h);
+        fondo.setFill(Color.GRAY);
+        fondo.setArcWidth(20);
+        fondo.setArcHeight(20);
+        fondo.setStroke(Color.DARKGRAY);
+
+        ImageView logo = new ImageView(
+                new Image(getClass().getResource("/images/logo.png").toExternalForm())
+        );
+        logo.setFitWidth(w * 0.5);
+        logo.setPreserveRatio(true);
+
+        StackPane placeholder = new StackPane(fondo, logo);
+        placeholder.setPrefSize(w, h);
+
+        cartaContainer.getChildren().setAll(placeholder);
+        cartaContainer.setPrefSize(w, h);
+        cartaContainer.setMinSize(w, h);
+        cartaContainer.setMaxSize(w, h);
+
+        // 2) Sólo si no es fullSize creamos pivote
+        if (!fullSize) {
+            pivote = new Label(position.name() + " 0");
+            pivote.setFont(Font.font("Verdana", FontWeight.BOLD, 12));
+            pivote.setTextFill(Color.WHITE);
+            pivote.setBackground(new Background(new BackgroundFill(
+                    Color.rgb(30,30,30), new CornerRadii(6), Insets.EMPTY
+            )));
+            pivote.setPadding(new Insets(2,8,2,8));
+        } else {
+            pivote = null;
+        }
+
+        // 3) Agrupamos
+        if (pivote != null) {
+            VBox wrapper = new VBox(0, cartaContainer, pivote);
+            wrapper.setAlignment(Pos.CENTER);
+            getChildren().setAll(wrapper);
+            double pivotHeight = pivote.getFont().getSize() + 4;
+            setPrefSize(w, h + pivotHeight);
+            setMinSize (w, h + pivotHeight);
+            setMaxSize (w, h + pivotHeight);
+        } else {
+            // sólo la cartaContainer, sin pivote
+            getChildren().setAll(cartaContainer);
+            setPrefSize(w, h);
+            setMinSize (w, h);
+            setMaxSize (w, h);
+        }
+
+        setAlignment(Pos.CENTER);
+
+        // 4) Hover effect
+        ScaleTransition stIn  = new ScaleTransition(Duration.millis(200), this);
+        ScaleTransition stOut = new ScaleTransition(Duration.millis(200), this);
+        stIn.setToX(1.05); stIn.setToY(1.05);
+        stOut.setToX(1.00); stOut.setToY(1.00);
+        setOnMouseEntered(e -> {
+            stOut.stop();
+            stIn.playFromStart();
+            setCursor(Cursor.HAND);
+        });
+        setOnMouseExited(e -> {
+            stIn.stop();
+            stOut.playFromStart();
+            setCursor(Cursor.DEFAULT);
+        });
+    }
+
     /** Elimina el placeholder, deja la celda “lista” **/
     public void desbloquear(Card card) {
         unlocked = true;
