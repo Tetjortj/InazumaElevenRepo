@@ -12,7 +12,7 @@
 -Animacion de colocacion de las cartas en el campo
 -Holder en seleccion de cartas para preveer el campo con la implementacion
 -Mejora del pivote
--Ajuste del background y labels de pantalla del draft
+-Ajuste del background y labels de pantalla del draft ✅
 -Visual del selector de cartas
 -Solucionar problema de tapado visual entre cells en draft, tambien ubicacion de estas segun player placement
 -Poner efectos de sonido en cosas como las cartas

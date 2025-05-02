@@ -1,6 +1,7 @@
 package main.ui;
 
 import javafx.application.Platform;
+import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -41,6 +42,12 @@ public class DraftView extends HBox {
         campoStack.setPadding(Insets.EMPTY);
         campoStack.prefWidthProperty().bind(widthProperty().multiply(0.75));
         campoStack.prefHeightProperty().bind(heightProperty());
+
+        // >>> AÑADIMOS ESTO: para que jugadorLayer y linkLayer llenen TODO el campo <<<
+        jugadorLayer.prefWidthProperty().bind(campoStack.widthProperty());
+        jugadorLayer.prefHeightProperty().bind(campoStack.heightProperty());
+        linkLayer.prefWidthProperty().bind(campoStack.widthProperty());
+        linkLayer.prefHeightProperty().bind(campoStack.heightProperty());
 
         // --- Le ponemos un BackgroundImage con COVER para que escale+recorte ---
         Image campoImg = new Image(
@@ -85,10 +92,12 @@ public class DraftView extends HBox {
         Platform.runLater(this::renderizarAlineacion);
     }
 
+
     private void renderizarAlineacion() {
         jugadorLayer.getChildren().clear();
         playerCells.clear();
 
+        // 1) Determinar filas/columnas de la formación
         int minFila = formation.getMinFila();
         int maxFila = formation.getPlacements().stream()
                 .mapToInt(PlayerPlacement::getFila).max().orElse(minFila);
@@ -99,29 +108,53 @@ public class DraftView extends HBox {
         int filas    = maxFila - minFila + 1;
         int columnas = maxCol - minCol + 1;
 
+        // 2) Obtener espacio disponible en el campo
         double W = jugadorLayer.getWidth();
         double H = jugadorLayer.getHeight() * 0.8;
         if (W == 0 || H == 0) {
+            // Si aún no está layoutado, reintentar tras el próximo layout
             jugadorLayer.layoutBoundsProperty()
-                    .addListener((o,ov,nv)-> renderizarAlineacion());
+                    .addListener((o, ov, nv) -> renderizarAlineacion());
             return;
         }
 
-        // Espaciado para que las celdas encajen exactas
-        double cellW = PlayerCell.CELL_WIDTH;
-        double cellH = PlayerCell.CELL_HEIGHT;
-        double sx = (W - columnas * cellW) / (columnas + 1);
-        double sy = (H - filas    * cellH) / (filas    + 1);
+        // 3) Parámetros máximos y mínimos
+        double maxCardW    = 125;  // ancho máximo de carta
+        double maxCardH    = 175;  // alto máximo de carta
+        double minSpacingX = 20;   // espacio mínimo horizontal
+        double minSpacingY = 20;   // espacio mínimo vertical
 
+        // 4) Ajustar ancho de carta y spacingX
+        double cardW   = maxCardW;
+        double spacingX = (W - columnas * cardW) / (columnas + 1);
+        if (spacingX < minSpacingX) {
+            // Reducimos carta hasta que spacingX == minSpacingX
+            cardW    = (W - minSpacingX * (columnas + 1)) / columnas;
+            spacingX = minSpacingX;
+        }
+
+        // 5) Ajustar alto de carta y spacingY
+        double cardH   = maxCardH;
+        double spacingY = (H - filas * cardH) / (filas + 1);
+        if (spacingY < minSpacingY) {
+            cardH    = (H - minSpacingY * (filas + 1)) / filas;
+            spacingY = minSpacingY;
+        }
+
+        // 6) Colocar cada celda
         for (PlayerPlacement p : formation.getPlacements()) {
             int idx = formation.getPlacements().indexOf(p);
-            int row = p.getFila()   - minFila;
-            int col = p.getColumna()- minCol;
+            int row = p.getFila()    - minFila;
+            int col = p.getColumna() - minCol;
 
             PlayerCell cell = new PlayerCell(idx, p.getPosition());
-            double x = sx + col * (cellW + sx);
-            double y = sy + row * (cellH + sy);
-            cell.relocate(x,y);
+            cell.setPrefSize(cardW, cardH);
+            cell.setMinSize(cardW, cardH);
+            cell.setMaxSize(cardW, cardH);
+
+            double x = spacingX + col * (cardW + spacingX);
+            double y = spacingY + row * (cardH + spacingY);
+            cell.relocate(x, y);
 
             cell.setOnMouseClicked(evt -> {
                 if (!cell.isUnlocked()) seleccionarJugador(cell);
@@ -131,15 +164,51 @@ public class DraftView extends HBox {
             playerCells.add(cell);
         }
 
-        // Centrar todo el layer
-        double totalW = columnas * cellW + (columnas+1)*sx;
-        double totalH = filas    * cellH + (filas   +1)*sy;
-        jugadorLayer.setTranslateX((jugadorLayer.getWidth()  - totalW)/2);
-        jugadorLayer.setTranslateY((jugadorLayer.getHeight() - totalH)/2);
+        // 6.b) Resolver colisiones: empuja ligeramente celdas que se solapen
+        boolean moved;
+        do {
+            moved = false;
+            for (int i = 0; i < playerCells.size(); i++) {
+                PlayerCell a = playerCells.get(i);
+                Bounds ba = a.getBoundsInParent();
+                for (int j = i + 1; j < playerCells.size(); j++) {
+                    PlayerCell b = playerCells.get(j);
+                    Bounds bb = b.getBoundsInParent();
+                    if (ba.intersects(bb)) {
+                        // Vector de separación A←B
+                        double dx = ba.getCenterX() - bb.getCenterX();
+                        double dy = ba.getCenterY() - bb.getCenterY();
+                        if (Math.hypot(dx, dy) < 1e-3) {
+                            // Centros casi idénticos: empuja en Y
+                            dy = 1;
+                        }
+                        double dist = Math.hypot(dx, dy);
+                        // Normalizar y aplicar un pequeño desplazamiento (2px)
+                        double ux = dx / dist * 2;
+                        double uy = dy / dist * 2;
 
-        // Finalmente, pintamos las conexiones
+                        a.relocate(a.getLayoutX() + ux, a.getLayoutY() + uy);
+                        b.relocate(b.getLayoutX() - ux, b.getLayoutY() - uy);
+
+                        // Recalcular bounds para próximas iteraciones
+                        ba = a.getBoundsInParent();
+                        bb = b.getBoundsInParent();
+                        moved = true;
+                    }
+                }
+            }
+        } while (moved);
+
+        // 7) Centrar todo el layer dentro del pane
+        double totalW = columnas * cardW + (columnas + 1) * spacingX;
+        double totalH = filas    * cardH + (filas    + 1) * spacingY;
+        jugadorLayer.setTranslateX((jugadorLayer.getWidth()  - totalW) / 2);
+        jugadorLayer.setTranslateY((jugadorLayer.getHeight() - totalH) / 2);
+
+        // 8) Dibujar conexiones
         renderConnections();
     }
+
 
     private void seleccionarJugador(PlayerCell cell) {
         List<Card> opts = new ArrayList<>(playerPool.getByPosition(cell.getPosition()));
