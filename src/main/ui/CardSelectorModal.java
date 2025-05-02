@@ -74,6 +74,49 @@ public class CardSelectorModal extends Stage {
         }
 
         layout.getChildren().addAll(titulo, cartasBox);
+
+        // 1) Preparamos el flag y la referencia al master transition
+        final boolean[] animationsDone = { false };
+        final SequentialTransition[] masterRef = { null };
+
+        // 2) Skip-on-click: si pinchas antes de terminar, forzamos estado final
+        layout.setOnMouseClicked(evt -> {
+            if (!animationsDone[0] && masterRef[0] != null) {
+                masterRef[0].jumpTo(masterRef[0].getTotalDuration());  // detenemos TODO
+
+                for (int j = 0; j < placeholders.size(); j++) {
+                    PlayerCell pc = placeholders.get(j);
+                    Card c        = opciones.get(j);
+                    StackPane cont = pc.getCartaContainer();
+
+                    // Forzamos visibilidad y escala
+                    pc.setOpacity(1);
+                    pc.setScaleX(1);
+                    pc.setScaleY(1);
+                    pc.setRotate(0);
+
+                    // Reemplazamos contenedor por la CardView real
+                    cont.getChildren().clear();
+                    CardView real = new CardView(c);
+                    double tw = cont.getPrefWidth(), th = cont.getPrefHeight();
+                    double sx = tw / real.getPrefWidth(), sy = th / real.getPrefHeight();
+                    double sc = Math.min(sx, sy);
+                    real.setScaleX(sc);
+                    real.setScaleY(sc);
+                    cont.getChildren().add(real);
+
+                    // Activamos clic definitivo
+                    final Card chosen = c;
+                    pc.setOnMouseClicked(e2 -> {
+                        close();
+                        onSelect.accept(chosen);
+                    });
+                }
+
+                animationsDone[0] = true;
+            }
+        });
+
         Scene scene = new Scene(layout, 1300, 550);
         scene.setFill(Color.TRANSPARENT);
         setScene(scene);
@@ -87,14 +130,18 @@ public class CardSelectorModal extends Stage {
             slideIn.setFromX(-scene.getWidth());
             slideIn.setToX(0);
             slideIn.setInterpolator(Interpolator.EASE_OUT);
-            slideIn.setOnFinished(ev -> playCardReveal(placeholders, opciones, onSelect));
+            slideIn.setOnFinished(ev -> {
+                // Capturamos el master transition para poder pararlo
+                masterRef[0] = playCardReveal(placeholders, opciones, onSelect, animationsDone);
+            });
             slideIn.play();
         });
     }
 
-    private void playCardReveal(List<PlayerCell> placeholders,
+    private SequentialTransition playCardReveal(List<PlayerCell> placeholders,
                                 List<Card> cards,
-                                Consumer<Card> onSelect) {
+                                Consumer<Card> onSelect,
+                                boolean[] animationsDone) {
         int n = placeholders.size();
 
         // 1) Construimos todas las animaciones de entrada en paralelo
@@ -165,7 +212,8 @@ public class CardSelectorModal extends Stage {
 
         // 3) Encadenamos TODO: primero entradas, luego flips
         SequentialTransition master = new SequentialTransition(allEntries, allFlips);
+        master.setOnFinished(ev -> animationsDone[0] = true);
         master.play();
+        return master;
     }
-
 }
