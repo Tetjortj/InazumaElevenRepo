@@ -28,9 +28,9 @@ import java.util.function.Consumer;
 public class CardSelectorModal extends Stage {
 
     private static final Duration PANEL_SLIDE_DURATION   = Duration.millis(400);
-    private static final Duration ENTRY_DURATION         = Duration.millis(400);
-    private static final Duration CARD_REVEAL_DURATION   = Duration.millis(600);
-    private static final Duration CARD_REVEAL_STAGGER    = Duration.millis(500);
+    private static final Duration ENTRY_DURATION         = Duration.millis(200);
+    private static final Duration CARD_REVEAL_DURATION   = Duration.millis(300);
+    private static final Duration CARD_REVEAL_STAGGER    = Duration.millis(200);
     private static final double   INITIAL_SCALE          = 1.6;
 
     public CardSelectorModal(List<Card> opciones, Consumer<Card> onSelect) {
@@ -96,71 +96,76 @@ public class CardSelectorModal extends Stage {
                                 List<Card> cards,
                                 Consumer<Card> onSelect) {
         int n = placeholders.size();
-        Duration totalEntry = ENTRY_DURATION.add(CARD_REVEAL_STAGGER.multiply(n - 1));
 
+        // 1) Construimos todas las animaciones de entrada en paralelo
+        List<Animation> entryAnims = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            PlayerCell pc = placeholders.get(i);
+
+            // fade+scale con delay i * CARD_REVEAL_STAGGER
+            FadeTransition fade = new FadeTransition(ENTRY_DURATION, pc);
+            fade.setFromValue(0);
+            fade.setToValue(1);
+
+            ScaleTransition scale = new ScaleTransition(ENTRY_DURATION, pc);
+            scale.setFromX(INITIAL_SCALE);
+            scale.setFromY(INITIAL_SCALE);
+            scale.setToX(1);
+            scale.setToY(1);
+
+            ParallelTransition entry = new ParallelTransition(fade, scale);
+            entry.setDelay(CARD_REVEAL_STAGGER.multiply(i));
+            entryAnims.add(entry);
+        }
+        ParallelTransition allEntries = new ParallelTransition();
+        allEntries.getChildren().addAll(entryAnims);
+
+        // 2) Construimos todos los flips en secuencia, uno detrás de otro
+        SequentialTransition allFlips = new SequentialTransition();
         for (int i = 0; i < n; i++) {
             PlayerCell placeholder = placeholders.get(i);
             Card carta            = cards.get(i);
             StackPane container   = placeholder.getCartaContainer();
 
-            // --- 1) Animación de entrada (fade + scale) ---
-            FadeTransition fadeIn = new FadeTransition(ENTRY_DURATION, placeholder);
-            fadeIn.setFromValue(0);
-            fadeIn.setToValue(1);
-
-            ScaleTransition scaleIn = new ScaleTransition(ENTRY_DURATION, placeholder);
-            scaleIn.setFromX(INITIAL_SCALE);
-            scaleIn.setFromY(INITIAL_SCALE);
-            scaleIn.setToX(1.0);
-            scaleIn.setToY(1.0);
-
-            ParallelTransition entry = new ParallelTransition(fadeIn, scaleIn);
-            entry.setDelay(CARD_REVEAL_STAGGER.multiply(i));
-
-            entry.play();
-
-            // --- 2) Preparamos CardView oculto ---
+            // Preparamos la CardView “real” pero oculta
             CardView real = new CardView(carta);
-            double tw = container.getPrefWidth();
-            double th = container.getPrefHeight();
-            double sx = tw / real.getPrefWidth();
-            double sy = th / real.getPrefHeight();
+            double tw = container.getPrefWidth(), th = container.getPrefHeight();
+            double sx = tw / real.getPrefWidth(), sy = th / real.getPrefHeight();
             double sc = Math.min(sx, sy);
             real.setScaleX(sc);
             real.setScaleY(sc);
             real.setVisible(false);
             container.getChildren().add(real);
 
-            // --- 3) Flip: mitad1 y mitad2 ---
+            // mitad1: 0° → 90°
             RotateTransition half1 = new RotateTransition(CARD_REVEAL_DURATION.divide(2), placeholder);
             half1.setAxis(Rotate.Y_AXIS);
             half1.setFromAngle(0);
             half1.setToAngle(90);
             half1.setOnFinished(evt -> {
-                // En 90° swap placeholder → real
+                // swap placeholder → real
                 container.getChildren().get(0).setVisible(false);
                 real.setVisible(true);
             });
 
+            // mitad2: 90° → 0°
             RotateTransition half2 = new RotateTransition(CARD_REVEAL_DURATION.divide(2), placeholder);
             half2.setAxis(Rotate.Y_AXIS);
             half2.setFromAngle(90);
             half2.setToAngle(0);
             half2.setOnFinished(evt -> {
-                // Activar selección final
-                placeholder.setOnMouseClicked(e2 -> {
+                placeholder.setOnMouseClicked(e -> {
                     close();
                     onSelect.accept(carta);
                 });
             });
 
-            // --- 4) Secuencia completa: entry → half1 → half2 ---
-            // 3) Encadenamos con una pausa inicial = totalEntry + stagger(i)
-            PauseTransition pause = new PauseTransition(
-                    totalEntry.add(CARD_REVEAL_STAGGER.multiply(i))
-            );
-            SequentialTransition flipSeq = new SequentialTransition(pause, half1, half2);
-            flipSeq.play();
+            allFlips.getChildren().addAll(half1, half2);
         }
+
+        // 3) Encadenamos TODO: primero entradas, luego flips
+        SequentialTransition master = new SequentialTransition(allEntries, allFlips);
+        master.play();
     }
+
 }
