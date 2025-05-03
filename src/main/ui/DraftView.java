@@ -5,6 +5,7 @@ import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Button;
@@ -84,6 +85,14 @@ public class DraftView extends HBox {
         this.getChildren().setAll(campoStack, panelDerecho);
         this.setPrefSize(1600, 900);
 
+        jugadorLayer.setOnDragOver(e -> {
+            if (e.getDragboard().hasString()) {
+                // aceptamos siempre MOVE en todo el área, así nunca sale el cursor de "stop"
+                e.acceptTransferModes(TransferMode.MOVE);
+            }
+            e.consume();
+        });
+
         Platform.runLater(this::renderizarAlineacion);
     }
 
@@ -162,12 +171,15 @@ public class DraftView extends HBox {
                 // 3) Dejamos el placeholder “vacío” en la celda
                 cell.resetVisual();
 
+                cell.getScene().setCursor(Cursor.DEFAULT);
+
                 e.consume();
             });
 
 
             cell.setOnDragOver(e -> {
-                if (e.getGestureSource() != cell && e.getDragboard().hasString() && cell.isUnlocked()) {
+                if (e.getDragboard().hasString()) {
+                    // aceptamos siempre el MOVE para que el cursor nunca sea el "stop"
                     e.acceptTransferModes(TransferMode.MOVE);
                 }
                 e.consume();
@@ -214,6 +226,7 @@ public class DraftView extends HBox {
                         cell.resetVisual();
                     }
                 }
+                cell.getScene().setCursor(Cursor.DEFAULT);
                 e.consume();
             });
             // --- FIN DRAG & DROP ---
