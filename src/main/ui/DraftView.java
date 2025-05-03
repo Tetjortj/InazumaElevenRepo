@@ -154,7 +154,10 @@ public class DraftView extends HBox {
                 ClipboardContent content = new ClipboardContent();
                 content.putString(String.valueOf(cell.getIndex()));
                 db.setContent(content);
-                db.setDragView(snapshot);
+                db.setDragView(snapshot,
+                        snapshot.getWidth()  / 2,
+                        snapshot.getHeight() / 2
+                );
 
                 // 3) Dejamos el placeholder “vacío” en la celda
                 cell.resetVisual();
@@ -164,7 +167,7 @@ public class DraftView extends HBox {
 
 
             cell.setOnDragOver(e -> {
-                if (e.getGestureSource() != cell && e.getDragboard().hasString()) {
+                if (e.getGestureSource() != cell && e.getDragboard().hasString() && cell.isUnlocked()) {
                     e.acceptTransferModes(TransferMode.MOVE);
                 }
                 e.consume();
@@ -173,7 +176,7 @@ public class DraftView extends HBox {
             cell.setOnDragDropped(e -> {
                 Dragboard db = e.getDragboard();
                 boolean success = false;
-                if (db.hasString()) {
+                if (db.hasString() && cell.isUnlocked()) {
                     int fromIdx = Integer.parseInt(db.getString());
                     int toIdx   = cell.getIndex();
 
@@ -203,8 +206,14 @@ public class DraftView extends HBox {
             });
 
             cell.setOnDragDone(e -> {
-                // siempre restauramos la visibilidad del origen
-                cell.getCartaContainer().setVisible(true);
+                if (!e.isDropCompleted()) {
+                    Card original = jugadoresSeleccionados.get(cell.getIndex());
+                    if (original != null) {
+                        mostrarCartaEnCelda(cell, original);
+                    } else {
+                        cell.resetVisual();
+                    }
+                }
                 e.consume();
             });
             // --- FIN DRAG & DROP ---
