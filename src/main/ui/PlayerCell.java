@@ -39,6 +39,8 @@ public class PlayerCell extends StackPane {
     private final Polygon pivoteTip;
     private final VBox pivoteContainer;
 
+    private final StackPane placeholderNode;
+
     public PlayerCell(int index, Position position) {
         this.index    = index;
         this.position = position;
@@ -58,6 +60,12 @@ public class PlayerCell extends StackPane {
 
         StackPane placeholder = new StackPane(fondo, logo);
         placeholder.setPrefSize(CELL_WIDTH, CELL_HEIGHT);
+
+        // ► Asignamos el campo placeholderNode para poder resetear luego
+        this.placeholderNode = placeholder;
+
+        // Lo ponemos en el container
+        cartaContainer.getChildren().setAll(placeholderNode);
 
         cartaContainer.getChildren().setAll(placeholder);
         cartaContainer.setPrefSize(CELL_WIDTH, CELL_HEIGHT);
@@ -138,6 +146,12 @@ public class PlayerCell extends StackPane {
 
         StackPane placeholder = new StackPane(fondo, logo);
         placeholder.setPrefSize(w, h);
+
+        // ► Asignamos el campo placeholderNode para poder resetear luego
+        this.placeholderNode = placeholder;
+
+        // Lo ponemos en el container
+        cartaContainer.getChildren().setAll(placeholderNode);
 
         cartaContainer.getChildren().setAll(placeholder);
         cartaContainer.setPrefSize(w, h);
@@ -231,6 +245,17 @@ public class PlayerCell extends StackPane {
         this.baseScale = scale;
         setScaleX(scale);
         setScaleY(scale);
+    }
+
+    public void reset() {
+        unlocked = false;
+        // vuelve a poner el placeholder original
+        cartaContainer.getChildren().setAll(placeholderNode);
+    }
+
+    public void resetVisual() {
+        // sólo repintamos el placeholder, sin tocar unlocked
+        cartaContainer.getChildren().setAll(placeholderNode);
     }
 
     public boolean isUnlocked()            { return unlocked; }

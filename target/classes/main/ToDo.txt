@@ -1,4 +1,4 @@
--Enlaces entre jugadores
+-Enlaces entre jugadores ✅
 -Label de quimica y puntuacion
 -Animacion de entrada de las cartas mejorar ✅
 -Transición entre seleccion y draft mejorar
@@ -11,7 +11,7 @@
 -Segunda temporada
 -Animacion de colocacion de las cartas en el campo
 -Holder en seleccion de cartas para preveer el campo con la implementacion
--Mejora del pivote
+-Mejora del pivote ✅
 -Ajuste del background y labels de pantalla del draft ✅
 -Visual del selector de cartas
 -Solucionar problema de tapado visual entre cells en draft, tambien ubicacion de estas segun player placement
