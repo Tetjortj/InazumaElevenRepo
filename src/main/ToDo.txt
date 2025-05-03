@@ -4,7 +4,7 @@
 -Transición entre seleccion y draft mejorar
 -Banquillo
 -Capitan
--Movimiento entre jugadores ya en el campo
+-Movimiento entre jugadores ya en el campo ✅
 -Marcador puntuacion final
 -Guardar records anteriores
 -Logros

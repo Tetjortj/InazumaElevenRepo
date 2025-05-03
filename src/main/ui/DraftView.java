@@ -20,6 +20,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import main.Card;
 import main.Formation;
 import main.PlayerPlacement;
@@ -37,6 +38,11 @@ public class DraftView extends HBox {
     private final HBox banquilloBox = new HBox(10);
     Pane linkLayer = new Pane();
     private final List<PlayerCell> playerCells = new ArrayList<>();
+
+    // — NUEVO: barra de resultados —
+    private final Label quimicaLabel    = new Label("Química: 0");
+    private final Label puntuacionLabel = new Label("Puntuación: 0");
+    private final HBox scoreBox         = new HBox(20, quimicaLabel, puntuacionLabel);
 
     public DraftView(Formation formation, PlayerPool playerPool, StatsPanel statsPanel) {
         this.formation     = formation;
@@ -66,6 +72,10 @@ public class DraftView extends HBox {
         );
         campoStack.setBackground(new Background(bgImage));
 
+        // — AÑADIMOS la barra de resultados encima del campo —
+        scoreBox.setPadding(new Insets(8));
+        scoreBox.setStyle("-fx-background-color: rgba(0,0,0,0.6); -fx-background-radius: 8;");
+
         Button salir = new Button("Salir");
         salir.setFont(Font.font(16));
         salir.setStyle("-fx-background-color: #c62828; -fx-text-fill: white;");
@@ -75,7 +85,7 @@ public class DraftView extends HBox {
         banquilloBox.setPadding(new Insets(10));
         VBox.setVgrow(statsPanel, Priority.ALWAYS);
 
-        VBox panelDerecho = new VBox(20, salir, statsPanel, banquilloBox);
+        VBox panelDerecho = new VBox(20, salir, statsPanel, scoreBox, banquilloBox);
         panelDerecho.setPadding(new Insets(20));
         panelDerecho.setAlignment(Pos.TOP_CENTER);
         panelDerecho.prefWidthProperty().bind(widthProperty().multiply(0.25));
@@ -85,9 +95,9 @@ public class DraftView extends HBox {
         this.getChildren().setAll(campoStack, panelDerecho);
         this.setPrefSize(1600, 900);
 
+        // hacemos que todo el campo acepte siempre MOVE para no mostrar “stop”
         jugadorLayer.setOnDragOver(e -> {
             if (e.getDragboard().hasString()) {
-                // aceptamos siempre MOVE en todo el área, así nunca sale el cursor de "stop"
                 e.acceptTransferModes(TransferMode.MOVE);
             }
             e.consume();
@@ -266,6 +276,7 @@ public class DraftView extends HBox {
         jugadorLayer.setTranslateX((jugadorLayer.getWidth() - totalW)/2);
         jugadorLayer.setTranslateY((jugadorLayer.getHeight()- totalH)/2);
 
+        updateScores();
         Platform.runLater(this::renderConnections);
     }
 
@@ -274,6 +285,66 @@ public class DraftView extends HBox {
                 .filter(c -> c.getIndex() == idx)
                 .findFirst()
                 .orElseThrow(() -> new IllegalStateException("Cell " + idx + " no encontrada"));
+    }
+
+    private void updateScores() {
+        int quimica    = calcularQuimica(formation, jugadoresSeleccionados);
+        int puntuacion = calcularPuntuacion(formation, jugadoresSeleccionados);
+
+        quimicaLabel.   setText("Química: "    + quimica);
+        puntuacionLabel.setText("Puntuación: " + puntuacion);
+
+        puntuacionLabel.setFont(Font.font("Verdana", FontWeight.BOLD, 18));
+        quimicaLabel.setFont(Font.font("Verdana", FontWeight.BOLD, 18));
+
+        // Si ya están todas las posiciones llenas, mostramos sólo el total final
+        if (jugadoresSeleccionados.size() == playerCells.size()) {
+            int total = quimica + puntuacion;
+            scoreBox.getChildren().setAll(
+                    new Label("Total final: " + total)
+            );
+        }
+    }
+
+    private static int calcularQuimica(Formation formacion, Map<Integer, Card> jugadoresSeleccionados) {
+        Map<Integer, List<Integer>> links = formacion.getLinks();
+        int enlacesTotales = 0;
+        float quimicaActual = 0;
+
+        for (Map.Entry<Integer, List<Integer>> entry : links.entrySet()) {
+            int from = entry.getKey();
+            for (int to : entry.getValue()) {
+                if (from < to
+                        && jugadoresSeleccionados.containsKey(from)
+                        && jugadoresSeleccionados.containsKey(to)) {
+                    enlacesTotales++;
+                    Card a = jugadoresSeleccionados.get(from);
+                    Card b = jugadoresSeleccionados.get(to);
+
+                    if (a.getTeam() == b.getTeam()
+                            || (a.getElement() == b.getElement() && a.getGrade() == b.getGrade())) {
+                        quimicaActual += 1.0;
+                    } else if ((a.getElement() == b.getElement() && a.getGrade() != b.getGrade())
+                            || (a.getElement() != b.getElement() && a.getGrade() == b.getGrade())) {
+                        quimicaActual += 0.5;
+                    } else {
+                        quimicaActual += 0.25;
+                    }
+                }
+            }
+        }
+        return enlacesTotales > 0
+                ? Math.round((quimicaActual / enlacesTotales) * 100)
+                : 0;
+    }
+
+    // Calcula la puntuación media del equipo (como en tu Main)
+    private static int calcularPuntuacion(Formation formacion, Map<Integer, Card> jugadoresSeleccionados) {
+        if (jugadoresSeleccionados.isEmpty()) return 0;
+        int suma = jugadoresSeleccionados.values().stream()
+                .mapToInt(Card::getScore)
+                .sum();
+        return Math.round((float) suma / jugadoresSeleccionados.size());
     }
 
 
@@ -287,6 +358,9 @@ public class DraftView extends HBox {
             jugadoresSeleccionados.put(cell.getIndex(), carta);
             cell.desbloquear(carta);
             mostrarCartaEnCelda(cell, carta);
+
+            updateScores();
+
             statsPanel.actualizarStats(formation, jugadoresSeleccionados);
             Platform.runLater(this::renderConnections);
         });
