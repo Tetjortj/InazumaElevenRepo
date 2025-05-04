@@ -8,8 +8,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.SnapshotParameters;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
@@ -47,6 +46,8 @@ public class DraftView extends HBox {
     private final List<PlayerCell> benchCells = new ArrayList<>();
     private final List<Card> bench = new ArrayList<>();
     private final VBox benchContainer = new VBox(10);
+
+    private final Button finishButton = new Button("Terminar Draft");
 
     public DraftView(Formation formation, PlayerPool playerPool, StatsPanel statsPanel) {
         this.formation     = formation;
@@ -110,13 +111,19 @@ public class DraftView extends HBox {
         banquilloBox.setAlignment(Pos.CENTER);
         banquilloBox.setPadding(new Insets(0));
 
+        // 1.a) configura el botón
+        finishButton.setDisable(true);
+        finishButton.setVisible(false);
+        finishButton.setOnAction(e -> showFinalResult());
+
         VBox.setVgrow(statsPanel, Priority.ALWAYS);
 
         VBox panelDerecho = new VBox(20,
                 salir,
                 benchContainer,
                 statsPanel,
-                scoreBox
+                scoreBox,
+                finishButton
         );
         panelDerecho.setPadding(new Insets(20));
         panelDerecho.setAlignment(Pos.TOP_CENTER);
@@ -329,13 +336,9 @@ public class DraftView extends HBox {
         puntuacionLabel.setFont(Font.font("Verdana", FontWeight.BOLD, 18));
         quimicaLabel.setFont(Font.font("Verdana", FontWeight.BOLD, 18));
 
-        // Si ya están todas las posiciones llenas, mostramos sólo el total final
-        if (jugadoresSeleccionados.size() == playerCells.size()) {
-            int total = quimica + puntuacion;
-            scoreBox.getChildren().setAll(
-                    new Label("Total final: " + total)
-            );
-        }
+        boolean allPlaced = jugadoresSeleccionados.size() == playerCells.size();
+        finishButton.setDisable(!allPlaced);
+        finishButton.setVisible(allPlaced);
     }
 
     private static int calcularQuimica(Formation formacion, Map<Integer, Card> jugadoresSeleccionados) {
@@ -475,6 +478,26 @@ public class DraftView extends HBox {
             cell.getCartaContainer().getChildren().setAll(new MiniCardView(carta));
         });
         sel.showAndWait();
+    }
+
+    private void showFinalResult() {
+        int quimica    = calcularQuimica(formation, jugadoresSeleccionados);
+        int puntuacion = calcularPuntuacion(formation, jugadoresSeleccionados);
+        int total      = quimica + puntuacion;
+
+        Alert alert = new Alert(Alert.AlertType.NONE);
+        alert.initOwner(getScene().getWindow());
+        alert.setTitle("Draft Finalizado");
+        // etiqueta grande y en el medio
+        Label msg = new Label("Total final: " + total);
+        msg.setFont(Font.font("Verdana", FontWeight.BOLD, 24));
+        alert.getDialogPane().setContent(msg);
+
+        ButtonType btnSalir = new ButtonType("Salir", ButtonBar.ButtonData.OK_DONE);
+        alert.getButtonTypes().setAll(btnSalir);
+
+        alert.showAndWait();
+        Platform.exit();
     }
 
     public HBox getBanquilloBox() {
