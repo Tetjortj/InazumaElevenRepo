@@ -44,6 +44,10 @@ public class DraftView extends HBox {
     private final Label puntuacionLabel = new Label("Puntuación: 0");
     private final HBox scoreBox         = new HBox(20, quimicaLabel, puntuacionLabel);
 
+    private final List<PlayerCell> benchCells = new ArrayList<>();
+    private final List<Card> bench = new ArrayList<>();
+    private final VBox benchContainer = new VBox(10);
+
     public DraftView(Formation formation, PlayerPool playerPool, StatsPanel statsPanel) {
         this.formation     = formation;
         this.playerPool    = playerPool;
@@ -81,11 +85,39 @@ public class DraftView extends HBox {
         salir.setStyle("-fx-background-color: #c62828; -fx-text-fill: white;");
         salir.setOnAction(e -> Platform.exit());
 
+        // --- BANQUILLO: 2 filas (3 + 2) dentro de benchContainer ---
+        benchContainer.setPadding(new Insets(10));
+        benchContainer.setAlignment(Pos.CENTER);
+        // fila 1: 3 celdas
+        HBox row1 = new HBox(10);
+        row1.setAlignment(Pos.CENTER);
+        // fila 2: 2 celdas
+        HBox row2 = new HBox(10);
+        row2.setAlignment(Pos.CENTER);
+
+        for (int i = 0; i < 5; i++) {
+            // índice ficticio y posición null para bench
+            PlayerCell bc = new PlayerCell(true);
+            bc.setPrefSize(120, 170);
+            bc.resetVisual();
+            bc.setOnMouseClicked(evt -> seleccionarDelBench(bc));
+            benchCells.add(bc);
+            if (i < 3) row1.getChildren().add(bc);
+            else      row2.getChildren().add(bc);
+        }
+        benchContainer.getChildren().setAll(row1, row2);
+
         banquilloBox.setAlignment(Pos.CENTER);
-        banquilloBox.setPadding(new Insets(10));
+        banquilloBox.setPadding(new Insets(0));
+
         VBox.setVgrow(statsPanel, Priority.ALWAYS);
 
-        VBox panelDerecho = new VBox(20, salir, statsPanel, scoreBox, banquilloBox);
+        VBox panelDerecho = new VBox(20,
+                salir,
+                benchContainer,
+                statsPanel,
+                scoreBox
+        );
         panelDerecho.setPadding(new Insets(20));
         panelDerecho.setAlignment(Pos.TOP_CENTER);
         panelDerecho.prefWidthProperty().bind(widthProperty().multiply(0.25));
@@ -428,6 +460,21 @@ public class DraftView extends HBox {
                 }
             }
         }
+    }
+
+    private void seleccionarDelBench(PlayerCell cell) {
+        List<Card> opts = new ArrayList<>(playerPool.getAllPlayers());
+        opts.removeAll(jugadoresSeleccionados.values());
+        opts.removeAll(bench);
+        Collections.shuffle(opts);
+        opts = opts.stream().limit(5).toList();
+
+        CardSelectorModal sel = new CardSelectorModal(opts, carta -> {
+            bench.add(carta);
+            cell.desbloquear(carta);
+            cell.getCartaContainer().getChildren().setAll(new MiniCardView(carta));
+        });
+        sel.showAndWait();
     }
 
     public HBox getBanquilloBox() {

@@ -30,14 +30,14 @@ public class PlayerCell extends StackPane {
     public static final double CELL_HEIGHT = MiniCardView.VISIBLE_HEIGHT;
 
     private final StackPane cartaContainer = new StackPane();
-    private final Label pivoteLabel;
+    private Label pivoteLabel;
     private boolean unlocked = false;
     private final int index;
     private final Position position;
     private double baseScale = 1.0;
 
-    private final Polygon pivoteTip;
-    private final VBox pivoteContainer;
+    private Polygon pivoteTip;
+    private VBox pivoteContainer;
 
     private final StackPane placeholderNode;
 
@@ -230,6 +230,57 @@ public class PlayerCell extends StackPane {
         });
         setOnMouseExited(e -> {
             stIn.stop();
+            stOut.playFromStart();
+            setCursor(Cursor.DEFAULT);
+        });
+    }
+
+    public PlayerCell(boolean benchCell) {
+        this.index = -1;
+        this.position = null;
+        this.baseScale = 1.0;
+
+        // Creamos solo el placeholder, sin pivote ni lógica de posición
+        Rectangle fondo = new Rectangle(CELL_WIDTH, CELL_HEIGHT);
+        fondo.setFill(Color.GRAY);
+        fondo.setArcWidth(20);
+        fondo.setArcHeight(20);
+        fondo.setStroke(Color.DARKGRAY);
+
+        ImageView logo = new ImageView(
+                new Image(getClass().getResource("/images/logo.png").toExternalForm())
+        );
+        logo.setFitWidth(CELL_WIDTH * 0.5);
+        logo.setPreserveRatio(true);
+
+        StackPane placeholder = new StackPane(fondo, logo);
+        placeholder.setPrefSize(CELL_WIDTH, CELL_HEIGHT);
+
+        this.placeholderNode = placeholder;             // asume que ya tienes ese campo
+        cartaContainer.getChildren().setAll(placeholder);
+        cartaContainer.setPrefSize(CELL_WIDTH, CELL_HEIGHT);
+
+        getChildren().setAll(cartaContainer);
+        setAlignment(Pos.CENTER);
+
+        setPrefSize(CELL_WIDTH, CELL_HEIGHT);
+        setMinSize(CELL_WIDTH, CELL_HEIGHT);
+        setMaxSize(CELL_WIDTH, CELL_HEIGHT);
+
+        // (Opcional) hover effect si quieres:
+        ScaleTransition stIn  = new ScaleTransition(Duration.millis(200), this);
+        ScaleTransition stOut = new ScaleTransition(Duration.millis(200), this);
+        setOnMouseEntered(e -> {
+            stOut.stop();
+            stIn.setToX(1.05);
+            stIn.setToY(1.05);
+            stIn.playFromStart();
+            setCursor(Cursor.HAND);
+        });
+        setOnMouseExited(e -> {
+            stIn.stop();
+            stOut.setToX(1.00);
+            stOut.setToY(1.00);
             stOut.playFromStart();
             setCursor(Cursor.DEFAULT);
         });
