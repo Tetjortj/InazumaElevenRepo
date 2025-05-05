@@ -5,6 +5,7 @@ import javafx.animation.ParallelTransition;
 import javafx.animation.TranslateTransition;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 import javafx.util.Duration;
@@ -28,11 +29,11 @@ public class DraftScreen {
         // obtenemos 3 formaciones al azar
         List<Formation> opciones = new FormationRepository().getRandomFormations(3);
 
-        // creamos el componente que pide la formación y cuando se elige,
-        // llama a cargarPantallaDraft(...)
+        // selector llama a cargarPantallaDraft(...) al elegir
         FormationSelectionScreen selector =
                 new FormationSelectionScreen(opciones, chosen -> cargarPantallaDraft(stage, chosen));
 
+        // **Title → Selection**: slide+fade
         animateSceneTransition(stage, selector);
     }
 
@@ -41,48 +42,69 @@ public class DraftScreen {
         MusicManager.playMusic("/music/draft-theme.wav");
 
         // preparativos
-        List<Card> all = new CardLoader().loadCards();
-        PlayerPool pool = new PlayerPool(all);
+        List<Card> all   = new CardLoader().loadCards();
+        PlayerPool pool  = new PlayerPool(all);
         StatsPanel stats = new StatsPanel();
-        DraftView draftView = new DraftView(selectedFormation, pool, stats);
+        DraftView draft  = new DraftView(selectedFormation, pool, stats);
 
-        animateSceneTransition(stage, draftView);
+        // **Selection → Draft**: cross‐fade
+        DraftView draftView = new DraftView(selectedFormation, pool, stats);
+        animateFadeTransition(stage, draftView);
     }
 
+    /**
+     * Cross‐fade entre la root actual y newRoot.
+     * No toca animateSceneTransition para no alterar el Title→Selection.
+     */
+    private void animateFadeTransition(Stage stage, Parent newRoot) {
+        Scene scene    = stage.getScene();
+        Parent oldRoot = scene.getRoot();
+
+        // Prepara la nueva pantalla DENTRO del stack (detrás)
+        newRoot.setOpacity(1.0);
+        StackPane stack = new StackPane(newRoot, oldRoot);
+        scene.setRoot(stack);
+
+        // Solo fade-out del viejo root para revelar el newRoot
+        FadeTransition fadeOut = new FadeTransition(Duration.millis(1200), oldRoot);
+        fadeOut.setFromValue(1.0);
+        fadeOut.setToValue(0.0);
+
+        fadeOut.setOnFinished(evt -> {
+            // Limpiamos el stack (quitamos both children)
+            stack.getChildren().clear();
+            // Ya newRoot no tiene padre, lo ponemos de una vez como root
+            scene.setRoot(newRoot);
+        });
+
+        fadeOut.play();
+    }
+
+    // Tu animateSceneTransition original (Title → Selection) queda idéntico
     private void animateSceneTransition(Stage stage, Parent newRoot) {
         Scene scene = stage.getScene();
         Parent oldRoot = scene.getRoot();
-
         double width = scene.getWidth();
 
-        // Prepara el newRoot fuera del viewport, a la derecha
+        // slide+fade out/in...
         newRoot.translateXProperty().set(width);
         newRoot.opacityProperty().set(0);
-
-        // Ponemos el newRoot *ya* en la escena (pero fuera de pantalla)
         scene.setRoot(newRoot);
 
-        // Creamos la animación de salida del viejo root
         TranslateTransition slideOut = new TranslateTransition(Duration.millis(400), oldRoot);
         slideOut.setToX(-width);
-
         FadeTransition fadeOut = new FadeTransition(Duration.millis(400), oldRoot);
         fadeOut.setToValue(0.3);
 
-        // Animación de entrada del nuevo root
         TranslateTransition slideIn = new TranslateTransition(Duration.millis(400), newRoot);
         slideIn.setToX(0);
-
         FadeTransition fadeIn = new FadeTransition(Duration.millis(400), newRoot);
         fadeIn.setToValue(1.0);
 
-        // Las ejecutamos en paralelo
         ParallelTransition out = new ParallelTransition(slideOut, fadeOut);
         ParallelTransition in  = new ParallelTransition(slideIn,  fadeIn);
 
-        // Cuando termine el “out”, lanzamos el “in”
         out.setOnFinished(e -> in.play());
         out.play();
     }
-
 }
