@@ -152,11 +152,11 @@ public class FormationSelectionScreen extends BorderPane {
             Label name = (Label) item.getChildren().get(0);
             FormationPreview prev = (FormationPreview) item.getChildren().get(1);
 
-            FadeTransition fadeName = new FadeTransition(Duration.seconds(0.8), name);
+            FadeTransition fadeName = new FadeTransition(Duration.seconds(0.5), name);
             fadeName.setFromValue(0);
             fadeName.setToValue(2);
 
-            FadeTransition fadeDots = new FadeTransition(Duration.seconds(0.8), prev.getMarkers());
+            FadeTransition fadeDots = new FadeTransition(Duration.seconds(0.5), prev.getMarkers());
             fadeDots.setFromValue(0);
             fadeDots.setToValue(2);
 

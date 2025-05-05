@@ -1,11 +1,11 @@
 -Enlaces entre jugadores ✅
--Label de quimica y puntuacion
+-Label de quimica y puntuacion 🔁
 -Animacion de entrada de las cartas mejorar ✅
--Transición entre seleccion y draft mejorar
--Banquillo
+-Transición entre seleccion y draft mejorar ✅
+-Banquillo 🔁
 -Capitan
 -Movimiento entre jugadores ya en el campo ✅
--Marcador puntuacion final
+-Marcador puntuacion final 🔁
 -Guardar records anteriores
 -Logros
 -Segunda temporada
