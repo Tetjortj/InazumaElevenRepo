@@ -11,7 +11,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import main.Formation;
 import main.FormationRepository;
-import main.ui.MusicManager;
+import main.ui.screens.utils.MusicManager;
 
 import java.util.List;
 import main.Card;

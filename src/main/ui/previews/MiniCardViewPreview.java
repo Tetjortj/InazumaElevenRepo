@@ -1,4 +1,4 @@
-package main.ui;
+package main.ui.previews;
 
 import javafx.application.Application;
 import javafx.geometry.Insets;
@@ -10,6 +10,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import main.Card;
 import main.CardLoader;
+import main.ui.MiniCardView;
 
 import java.util.List;
 

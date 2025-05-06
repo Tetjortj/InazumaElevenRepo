@@ -1,4 +1,4 @@
-package main.ui;
+package main.ui.screens.utils;
 
 import javafx.stage.Stage;
 import javafx.stage.Window;

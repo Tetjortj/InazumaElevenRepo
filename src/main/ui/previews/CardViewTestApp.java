@@ -1,13 +1,13 @@
-package main.ui;
+package main.ui.previews;
 
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.TilePane;
 import javafx.stage.Stage;
 import main.*;
+import main.ui.CardView;
 
 import java.util.Collections;
 import java.util.List;
