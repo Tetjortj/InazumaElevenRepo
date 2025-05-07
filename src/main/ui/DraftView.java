@@ -1,10 +1,7 @@
 package main.ui;
 
 import javafx.application.Platform;
-import javafx.geometry.Bounds;
-import javafx.geometry.Insets;
-import javafx.geometry.Point2D;
-import javafx.geometry.Pos;
+import javafx.geometry.*;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.SnapshotParameters;
@@ -290,11 +287,27 @@ public class DraftView extends HBox {
             moved = false;
             for (int i = 0; i < playerCells.size(); i++) {
                 PlayerCell a = playerCells.get(i);
+
                 Bounds ba = a.getBoundsInParent();
+                double extra = 30;
+                Bounds totalA = new BoundingBox(
+                        ba.getMinX(),
+                        ba.getMinY(),
+                        ba.getWidth(),
+                        ba.getHeight() + extra
+                );
+
                 for (int j = i+1; j < playerCells.size(); j++) {
                     PlayerCell b = playerCells.get(j);
                     Bounds bb = b.getBoundsInParent();
-                    if (ba.intersects(bb)) {
+                    Bounds totalB = new BoundingBox(
+                            bb.getMinX(),
+                            bb.getMinY(),
+                            bb.getWidth(),
+                            bb.getHeight() + extra
+                    );
+
+                    if (totalA.intersects(totalB)) {
                         double dx = ba.getCenterX() - bb.getCenterX();
                         double dy = ba.getCenterY() - bb.getCenterY();
                         if (Math.hypot(dx,dy) < 1e-3) dy = 1;
@@ -303,8 +316,6 @@ public class DraftView extends HBox {
                         a.relocate(a.getLayoutX()+ux, a.getLayoutY()+uy);
                         b.relocate(b.getLayoutX()-ux, b.getLayoutY()-uy);
                         moved = true;
-                        ba = a.getBoundsInParent();
-                        bb = b.getBoundsInParent();
                     }
                 }
             }

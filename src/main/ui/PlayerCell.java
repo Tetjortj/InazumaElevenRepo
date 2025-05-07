@@ -315,6 +315,7 @@ public class PlayerCell extends StackPane {
     public StackPane getCartaContainer()   { return cartaContainer; }
     public void setQuimica(int q)          { pivoteLabel.setText(position.name() + " " + q); }
     public Label getPivoteNode()           { return pivoteLabel; }
+    public Polygon getPivoteTip()          { return pivoteTip; }
     public Point2D getPivotTipLocation(Pane linkLayer) {
         // 1) Punto en local: centro-base del triángulo, altura total
         Bounds tipB = pivoteTip.getBoundsInLocal();
