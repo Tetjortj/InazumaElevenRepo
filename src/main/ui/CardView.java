@@ -23,6 +23,7 @@ import java.io.InputStream;
 import java.net.URL;
 
 import javafx.scene.shape.Rectangle;
+import main.Team;
 
 public class CardView extends StackPane {
 
@@ -86,37 +87,66 @@ public class CardView extends StackPane {
 
         content.getChildren().addAll(
                 createTopRow(),
-                createNameSection(),
-                createSeparator(),
-                createStatsSection()
+                createBottomRow()
         );
         addScoreLabel();
+    }
+
+    private Node createBottomRow() {
+        VBox bottomRow = new VBox();
+        VBox nameSeparator = new VBox();
+        VBox statsSection = new VBox();
+        nameSeparator.getChildren().addAll(
+                createNameSection(),
+                createSeparator()
+        );
+        nameSeparator.setAlignment(Pos.CENTER);
+        statsSection.getChildren().addAll(
+                createStatsSection()
+        );
+        statsSection.setPadding(new Insets(CardConfig.STAT_PADDING));
+        bottomRow.getChildren().addAll(
+                nameSeparator,
+                statsSection
+        );
+        bottomRow.setAlignment(Pos.TOP_CENTER);
+        return bottomRow;
     }
 
     //MET: Devuelve Node con el contenido de la parte de arriba de la carta
     //(escudo, iconos y retrato)
     private Node createTopRow() {
-        HBox topRow = new HBox(CardConfig.TOP_ROW_SPACING);
-        topRow.setAlignment(Pos.TOP_LEFT);
+        VBox iconsBox = createIcons();
+        //iconsBox.setAlignment(Pos.BOTTOM_LEFT);
 
-        Pane shieldBox     = createShield();
-        VBox iconsBox      = createIcons();
-        StackPane photoBox = createPlayerPhoto();
+        VBox shieldBox = createShield();
+        //shieldBox.setAlignment(Pos.BOTTOM_LEFT);
 
-        topRow.getChildren().addAll(shieldBox, iconsBox, photoBox);
+        HBox leftGroup = new HBox(CardConfig.CONTENT_PADDING, shieldBox, iconsBox);
+        leftGroup.setAlignment(Pos.CENTER);
+
+        Node photo = createPlayerPhoto();
+
+        HBox topRow = new HBox(5, leftGroup, photo);
+        topRow.setAlignment(Pos.BOTTOM_LEFT);
+        topRow.setPadding(new Insets(10, 0, 0, 5));
+
         return topRow;
     }
 
     //MET: Devuelve Pane con la imagen del escudo
-    private Pane createShield() {
-        Pane box = new VBox();
-        double w = CardConfig.FULL_WIDTH * CardConfig.SHIELD_BOX_RATIO;
-        box.setPrefWidth(w);
-
+    private VBox createShield() {
         ImageView logo = ImageLoader.loadTeamLogo(card.getTeam().name());
 
-        box.getChildren().add(logo);
-        return box;
+        VBox shieldBox = new VBox(logo);
+
+        shieldBox.setPrefWidth(40);
+        shieldBox.setPrefHeight(40);
+        shieldBox.setMinWidth(40);
+        shieldBox.setMaxWidth(40);
+
+        shieldBox.setAlignment(Pos.BOTTOM_LEFT);
+        return shieldBox;
     }
 
     //MET: Devuelve VBox con los iconos
@@ -127,11 +157,14 @@ public class CardView extends StackPane {
                                                                         CardConfig.ICON_SIZE);
         ImageView grade  = ImageLoader.loadGradeIcon(card.getGrade().name(),
                                                                         CardConfig.ICON_SIZE);
-        return new VBox(CardConfig.ICON_SPACING,
+        VBox iconsBox = new VBox(CardConfig.ICON_SPACING,
                 posIcon,
                 elemIcon,
                 grade
         );
+        iconsBox.setAlignment(Pos.BOTTOM_LEFT);
+
+        return iconsBox;
     }
 
     //MET: Devuelve StackPane con el marco del jugador
@@ -147,8 +180,7 @@ public class CardView extends StackPane {
         ImageView background = ImageLoader.loadPlayerFrameBackground(CardConfig.PLAYER_FRAME_SIZE,
                                                                         CardConfig.PLAYER_FRAME_SIZE);
 
-        background.setClip(new Rectangle(CardConfig.PLAYER_FRAME_SIZE, CardConfig.PLAYER_FRAME_SIZE,
-                CardConfig.PLAYER_FRAME_SIZE, CardConfig.PLAYER_FRAME_SIZE) {{
+        background.setClip(new Rectangle(CardConfig.PLAYER_FRAME_SIZE, CardConfig.PLAYER_FRAME_SIZE) {{
             setArcWidth(CardConfig.ARC_RADIUS/2);
             setArcHeight(CardConfig.ARC_RADIUS/2);
         }});
@@ -205,6 +237,7 @@ public class CardView extends StackPane {
 
         StackPane overlay = new StackPane(statsBackground, stats);
         overlay.setPrefSize(CardConfig.FULL_WIDTH, h);
+        //overlay.setAlignment(Pos.CENTER);
         return overlay;
     }
 

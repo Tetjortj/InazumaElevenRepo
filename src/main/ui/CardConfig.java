@@ -57,7 +57,7 @@ public final class CardConfig {
     public static final double STAT_FONT_SIZE         = 14;
 
     /** Proporción de altura de la sección de stats respecto a FULL_HEIGHT */
-    public static final double STATS_SECTION_RATIO    = 0.35;
+    public static final double STATS_SECTION_RATIO    = 0.4;
     /** Proporción de padding‐bottom tras la sección de stats */
     public static final double STATS_BOTTOM_PAD_RATIO = 0.10;
 
