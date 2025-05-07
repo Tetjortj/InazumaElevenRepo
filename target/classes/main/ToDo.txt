@@ -14,8 +14,8 @@
 -Mejora del pivote ✅
 -Ajuste del background y labels de pantalla del draft ✅
 -Visual del selector de cartas
--Solucionar problema de tapado visual entre cells en draft, tambien ubicacion de estas segun player placement
+-Solucionar problema de tapado visual entre cells en draft, tambien ubicacion de estas segun player placement ✅
 -Poner efectos de sonido en cosas como las cartas
--Acabar de completar las alineaciones
+-Acabar de completar las alineaciones ✅
 -Cambiar diseño parte de detras de las cartas
 -Acortar tiempo en el que salen las cartas una vez escogido un player cell

@@ -25,7 +25,7 @@ public class CardSelectorModal extends Stage {
     private static final Duration PANEL_SLIDE_DURATION   = Duration.millis(400);
     private static final Duration ENTRY_DURATION         = Duration.millis(200);
     private static final Duration CARD_REVEAL_DURATION   = Duration.millis(300);
-    private static final Duration CARD_REVEAL_STAGGER    = Duration.millis(200);
+    private static final Duration CARD_REVEAL_STAGGER    = Duration.millis(50);
     private static final double   INITIAL_SCALE          = 1.6;
 
     public CardSelectorModal(List<Card> opciones, Consumer<Card> onSelect) {
