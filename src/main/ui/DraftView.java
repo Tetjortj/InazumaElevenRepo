@@ -46,6 +46,8 @@ public class DraftView extends HBox {
 
     private final Button finishButton = new Button("Terminar Draft");
 
+    private final ClickMoveManager moveManager = new ClickMoveManager(this);
+
     public DraftView(Formation formation, PlayerPool playerPool, StatsPanel statsPanel) {
         this.formation     = formation;
         this.playerPool    = playerPool;
@@ -98,7 +100,7 @@ public class DraftView extends HBox {
             PlayerCell bc = new PlayerCell(true);
             bc.setPrefSize(120, 170);
             bc.resetVisual();
-            bc.setOnMouseClicked(evt -> seleccionarDelBench(bc));
+            moveManager.register(bc, /*onField*/ false);
             benchCells.add(bc);
             if (i < 3) row1.getChildren().add(bc);
             else      row2.getChildren().add(bc);
@@ -193,89 +195,7 @@ public class DraftView extends HBox {
             double y = spacingY + row * (cardH + spacingY);
             cell.relocate(x, y);
 
-            cell.setOnMouseClicked(evt -> {
-                if (!cell.isUnlocked()) seleccionarJugador(cell);
-            });
-
-            cell.setOnDragDetected(e -> {
-                if (!cell.isUnlocked()) return;
-                // 1) Snapshot de la vista actual (mini-carta o placeholder)
-                SnapshotParameters sp = new SnapshotParameters();
-                sp.setFill(Color.TRANSPARENT);
-                WritableImage snapshot = cell.getCartaContainer().snapshot(sp, null);
-
-                // 2) Iniciamos el dragboard
-                Dragboard db = cell.startDragAndDrop(TransferMode.MOVE);
-                ClipboardContent content = new ClipboardContent();
-                content.putString(String.valueOf(cell.getIndex()));
-                db.setContent(content);
-                db.setDragView(snapshot,
-                        snapshot.getWidth()  / 2,
-                        snapshot.getHeight() / 2
-                );
-
-                // 3) Dejamos el placeholder “vacío” en la celda
-                cell.resetVisual();
-
-                cell.getScene().setCursor(Cursor.DEFAULT);
-
-                e.consume();
-            });
-
-
-            cell.setOnDragOver(e -> {
-                if (e.getDragboard().hasString()) {
-                    // aceptamos siempre el MOVE para que el cursor nunca sea el "stop"
-                    e.acceptTransferModes(TransferMode.MOVE);
-                }
-                e.consume();
-            });
-
-            cell.setOnDragDropped(e -> {
-                Dragboard db = e.getDragboard();
-                boolean success = false;
-                if (db.hasString() && cell.isUnlocked()) {
-                    int fromIdx = Integer.parseInt(db.getString());
-                    int toIdx   = cell.getIndex();
-
-                    Card a = jugadoresSeleccionados.get(fromIdx);
-                    Card b = jugadoresSeleccionados.get(toIdx);
-
-                    // 1) ponemos 'a' en destino
-                    jugadoresSeleccionados.put(toIdx, a);
-                    mostrarCartaEnCelda(findCell(toIdx), a);
-
-                    // 2) swap o move
-                    if (b != null) {
-                        jugadoresSeleccionados.put(fromIdx, b);
-                        mostrarCartaEnCelda(findCell(fromIdx), b);
-                    } else {
-                        jugadoresSeleccionados.remove(fromIdx);
-                        findCell(fromIdx).reset();
-                    }
-
-                    statsPanel.actualizarStats(formation, jugadoresSeleccionados);
-                    Platform.runLater(this::renderConnections);
-
-                    success = true;
-                }
-                e.setDropCompleted(success);
-                e.consume();
-            });
-
-            cell.setOnDragDone(e -> {
-                if (!e.isDropCompleted()) {
-                    Card original = jugadoresSeleccionados.get(cell.getIndex());
-                    if (original != null) {
-                        mostrarCartaEnCelda(cell, original);
-                    } else {
-                        cell.resetVisual();
-                    }
-                }
-                cell.getScene().setCursor(Cursor.DEFAULT);
-                e.consume();
-            });
-            // --- FIN DRAG & DROP ---
+            moveManager.register(cell, /*onField*/ true);
 
             jugadorLayer.getChildren().add(cell);
             playerCells.add(cell);
@@ -337,6 +257,103 @@ public class DraftView extends HBox {
                 .orElseThrow(() -> new IllegalStateException("Cell " + idx + " no encontrada"));
     }
 
+    /**
+     * Mueve o intercambia la carta de sourceCell a targetCell.
+     * Si target está vacío, simplemente la mueve.
+     * Si target contiene carta, hace swap.
+     * En destinos inválidos, devuelve la carta al origen.
+     */
+    public void performClickMove(
+            PlayerCell srcCell, boolean srcOnField,
+            PlayerCell dstCell, boolean dstOnField) {
+
+        // 1) Recuperar la carta que estaba en srcCell
+        Card moving = srcOnField
+                ? jugadoresSeleccionados.get(srcCell.getIndex())
+                : bench.get( benchCells.indexOf(srcCell) );
+
+        if (moving == null) {
+            // nada que mover
+            return;
+        }
+
+        // 2) Destino válido → intercambio
+        if (dstOnField && srcOnField) {
+            // campo ⇄ campo
+            int iFrom = srcCell.getIndex();
+            int iTo   = dstCell.getIndex();
+            Card other = jugadoresSeleccionados.get(iTo);
+
+            // mueve la “moving”
+            jugadoresSeleccionados.put(iTo, moving);
+            mostrarCartaEnCelda(dstCell, moving);
+
+            if (other != null) {
+                // devuelve la “other” al source
+                jugadoresSeleccionados.put(iFrom, other);
+                mostrarCartaEnCelda(srcCell, other);
+            } else {
+                jugadoresSeleccionados.remove(iFrom);
+                srcCell.resetVisual();
+            }
+
+        } else if (!dstOnField && !srcOnField) {
+            // banquillo ⇄ banquillo
+            int bFrom = benchCells.indexOf(srcCell);
+            int bTo   = benchCells.indexOf(dstCell);
+            Collections.swap(bench, bFrom, bTo);
+
+            Node tmp = srcCell.getCartaContainer().getChildren().get(0);
+            srcCell.getCartaContainer().getChildren().setAll(dstCell.getCartaContainer().getChildren());
+            dstCell.getCartaContainer().getChildren().setAll(tmp);
+
+        } else if (srcOnField && !dstOnField) {
+            // campo → banquillo
+            int iFrom = srcCell.getIndex();
+            int bTo   = benchCells.indexOf(dstCell);
+            Card oldBench = bench.get(bTo);
+
+            // quita del campo
+            jugadoresSeleccionados.remove(iFrom);
+            srcCell.resetVisual();
+
+            // pone en bench
+            bench.set(bTo, moving);
+            dstCell.getCartaContainer().getChildren().setAll(new MiniCardView(moving));
+
+            // devuelve la que había en bench al campo
+            if (oldBench != null) {
+                jugadoresSeleccionados.put(iFrom, oldBench);
+                mostrarCartaEnCelda(srcCell, oldBench);
+            }
+
+        } else if (!srcOnField && dstOnField) {
+            // banquillo → campo
+            int bFrom = benchCells.indexOf(srcCell);
+            int iTo   = dstCell.getIndex();
+            Card oldField = jugadoresSeleccionados.get(iTo);
+
+            // quita de bench
+            bench.set(bFrom, null);
+            srcCell.resetVisual();
+
+            // pone en campo
+            jugadoresSeleccionados.put(iTo, moving);
+            mostrarCartaEnCelda(dstCell, moving);
+
+            // devuelve la que había en campo al bench
+            if (oldField != null) {
+                bench.set(bFrom, oldField);
+                benchCells.get(bFrom).getCartaContainer()
+                        .getChildren().setAll(new MiniCardView(oldField));
+            }
+        }
+
+        // 3) Actualiza stats y conexiones
+        updateScores();
+        Platform.runLater(this::renderConnections);
+    }
+
     private void updateScores() {
         int quimica    = calcularQuimica(formation, jugadoresSeleccionados);
         int puntuacion = calcularPuntuacion(formation, jugadoresSeleccionados);
@@ -394,7 +411,7 @@ public class DraftView extends HBox {
     }
 
 
-    private void seleccionarJugador(PlayerCell cell) {
+    public void seleccionarJugador(PlayerCell cell) {
         List<Card> opts = new ArrayList<>(playerPool.getByPosition(cell.getPosition()));
         opts.removeAll(jugadoresSeleccionados.values());
         Collections.shuffle(opts);
@@ -476,7 +493,7 @@ public class DraftView extends HBox {
         }
     }
 
-    private void seleccionarDelBench(PlayerCell cell) {
+    public void seleccionarDelBench(PlayerCell cell) {
         List<Card> opts = new ArrayList<>(playerPool.getAllPlayers());
         opts.removeAll(jugadoresSeleccionados.values());
         opts.removeAll(bench);

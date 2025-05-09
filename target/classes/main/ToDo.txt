@@ -18,4 +18,10 @@
 -Poner efectos de sonido en cosas como las cartas
 -Acabar de completar las alineaciones ✅
 -Cambiar diseño parte de detras de las cartas
--Acortar tiempo en el que salen las cartas una vez escogido un player cell
+-Acortar tiempo en el que salen las cartas una vez escogido un player cell ✅
+-Cambiar estilo de sumar quimica, todos los jugadores valen diez puntos, posicion correcta +4, enlaces a la mitad +6 progresivo
+-Añadir supertecnicas, supertacticas, miximax, espiritus, etc. con perks o beneficios
+-Añadir sobres que se te den como recompensas por conseguir cosas en el draft y que luego estos te den las tecnicas, estas cosas pueden ser como misiones
+-Poner los links tambien en la preseleccion de alineacion
+-Clasificar drafts con F, D, C, B, A, S, etc.
+-Despues de un draft, volver a menu principal
