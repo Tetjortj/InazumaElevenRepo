@@ -9,8 +9,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.shape.Polygon;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
+import javafx.scene.text.*;
 import javafx.util.Duration;
 import main.Card;
 import main.Position;
@@ -41,6 +40,12 @@ public class PlayerCell extends StackPane {
 
     private final StackPane placeholderNode;
 
+    private Label chemistryLabel;
+
+    private Text positionText;
+    private Text chemText;
+    private TextFlow pivotFlow;
+
     public PlayerCell(int index, Position position) {
         this.index    = index;
         this.position = position;
@@ -70,14 +75,25 @@ public class PlayerCell extends StackPane {
         cartaContainer.getChildren().setAll(placeholder);
         cartaContainer.setPrefSize(CELL_WIDTH, CELL_HEIGHT);
 
-        // 2) Pivote justo abajo, sin espacio extra
-        pivoteLabel = new Label(position.name() + " 0");
-        pivoteLabel.setFont(Font.font("Verdana", FontWeight.BOLD, 12));
-        pivoteLabel.setTextFill(Color.WHITE);
-        pivoteLabel.setBackground(new Background(new BackgroundFill(
+        // 2) Creamos los Texts
+        positionText = new Text(position.name());
+        positionText.setFont(Font.font("Verdana", FontWeight.BOLD, 12));
+        // color inicial neutro o en rojo (posición aún no confirmada)
+        positionText.setFill(Color.FIREBRICK);
+
+        chemText = new Text("0");
+        chemText.setFont(Font.font("Verdana", FontWeight.BOLD, 12));
+        chemText.setFill(Color.WHITE);
+
+        // Hacemos un TextFlow para juntarlos
+        pivotFlow = new TextFlow(positionText, new Text(" "), chemText);
+        pivotFlow.setPrefWidth(CELL_WIDTH * 0.4);
+        pivotFlow.setMaxWidth(CELL_WIDTH * 0.4);
+        pivotFlow.setTextAlignment(TextAlignment.CENTER);
+        pivotFlow.setBackground(new Background(new BackgroundFill(
                 Color.rgb(30,30,30), new CornerRadii(6), Insets.EMPTY
         )));
-        pivoteLabel.setPadding(new Insets(2,8,2,8));
+        pivotFlow.setPadding(new Insets(2,8,2,8));
 
         //    y triángulo salida
         pivoteTip = new Polygon(
@@ -88,7 +104,7 @@ public class PlayerCell extends StackPane {
         pivoteTip.setFill(Color.rgb(30,30,30));
 
         // 3) Contenedor vertical pivot
-        pivoteContainer = new VBox(0, cartaContainer, pivoteLabel, pivoteTip);
+        pivoteContainer = new VBox(0, cartaContainer, pivotFlow, pivoteTip);
         pivoteContainer.setAlignment(Pos.TOP_CENTER);
 
         // 4) Ensamblar todo
@@ -96,7 +112,8 @@ public class PlayerCell extends StackPane {
         setAlignment(Pos.CENTER);
 
         // 5) Ajustar tamaño total
-        double pivotHeight = pivoteLabel.getFont().getSize() + 4 + 6; // etiqueta + triángulo
+        double pivotHeight = pivotFlow.prefHeight(-1)
+                + pivoteTip.getBoundsInLocal().getHeight();
         setPrefSize(CELL_WIDTH, CELL_HEIGHT + pivotHeight);
         setMinSize (CELL_WIDTH, CELL_HEIGHT + pivotHeight);
         setMaxSize (CELL_WIDTH, CELL_HEIGHT + pivotHeight);
@@ -307,6 +324,19 @@ public class PlayerCell extends StackPane {
     public void resetVisual() {
         // sólo repintamos el placeholder, sin tocar unlocked
         cartaContainer.getChildren().setAll(placeholderNode);
+    }
+
+    /** chem entre 0 y 10 */
+    public void updateChemistry(double chem) {
+        int value = (int)Math.round(chem);
+        chemText.setText(String.valueOf(value));
+
+        // sólo pintamos la posición según si obtuvo los 4 puntos:
+        if (chem >= 4) {
+            positionText.setFill(Color.LIMEGREEN);
+        } else {
+            positionText.setFill(Color.FIREBRICK);
+        }
     }
 
     public boolean isUnlocked()            { return unlocked; }

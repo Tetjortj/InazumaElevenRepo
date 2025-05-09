@@ -363,10 +363,19 @@ public class DraftView extends HBox {
     }
 
     private void updateScores() {
-        int quimica    = calcularQuimica(formation, jugadoresSeleccionados);
-        int puntuacion = calcularPuntuacion(formation, jugadoresSeleccionados);
+        for (PlayerCell cell : playerCells) {
+            double chem = calculatePlayerChemistry(cell.getIndex());
+            cell.updateChemistry(chem);
+        }
 
-        quimicaLabel.   setText("Química: "    + quimica);
+        double totalChem = playerCells.stream()
+                .mapToDouble(cell -> calculatePlayerChemistry(cell.getIndex()))
+                .sum();
+
+        int totalChemInt = (int) Math.round(totalChem);
+        quimicaLabel.setText("Química: " + totalChemInt);
+
+        int puntuacion = calcularPuntuacion(formation, jugadoresSeleccionados);
         puntuacionLabel.setText("Puntuación: " + puntuacion);
 
         puntuacionLabel.setFont(Font.font("Verdana", FontWeight.BOLD, 18));
@@ -377,7 +386,6 @@ public class DraftView extends HBox {
 
         // 2) ¿Banquillo completo?
         long benchCount = bench.stream().filter(Objects::nonNull).count();
-        System.out.println(benchCount);
         boolean allBench = benchCount == benchCells.size();
 
         // 3) Activar sólo si ambos están completos
@@ -416,6 +424,75 @@ public class DraftView extends HBox {
         return enlacesTotales > 0
                 ? Math.round((quimicaActual / enlacesTotales) * 100)
                 : 0;
+    }
+
+    /**
+     * Devuelve un valor de 0 a 10 para el jugador en posición idx.
+     */
+    private double calculatePlayerChemistry(int idx) {
+        Card card = jugadoresSeleccionados.get(idx);
+        if (card == null) return 0;
+
+        double score = 0;
+        // --- 4 puntos por posición correcta ---
+        PlayerPlacement placement = formation.getPlacements().get(idx);
+        if (card.getPosition().equals(placement.getPosition())) {
+            score += 4;
+        }
+
+        // --- 6 puntos por enlaces ---
+        List<Integer> links = formation.getLinks().get(idx);
+        if (links != null && !links.isEmpty()) {
+            int maxLinks = links.size();
+
+            // definimos cuántos puntos vale cada tipo de enlace
+            int ptsStrong, ptsMedium;
+            switch (maxLinks) {
+                case 1:
+                    ptsStrong = 6;  ptsMedium = 4;
+                    break;
+                case 2:
+                    ptsStrong = 4;  ptsMedium = 3;
+                    break;
+                case 3:
+                    ptsStrong = 4;  ptsMedium = 2;
+                    break;
+                case 4:
+                    ptsStrong = 3;  ptsMedium = 2;
+                    break;
+                case 5:
+                    ptsStrong = 3;  ptsMedium = 1;
+                    break;
+                case 6:
+                    ptsStrong = 2;  ptsMedium = 1;
+                    break;
+                default:
+                    // por si en el futuro hubiera más de 6 enlaces
+                    ptsStrong = 1;  ptsMedium = 1;
+            }
+
+            // recorremos cada enlace y sumamos según su fuerza
+            int linkScore = 0;
+            for (int to : links) {
+                Card other = jugadoresSeleccionados.get(to);
+                if (other == null) continue;
+
+                if (card.getTeam() == other.getTeam()
+                        || (card.getElement() == other.getElement() && card.getGrade() == other.getGrade())) {
+                    // enlace fuerte (verde)
+                    linkScore += ptsStrong;
+                } else if (card.getElement() == other.getElement()
+                        || card.getGrade() == other.getGrade()) {
+                    // enlace medio (amarillo)
+                    linkScore += ptsMedium;
+                }
+                // los “rojos” no suman nada
+            }
+
+            score += linkScore;
+        }
+
+        return Math.min(score, 10);
     }
 
     // Calcula la puntuación media del equipo (como en tu Main)
@@ -548,9 +625,13 @@ public class DraftView extends HBox {
     }
 
     private void showFinalResult() {
-        int quimica    = calcularQuimica(formation, jugadoresSeleccionados);
+        double totalChem = playerCells.stream()
+                .mapToDouble(cell -> calculatePlayerChemistry(cell.getIndex()))
+                .sum();
+
+        int totalChemInt = (int) Math.round(totalChem);
         int puntuacion = calcularPuntuacion(formation, jugadoresSeleccionados);
-        int total      = quimica + puntuacion;
+        int total      = totalChemInt + puntuacion;
 
         Alert alert = new Alert(Alert.AlertType.NONE);
         Stage stage = (Stage) getScene().getWindow();
