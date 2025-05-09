@@ -17,12 +17,15 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.stage.Stage;
 import main.Card;
 import main.Formation;
 import main.PlayerPlacement;
 import main.PlayerPool;
+import main.ui.screens.TitleScreen;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class DraftView extends HBox {
 
@@ -412,8 +415,18 @@ public class DraftView extends HBox {
 
 
     public void seleccionarJugador(PlayerCell cell) {
-        List<Card> opts = new ArrayList<>(playerPool.getByPosition(cell.getPosition()));
-        opts.removeAll(jugadoresSeleccionados.values());
+        // 1) construyo el set de ya usados: campo + banquillo
+        Set<Card> usados = new HashSet<>(jugadoresSeleccionados.values());
+        usados.addAll(
+                bench.stream()
+                        .filter(Objects::nonNull)
+                        .collect(Collectors.toList())
+        );
+
+        // 2) cojo sólo los de su posición y filtro los usados
+        List<Card> opts = playerPool.getByPosition(cell.getPosition()).stream()
+                .filter(c -> !usados.contains(c))
+                .collect(Collectors.toList());
         Collections.shuffle(opts);
         opts = opts.stream().limit(5).toList();
 
@@ -426,6 +439,30 @@ public class DraftView extends HBox {
 
             statsPanel.actualizarStats(formation, jugadoresSeleccionados);
             Platform.runLater(this::renderConnections);
+        });
+        sel.showAndWait();
+    }
+
+    public void seleccionarDelBench(PlayerCell cell) {
+        // 1) construyo el set de ya usados: campo + banquillo
+        Set<Card> usados = new HashSet<>(jugadoresSeleccionados.values());
+        usados.addAll(
+                bench.stream()
+                        .filter(Objects::nonNull)
+                        .collect(Collectors.toList())
+        );
+
+        // 2) filtro todas las cartas
+        List<Card> opts = playerPool.getAllPlayers().stream()
+                .filter(c -> !usados.contains(c))
+                .collect(Collectors.toList());
+        Collections.shuffle(opts);
+        opts = opts.stream().limit(5).toList();
+
+        CardSelectorModal sel = new CardSelectorModal(opts, carta -> {
+            bench.add(carta);
+            cell.desbloquear(carta);
+            cell.getCartaContainer().getChildren().setAll(new MiniCardView(carta));
         });
         sel.showAndWait();
     }
@@ -493,39 +530,25 @@ public class DraftView extends HBox {
         }
     }
 
-    public void seleccionarDelBench(PlayerCell cell) {
-        List<Card> opts = new ArrayList<>(playerPool.getAllPlayers());
-        opts.removeAll(jugadoresSeleccionados.values());
-        opts.removeAll(bench);
-        Collections.shuffle(opts);
-        opts = opts.stream().limit(5).toList();
-
-        CardSelectorModal sel = new CardSelectorModal(opts, carta -> {
-            bench.add(carta);
-            cell.desbloquear(carta);
-            cell.getCartaContainer().getChildren().setAll(new MiniCardView(carta));
-        });
-        sel.showAndWait();
-    }
-
     private void showFinalResult() {
         int quimica    = calcularQuimica(formation, jugadoresSeleccionados);
         int puntuacion = calcularPuntuacion(formation, jugadoresSeleccionados);
         int total      = quimica + puntuacion;
 
         Alert alert = new Alert(Alert.AlertType.NONE);
-        alert.initOwner(getScene().getWindow());
+        Stage stage = (Stage) getScene().getWindow();
+        alert.initOwner(stage);
         alert.setTitle("Draft Finalizado");
         // etiqueta grande y en el medio
         Label msg = new Label("Total final: " + total);
         msg.setFont(Font.font("Verdana", FontWeight.BOLD, 24));
         alert.getDialogPane().setContent(msg);
 
-        ButtonType btnSalir = new ButtonType("Salir", ButtonBar.ButtonData.OK_DONE);
-        alert.getButtonTypes().setAll(btnSalir);
+        ButtonType btnVolver = new ButtonType("Volver al titulo", ButtonBar.ButtonData.OK_DONE);
+        alert.getButtonTypes().setAll(btnVolver);
 
         alert.showAndWait();
-        Platform.exit();
+        new TitleScreen().show(stage);
     }
 
     public HBox getBanquilloBox() {

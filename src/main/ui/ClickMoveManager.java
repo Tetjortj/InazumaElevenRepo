@@ -78,16 +78,16 @@ public class ClickMoveManager {
                 // Primer clic: marcamos fuente y resaltamos
                 sourceCell      = cell;
                 sourceOnField   = onField;
-                cell.setBorder(SELECTED_BORDER);
-                cell.setEffect(SELECTED_SHADOW);
+                cell.getCartaContainer().setBorder(SELECTED_BORDER);
+                cell.getCartaContainer().setEffect(SELECTED_SHADOW);
             }
         });
     }
 
     private void clearSelection() {
         if (sourceCell != null) {
-            sourceCell.setBorder(null);
-            sourceCell.setEffect(null);
+            sourceCell.getCartaContainer().setBorder(null);
+            sourceCell.getCartaContainer().setEffect(null);
             sourceCell = null;
         }
     }
