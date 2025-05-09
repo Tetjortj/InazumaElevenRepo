@@ -4,6 +4,7 @@ import javafx.animation.FadeTransition;
 import javafx.animation.ScaleTransition;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
@@ -18,6 +19,7 @@ import main.ui.screens.utils.MusicManager;
 //import javax.print.attribute.standard.Media;
 
 public class TitleScreen {
+    private StackPane root;
 
     public void show(Stage stage) {
         // 1) Start music (unchanged)
@@ -71,22 +73,28 @@ public class TitleScreen {
         layout.setCenter(menuVBox);
         layout.setBottom(volumeBox);
 
-        StackPane root = new StackPane(backgroundView, layout);
+        root = new StackPane(backgroundView, layout);
 
         // 7) set up scene once
-        Scene scene = new Scene(root, 1200, 1000);
-        stage.setScene(scene);
-        stage.setFullScreen(true);
-        stage.setFullScreenExitHint("");
+        Scene scene = stage.getScene();
+        if(scene == null) {
+            scene = new Scene(root, 1200, 1000);
+            stage.setScene(scene);
+            stage.setFullScreen(true);
+            stage.setFullScreenExitHint("");
 
-        // start with transparent and then fade in
-        root.setOpacity(0);
-        stage.show();
-
-        FadeTransition fadeIn = new FadeTransition(Duration.seconds(2), root);
-        fadeIn.setFromValue(0);
-        fadeIn.setToValue(1);
-        fadeIn.play();
+            // 1) Asegúrate de que empiece invisible
+            root.setOpacity(0);
+            // 2) Ahora sí, muéstralo
+            stage.show();
+            // 3) Y por último, lanza el fade-in
+            FadeTransition fadeIn = new FadeTransition(Duration.seconds(2), root);
+            fadeIn.setFromValue(0);
+            fadeIn.setToValue(1);
+            fadeIn.play();
+        } else {
+            animateEntrance();
+        }
 
         // 8) Button transitions (unchanged)
         playButton.setOnAction(e -> {
@@ -118,5 +126,19 @@ public class TitleScreen {
             st.play();
             st.setOnFinished(ev -> Platform.exit());
         });
+    }
+
+    public Parent getRoot() {
+        return root;
+    }
+
+    public void animateEntrance() {
+        // empieza invisible
+        root.setOpacity(0);
+        // lanza fade-in
+        FadeTransition ft = new FadeTransition(Duration.seconds(2), root);
+        ft.setFromValue(0);
+        ft.setToValue(1);
+        ft.play();
     }
 }

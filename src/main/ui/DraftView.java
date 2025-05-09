@@ -1,10 +1,11 @@
 package main.ui;
 
+import javafx.animation.FadeTransition;
+import javafx.animation.ParallelTransition;
+import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.geometry.*;
-import javafx.scene.Cursor;
-import javafx.scene.Node;
-import javafx.scene.SnapshotParameters;
+import javafx.scene.*;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -18,6 +19,7 @@ import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import main.Card;
 import main.Formation;
 import main.PlayerPlacement;
@@ -548,7 +550,35 @@ public class DraftView extends HBox {
         alert.getButtonTypes().setAll(btnVolver);
 
         alert.showAndWait();
-        new TitleScreen().show(stage);
+
+        TitleScreen title = new TitleScreen();
+        title.show(stage);
+
+        crossFadeToTitle(stage, title.getRoot());
+    }
+
+    private void crossFadeToTitle(Stage stage, Parent newRoot) {
+        Scene scene    = stage.getScene();
+        Parent oldRoot = scene.getRoot();
+
+        // 1) Fade-out del viejo root
+        FadeTransition fadeOut = new FadeTransition(Duration.millis(600), oldRoot);
+        fadeOut.setFromValue(1.0);
+        fadeOut.setToValue(0.0);
+
+        fadeOut.setOnFinished(e -> {
+            // 2) Reemplaza directamente la root (sin stack intermedio)
+            scene.setRoot(newRoot);
+
+            // 3) Fade-in de la nueva root
+            newRoot.setOpacity(0);
+            FadeTransition fadeIn = new FadeTransition(Duration.millis(600), newRoot);
+            fadeIn.setFromValue(0.0);
+            fadeIn.setToValue(1.0);
+            fadeIn.play();
+        });
+
+        fadeOut.play();
     }
 
     public HBox getBanquilloBox() {
