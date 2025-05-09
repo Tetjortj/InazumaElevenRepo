@@ -107,6 +107,9 @@ public class DraftView extends HBox {
             bc.resetVisual();
             moveManager.register(bc, /*onField*/ false);
             benchCells.add(bc);
+
+            bench.add(null);
+
             if (i < 3) row1.getChildren().add(bc);
             else      row2.getChildren().add(bc);
         }
@@ -369,9 +372,18 @@ public class DraftView extends HBox {
         puntuacionLabel.setFont(Font.font("Verdana", FontWeight.BOLD, 18));
         quimicaLabel.setFont(Font.font("Verdana", FontWeight.BOLD, 18));
 
-        boolean allPlaced = jugadoresSeleccionados.size() == playerCells.size();
-        finishButton.setDisable(!allPlaced);
-        finishButton.setVisible(allPlaced);
+        // 1) ¿Campo completo?
+        boolean allField = jugadoresSeleccionados.size() == playerCells.size();
+
+        // 2) ¿Banquillo completo?
+        long benchCount = bench.stream().filter(Objects::nonNull).count();
+        System.out.println(benchCount);
+        boolean allBench = benchCount == benchCells.size();
+
+        // 3) Activar sólo si ambos están completos
+        boolean ready = allField && allBench;
+        finishButton.setDisable(!ready);
+        finishButton.setVisible(ready);
     }
 
     private static int calcularQuimica(Formation formacion, Map<Integer, Card> jugadoresSeleccionados) {
@@ -462,9 +474,12 @@ public class DraftView extends HBox {
         opts = opts.stream().limit(5).toList();
 
         CardSelectorModal sel = new CardSelectorModal(opts, carta -> {
-            bench.add(carta);
+            int idx = benchCells.indexOf(cell);
+            bench.set(idx, carta);
             cell.desbloquear(carta);
             cell.getCartaContainer().getChildren().setAll(new MiniCardView(carta));
+            updateScores();
+            Platform.runLater(this::renderConnections);
         });
         sel.showAndWait();
     }

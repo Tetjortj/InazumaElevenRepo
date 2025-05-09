@@ -22,6 +22,7 @@
 -Cambiar estilo de sumar quimica, todos los jugadores valen diez puntos, posicion correcta +4, enlaces a la mitad +6 progresivo
 -Añadir supertecnicas, supertacticas, miximax, espiritus, etc. con perks o beneficios
 -Añadir sobres que se te den como recompensas por conseguir cosas en el draft y que luego estos te den las tecnicas, estas cosas pueden ser como misiones
+-Las misiones pueden salir al principio e incluso tener diferentes categorias y que sea el jugador el que las escoge
 -Poner los links tambien en la preseleccion de alineacion
 -Clasificar drafts con F, D, C, B, A, S, etc.
--Despues de un draft, volver a menu principal
+-Despues de un draft, volver a menu principal ✅
