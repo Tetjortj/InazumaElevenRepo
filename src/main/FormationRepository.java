@@ -361,7 +361,7 @@ public class FormationRepository {
         links.put(3, List.of(0, 2, 4, 6, 7));
         links.put(4, List.of(3, 7));
         links.put(5, List.of(1, 2, 8));
-        links.put(6, List.of(1, 3, 8, 9));
+        links.put(6, List.of(2, 3, 8, 9));
         links.put(7, List.of(3, 4, 9));
         links.put(8, List.of(5, 6, 10));
         links.put(9, List.of(6, 7, 10));
