@@ -29,12 +29,22 @@ public class CardSelectorModal extends Stage {
     private static final Duration CARD_REVEAL_STAGGER    = Duration.millis(50);
     private static final double   INITIAL_SCALE          = 1.6;
 
-    private final Consumer<Card> onPeek;
+    private Consumer<Card> onPeek;
     private Consumer<Card> onSelect;
 
-    public CardSelectorModal(List<Card> opciones, Consumer<Card> onSelect,  Consumer<Card> onPeek) {
+    private boolean animateOnShow;
+
+    // constructor por defecto (animado)
+    public CardSelectorModal(List<Card> opciones,
+                             Consumer<Card> onSelect,
+                             Consumer<Card> onPeek) {
+        this(opciones, onSelect, onPeek, true);
+    }
+
+    public CardSelectorModal(List<Card> opciones, Consumer<Card> onSelect,  Consumer<Card> onPeek, boolean animateOnShow) {
         this.onSelect = onSelect;
         this.onPeek   = onPeek;
+        this.animateOnShow = animateOnShow;
 
         initModality(Modality.APPLICATION_MODAL);
         initOwner(FxUtils.getCurrentStage());
@@ -122,18 +132,48 @@ public class CardSelectorModal extends Stage {
         // Impedir cierre con X o ESC
         setOnCloseRequest(e -> e.consume());
 
-        // --- 3) Slide-in y luego revelado ---
-        setOnShown(e -> {
-            TranslateTransition slideIn = new TranslateTransition(PANEL_SLIDE_DURATION, layout);
-            slideIn.setFromX(-scene.getWidth());
-            slideIn.setToX(0);
-            slideIn.setInterpolator(Interpolator.EASE_OUT);
-            slideIn.setOnFinished(ev -> {
-                // Capturamos el master transition para poder pararlo
-                masterRef[0] = playCardReveal(placeholders, opciones, onSelect, animationsDone);
+        if (animateOnShow) {
+            setOnShown(e -> {
+                TranslateTransition slideIn = new TranslateTransition(PANEL_SLIDE_DURATION, layout);
+                slideIn.setFromX(-scene.getWidth());
+                slideIn.setToX(0);
+                slideIn.setInterpolator(Interpolator.EASE_OUT);
+                slideIn.setOnFinished(ev -> {
+                    // Capturamos el master transition para poder pararlo
+                    masterRef[0] = playCardReveal(placeholders, opciones, onSelect, animationsDone);
+                });
+                slideIn.play();
             });
-            slideIn.play();
-        });
+        } else {
+            setOnShown(e -> {
+                // ✋ en vez de playCardReveal, ejecuta este código:
+                for (int j = 0; j < placeholders.size(); j++) {
+                    PlayerCell pc = placeholders.get(j);
+                    Card c = opciones.get(j);
+                    StackPane cont = pc.getCartaContainer();
+
+                    pc.setOpacity(1);
+                    pc.setScaleX(1);
+                    pc.setScaleY(1);
+                    pc.setRotate(0);
+
+                    cont.getChildren().clear();
+                    CardView real = new CardView(c);
+                    // …calcula sc…
+
+                    double tw = cont.getPrefWidth(), th = cont.getPrefHeight();
+                    double sx = tw / real.getPrefWidth(), sy = th / real.getPrefHeight();
+                    double sc = Math.min(sx, sy);
+                    real.setScaleX(sc);
+                    real.setScaleY(sc);
+                    cont.getChildren().add(real);
+
+                    instalarClickHandler(pc, c, onSelect, onPeek);
+                }
+                // marca animationsDone para que skip-on-click no haga nada
+                animationsDone[0] = true;
+            });
+        }
     }
 
     private SequentialTransition playCardReveal(List<PlayerCell> placeholders,
@@ -223,6 +263,7 @@ public class CardSelectorModal extends Stage {
             } else if (e.getButton()==MouseButton.SECONDARY) {
                 System.out.println("PEEK ➞ " + carta);
                 onPeek.accept(carta);
+                close();
             }
             e.consume();
         });
