@@ -4,6 +4,7 @@ import javafx.animation.*;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -28,7 +29,13 @@ public class CardSelectorModal extends Stage {
     private static final Duration CARD_REVEAL_STAGGER    = Duration.millis(50);
     private static final double   INITIAL_SCALE          = 1.6;
 
-    public CardSelectorModal(List<Card> opciones, Consumer<Card> onSelect) {
+    private final Consumer<Card> onPeek;
+    private Consumer<Card> onSelect;
+
+    public CardSelectorModal(List<Card> opciones, Consumer<Card> onSelect,  Consumer<Card> onPeek) {
+        this.onSelect = onSelect;
+        this.onPeek   = onPeek;
+
         initModality(Modality.APPLICATION_MODAL);
         initOwner(FxUtils.getCurrentStage());
         initStyle(StageStyle.TRANSPARENT);
@@ -101,11 +108,7 @@ public class CardSelectorModal extends Stage {
                     cont.getChildren().add(real);
 
                     // Activamos clic definitivo
-                    final Card chosen = c;
-                    pc.setOnMouseClicked(e2 -> {
-                        close();
-                        onSelect.accept(chosen);
-                    });
+                    instalarClickHandler(pc, c, onSelect, onPeek);
                 }
 
                 animationsDone[0] = true;
@@ -196,10 +199,7 @@ public class CardSelectorModal extends Stage {
             half2.setFromAngle(90);
             half2.setToAngle(0);
             half2.setOnFinished(evt -> {
-                placeholder.setOnMouseClicked(e -> {
-                    close();
-                    onSelect.accept(carta);
-                });
+                instalarClickHandler(placeholder, carta, onSelect, onPeek);
             });
 
             allFlips.getChildren().addAll(half1, half2);
@@ -210,5 +210,21 @@ public class CardSelectorModal extends Stage {
         master.setOnFinished(ev -> animationsDone[0] = true);
         master.play();
         return master;
+    }
+
+    private void instalarClickHandler(PlayerCell pc, Card carta,
+                                      Consumer<Card> onSelect,
+                                      Consumer<Card> onPeek) {
+        pc.setOnMouseClicked(e -> {
+            if (e.getButton()==MouseButton.PRIMARY) {
+                System.out.println("SELECT ➞ " + carta);
+                onSelect.accept(carta);
+                close();
+            } else if (e.getButton()==MouseButton.SECONDARY) {
+                System.out.println("PEEK ➞ " + carta);
+                onPeek.accept(carta);
+            }
+            e.consume();
+        });
     }
 }
