@@ -34,14 +34,24 @@ public class CardSelectorModal extends Stage {
 
     private boolean animateOnShow;
 
-    // constructor por defecto (animado)
+    private boolean isCaptain;
+
+    // constructor “viejo” sin animación ni capitán
     public CardSelectorModal(List<Card> opciones,
                              Consumer<Card> onSelect,
                              Consumer<Card> onPeek) {
-        this(opciones, onSelect, onPeek, true);
+        this(opciones, onSelect, onPeek, true, false);
     }
 
-    public CardSelectorModal(List<Card> opciones, Consumer<Card> onSelect,  Consumer<Card> onPeek, boolean animateOnShow) {
+    // constructor “viejo” con control de animación, sin capitán
+    public CardSelectorModal(List<Card> opciones,
+                             Consumer<Card> onSelect,
+                             Consumer<Card> onPeek,
+                             boolean animateOnShow) {
+        this(opciones, onSelect, onPeek, animateOnShow, false);
+    }
+
+    public CardSelectorModal(List<Card> opciones, Consumer<Card> onSelect,  Consumer<Card> onPeek, boolean animateOnShow, boolean isCaptain) {
         this.onSelect = onSelect;
         this.onPeek   = onPeek;
         this.animateOnShow = animateOnShow;
@@ -56,7 +66,8 @@ public class CardSelectorModal extends Stage {
         layout.setStyle("-fx-background-color: #222; -fx-padding: 30;");
         layout.setAlignment(Pos.CENTER);
 
-        Label titulo = new Label("Selecciona una carta");
+        String titleText = isCaptain ? "Escoge tu capitán" : "Selecciona una carta";
+        Label titulo = new Label(titleText);
         titulo.setStyle("-fx-text-fill: white; -fx-font-size: 40px; -fx-font-weight: bold;");
         titulo.setTranslateY(-45);
 
@@ -257,11 +268,9 @@ public class CardSelectorModal extends Stage {
                                       Consumer<Card> onPeek) {
         pc.setOnMouseClicked(e -> {
             if (e.getButton()==MouseButton.PRIMARY) {
-                System.out.println("SELECT ➞ " + carta);
                 onSelect.accept(carta);
                 close();
             } else if (e.getButton()==MouseButton.SECONDARY) {
-                System.out.println("PEEK ➞ " + carta);
                 onPeek.accept(carta);
                 close();
             }

@@ -61,6 +61,8 @@ public class DraftView extends HBox {
     private Card    previewCard;
     private int     previewIdx;
 
+    private boolean initialModalShown = false;
+
     public DraftView(Formation formation, PlayerPool playerPool, StatsPanel statsPanel) {
         this.formation     = formation;
         this.playerPool    = playerPool;
@@ -158,6 +160,35 @@ public class DraftView extends HBox {
         });
 
         Platform.runLater(this::renderizarAlineacion);
+    }
+
+    private void showInitialHighRatedSelector() {
+        // 1) Filtramos todas las cartas >80 de media
+        List<Card> opts = playerPool.getAllPlayers().stream()
+                .filter(c -> c.getScore() > 80)
+                .collect(Collectors.toList());
+        // 2) Barajamos y nos quedamos con 5
+        Collections.shuffle(opts);
+        opts = opts.stream().limit(5).toList();
+
+        lastOnSelect = carta -> {
+            for (PlayerCell pc : playerCells) {
+                if (pc.getPosition().equals(carta.getPosition())
+                        && !jugadoresSeleccionados.containsKey(pc.getIndex())) {
+                    jugadoresSeleccionados.put(pc.getIndex(), carta);
+                    pc.desbloquear(carta);
+                    mostrarCartaEnCelda(pc, carta);
+                    updateScores();
+                    statsPanel.actualizarStats(formation, jugadoresSeleccionados);
+                    Platform.runLater(this::renderConnections);
+                    break;
+                }
+            }
+        };
+        lastOnPeek = carta -> { /* no-op en este paso */ };
+
+        CardSelectorModal sel = new CardSelectorModal(opts, lastOnSelect, lastOnPeek, true, true);
+        sel.showAndWait();
     }
 
     private void renderizarAlineacion() {
@@ -264,13 +295,6 @@ public class DraftView extends HBox {
 
         updateScores();
         Platform.runLater(this::renderConnections);
-    }
-
-    private PlayerCell findCell(int idx) {
-        return playerCells.stream()
-                .filter(c -> c.getIndex() == idx)
-                .findFirst()
-                .orElseThrow(() -> new IllegalStateException("Cell " + idx + " no encontrada"));
     }
 
     /**
@@ -749,6 +773,12 @@ public class DraftView extends HBox {
                     }
                 }
             }
+        }
+
+        if (!initialModalShown) {
+            initialModalShown = true;
+            // aseguramos que ocurra *tras* este frame
+            Platform.runLater(this::showInitialHighRatedSelector);
         }
     }
 
