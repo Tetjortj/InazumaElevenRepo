@@ -36,6 +36,7 @@ public class DraftView extends HBox {
     private final HBox banquilloBox = new HBox(10);
     Pane linkLayer = new Pane();
     private final List<PlayerCell> playerCells = new ArrayList<>();
+    private final Pane benchLayer = new Pane();
 
     // — NUEVO: barra de resultados —
     private final Label quimicaLabel    = new Label("Química: 0");
@@ -135,9 +136,20 @@ public class DraftView extends HBox {
 
         VBox.setVgrow(statsPanel, Priority.ALWAYS);
 
+        benchLayer.prefWidthProperty().bind(benchContainer.widthProperty());
+        benchLayer.prefHeightProperty().bind(benchContainer.heightProperty());
+        benchLayer.setMouseTransparent(true);
+
+        // 1) metemos benchContainer y benchLayer en un StackPane
+        StackPane benchStack = new StackPane(benchContainer, benchLayer);
+        benchStack.setAlignment(Pos.CENTER);
+        // (guardamos benchLayer ya dimensionado igual que benchContainer,
+        //  ver paso 3)
+
+        // 2) y en el panel derecho usamos benchStack en lugar de benchContainer
         VBox panelDerecho = new VBox(20,
                 salir,
-                benchContainer,
+                benchStack,
                 statsPanel,
                 scoreBox,
                 finishButton
@@ -602,7 +614,7 @@ public class DraftView extends HBox {
         previewCard   = carta;
         previewIdx    = idx;
 
-        renderPreviewOnLayer(benchContainer, idx);
+        renderPreviewOnLayer(benchLayer, idx);
         installPreviewExitHandler();
     }
 
