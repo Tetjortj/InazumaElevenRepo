@@ -1,28 +1,30 @@
--Enlaces entre jugadores ✅
--Label de quimica y puntuacion 🔁
--Animacion de entrada de las cartas mejorar ✅
--Transición entre seleccion y draft mejorar ✅
--Banquillo ✅
--Capitan
--Movimiento entre jugadores ya en el campo ✅
--Marcador puntuacion final 🔁
+✅ -Enlaces entre jugadores
+✅ -Animacion de entrada de las cartas mejorar
+✅ -Transición entre seleccion y draft mejorar
+✅ -Banquillo
+✅ -Capitan
+✅ -Movimiento entre jugadores ya en el campo
+✅ -Holder en seleccion de cartas para preveer el campo con la implementacion
+✅ -Mejora del pivote
+✅ -Ajuste del background y labels de pantalla del draft
+✅ -Solucionar problema de tapado visual entre cells en draft, tambien ubicacion de estas segun player placement
+✅ -Acabar de completar las alineaciones
+✅ -Acortar tiempo en el que salen las cartas una vez escogido un player cell
+✅ -Cambiar estilo de sumar quimica, todos los jugadores valen diez puntos, posicion correcta +4, enlaces a la mitad +6 progresivo
+✅ -Despues de un draft, volver a menu principal
+🔁 -Label de quimica y puntuacion
+🔁 -Marcador puntuacion final
 -Guardar records anteriores
 -Logros
 -Segunda temporada
 -Animacion de colocacion de las cartas en el campo
--Holder en seleccion de cartas para preveer el campo con la implementacion ✅
--Mejora del pivote ✅
--Ajuste del background y labels de pantalla del draft ✅
 -Visual del selector de cartas
--Solucionar problema de tapado visual entre cells en draft, tambien ubicacion de estas segun player placement ✅
 -Poner efectos de sonido en cosas como las cartas
--Acabar de completar las alineaciones ✅
 -Cambiar diseño parte de detras de las cartas
--Acortar tiempo en el que salen las cartas una vez escogido un player cell ✅
--Cambiar estilo de sumar quimica, todos los jugadores valen diez puntos, posicion correcta +4, enlaces a la mitad +6 progresivo ✅
 -Añadir supertecnicas, supertacticas, miximax, espiritus, etc. con perks o beneficios
 -Añadir sobres que se te den como recompensas por conseguir cosas en el draft y que luego estos te den las tecnicas, estas cosas pueden ser como misiones
 -Las misiones pueden salir al principio e incluso tener diferentes categorias y que sea el jugador el que las escoge
 -Poner los links tambien en la preseleccion de alineacion
 -Clasificar drafts con F, D, C, B, A, S, etc.
--Despues de un draft, volver a menu principal ✅
+-Hacer que la previsualizacion muestre tambien cuanto suma de quimica el enlace correspondiente
+-Poner numero de quimica y puntuacion al lado del label para indicar cuanto sumara
